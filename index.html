@@ -29,7 +29,41 @@
                 </div>
                 <p class="text-sm text-slate-500">Automatic price changes on Wildberries by schedule. Web UI, Telegram bot, Google Sheets sync.</p>
             </a>
+
+            <!-- VPN Router -->
+            <a href="#" id="vpn-download" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-emerald-500 hover:bg-slate-800/80 transition-all">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold group-hover:text-emerald-400 transition-colors">VPN Router</h2>
+                        <p class="text-sm text-slate-400" id="vpn-version">Download latest</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500">AmneziaWG VPN client with routing rules. Click to download latest release.</p>
+            </a>
         </div>
     </div>
+
+    <script>
+        const vpnLink = document.getElementById('vpn-download');
+        const vpnVersion = document.getElementById('vpn-version');
+
+        fetch('https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest')
+            .then(r => r.json())
+            .then(data => {
+                const asset = data.assets?.find(a => a.name.endsWith('.zip'));
+                if (asset) {
+                    vpnLink.href = asset.browser_download_url;
+                    vpnVersion.textContent = data.tag_name;
+                }
+            })
+            .catch(() => {
+                vpnLink.href = 'https://github.com/PavelLizunov/VPNRouter/releases/latest';
+            });
+    </script>
 </body>
 </html>
