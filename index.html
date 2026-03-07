@@ -42,7 +42,15 @@
             </a>
 
             <!-- YT Downloader -->
-            <a href="/auth/login?next=https://yt.ninitux.space" id="yt-card" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-green-500 hover:bg-slate-800/80 transition-all">
+            <a href="/auth/login?next=https://yt.ninitux.space" id="yt-card" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-green-500 hover:bg-slate-800/80 transition-all relative overflow-hidden">
+                <div id="yt-lock-overlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] z-10 flex items-center justify-center">
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span class="text-sm font-medium">Login required</span>
+                    </div>
+                </div>
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center text-2xl shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -51,7 +59,7 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-semibold group-hover:text-green-400 transition-colors">YT Downloader</h2>
-                        <p class="text-sm text-slate-400" id="yt-status">Login required</p>
+                        <p class="text-sm text-slate-400" id="yt-status">Authorized access</p>
                     </div>
                 </div>
                 <p class="text-sm text-slate-500">YouTube video downloader. Web UI for yt-dlp. Authorized access via Telegram bot.</p>
@@ -100,9 +108,9 @@
                 // Logged in — show Logout button
                 btn.href = '/auth/logout';
                 btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout';
-                // YT card — direct link
+                // YT card — remove lock overlay, direct link
                 ytCard.href = 'https://yt.ninitux.space';
-                ytStatus.textContent = 'Authorized';
+                document.getElementById('yt-lock-overlay').remove();
             }
         });
 
