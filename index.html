@@ -9,8 +9,19 @@
 <body class="bg-slate-900 text-white min-h-screen">
     <div class="max-w-5xl mx-auto px-6 py-16">
         <header class="text-center mb-16">
-            <h1 class="text-4xl font-bold tracking-tight">ninitux.space</h1>
-            <p class="mt-3 text-lg text-slate-400">Self-hosted services</p>
+            <div class="flex items-center justify-between">
+                <div></div>
+                <div>
+                    <h1 class="text-4xl font-bold tracking-tight">ninitux.space</h1>
+                    <p class="mt-3 text-lg text-slate-400">Self-hosted services</p>
+                </div>
+                <a href="/auth/login?next=https://ninitux.space" id="auth-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-indigo-500 text-sm text-slate-300 hover:text-white transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    Login
+                </a>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -31,7 +42,7 @@
             </a>
 
             <!-- YT Downloader -->
-            <a href="https://yt.ninitux.space" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-green-500 hover:bg-slate-800/80 transition-all">
+            <a href="/auth/login?next=https://yt.ninitux.space" id="yt-card" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-green-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center text-2xl shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -40,7 +51,7 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-semibold group-hover:text-green-400 transition-colors">YT Downloader</h2>
-                        <p class="text-sm text-slate-400">Authorized access</p>
+                        <p class="text-sm text-slate-400" id="yt-status">Login required</p>
                     </div>
                 </div>
                 <p class="text-sm text-slate-500">YouTube video downloader. Web UI for yt-dlp. Authorized access via Telegram bot.</p>
@@ -78,25 +89,20 @@
                 <p class="text-sm text-slate-500">Process-based split-tunnel VPN for Windows. Routes selected apps through VLESS+Reality.</p>
             </a>
         </div>
-
-        <div class="mt-10 text-center" id="auth-section">
-            <a href="/auth/login?next=https://ninitux.space" id="auth-btn" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                </svg>
-                Login
-            </a>
-        </div>
     </div>
 
     <script>
         fetch('/auth/check').then(r => {
             const btn = document.getElementById('auth-btn');
+            const ytCard = document.getElementById('yt-card');
+            const ytStatus = document.getElementById('yt-status');
             if (r.ok) {
+                // Logged in — show Logout button
                 btn.href = '/auth/logout';
-                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout';
-                btn.classList.replace('bg-indigo-600', 'bg-slate-700');
-                btn.classList.replace('hover:bg-indigo-500', 'hover:bg-slate-600');
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout';
+                // YT card — direct link
+                ytCard.href = 'https://yt.ninitux.space';
+                ytStatus.textContent = 'Authorized';
             }
         });
 
