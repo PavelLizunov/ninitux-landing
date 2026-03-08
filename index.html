@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ninitux.space</title>
+    <title>ninitux.com</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🐧</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -24,10 +24,10 @@
             <div class="flex items-center justify-between">
                 <div></div>
                 <div>
-                    <h1 class="text-4xl font-bold tracking-tight">ninitux.space</h1>
+                    <h1 class="text-4xl font-bold tracking-tight">ninitux.com</h1>
                     <p class="mt-3 text-lg text-slate-400">Self-hosted services</p>
                 </div>
-                <a href="/auth/login?next=https://ninitux.space" id="auth-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-indigo-500 text-sm text-slate-300 hover:text-white transition-all">
+                <a href="/auth/login?next=https://ninitux.com" id="auth-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-indigo-500 text-sm text-slate-300 hover:text-white transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                     </svg>
@@ -38,7 +38,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- WB Price Scheduler — purple -->
-            <a href="https://wb.ninitux.space" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-purple-500 hover:bg-slate-800/80 transition-all">
+            <a href="https://wb.ninitux.com" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-purple-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-start gap-4 mb-4">
                     <div class="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -54,7 +54,7 @@
             </a>
 
             <!-- YT Downloader — red -->
-            <a href="/auth/login?next=https://yt.ninitux.space" id="yt-card" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-red-500 hover:bg-slate-800/80 transition-all relative overflow-hidden">
+            <a href="/auth/login?next=https://yt.ninitux.com" id="yt-card" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-red-500 hover:bg-slate-800/80 transition-all relative overflow-hidden">
                 <div id="yt-lock-overlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] z-10 flex items-center justify-center">
                     <div class="flex items-center gap-2 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -195,7 +195,7 @@
                 btn.href = '/auth/logout';
                 btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout';
                 // YT card — remove lock overlay, direct link
-                ytCard.href = 'https://yt.ninitux.space';
+                ytCard.href = 'https://yt.ninitux.com';
                 document.getElementById('yt-lock-overlay').remove();
             }
         });
