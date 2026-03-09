@@ -236,19 +236,14 @@
 
         const vpnLink = document.getElementById('vpn-download');
         const vpnVersion = document.getElementById('vpn-version');
+        vpnLink.href = 'https://github.com/PavelLizunov/VPNRouter/releases/latest';
 
         fetch('https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest')
             .then(r => r.json())
             .then(data => {
-                const asset = data.assets?.find(a => a.name.endsWith('.zip'));
-                if (asset) {
-                    vpnLink.href = asset.browser_download_url;
-                    vpnVersion.textContent = data.tag_name;
-                }
+                if (data.tag_name) vpnVersion.textContent = data.tag_name;
             })
-            .catch(() => {
-                vpnLink.href = 'https://github.com/PavelLizunov/VPNRouter/releases/latest';
-            });
+            .catch(() => {});
     </script>
 </body>
 </html>
