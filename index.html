@@ -37,7 +37,9 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Services -->
+        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Services</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- WB Price Scheduler — purple -->
             <a href="https://wb.ninitux.com" data-umami-event="click-wb" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-purple-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-start gap-4 mb-4">
@@ -93,23 +95,11 @@
                 </div>
                 <p class="text-sm text-slate-500">Discord bot for playing YouTube music in voice channels.</p>
             </div>
+        </div>
 
-            <!-- RustDesk — teal -->
-            <div onclick="umami.track('click-rustdesk');showModal('rustdesk')" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 cursor-pointer hover:border-teal-500 hover:bg-slate-800/80 transition-all group">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-teal-400 transition-colors">RustDesk</h2>
-                        <p class="text-sm text-slate-400">Access by request</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Self-hosted remote desktop server.</p>
-            </div>
-
+        <!-- Tools -->
+        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Tools</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- VPN Router — blue -->
             <a href="#" id="vpn-download" data-umami-event="click-vpn" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-blue-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-start gap-4 mb-4">
@@ -126,6 +116,26 @@
                 <p class="text-sm text-slate-500">Process-based split-tunnel VPN for Windows. Routes selected apps through VLESS+Reality.</p>
             </a>
 
+            <!-- RustDesk — teal -->
+            <div onclick="umami.track('click-rustdesk');showModal('rustdesk')" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 cursor-pointer hover:border-teal-500 hover:bg-slate-800/80 transition-all group">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center text-2xl shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold group-hover:text-teal-400 transition-colors">RustDesk</h2>
+                        <p class="text-sm text-slate-400">Access by request</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500">Self-hosted remote desktop server.</p>
+            </div>
+        </div>
+
+        <!-- Admin -->
+        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Admin</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- Umami Analytics — green -->
             <a href="https://analytics.ninitux.com" data-umami-event="click-analytics" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-emerald-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-start gap-4 mb-4">
@@ -141,7 +151,11 @@
                 </div>
                 <p class="text-sm text-slate-500">Privacy-focused website analytics. Self-hosted, no cookies, GDPR-compliant.</p>
             </a>
+        </div>
 
+        <!-- Support -->
+        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Support</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Virtual Penguin Network — orange/amber -->
             <a href="https://boosty.to/ninitux" target="_blank" rel="noopener" data-umami-event="click-boosty" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-amber-500 hover:bg-slate-800/80 transition-all">
                 <div class="flex items-start gap-4 mb-4">
