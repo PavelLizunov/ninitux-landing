@@ -81,7 +81,15 @@
             </a>
 
             <!-- Discord Music Bot — discord blurple -->
-            <div onclick="umami.track('click-discord');showModal('discord')" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 cursor-pointer hover:border-discord hover:bg-slate-800/80 transition-all group">
+            <div id="discord-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-discord hover:bg-slate-800/80 transition-all group relative overflow-hidden">
+                <div id="discord-lock-overlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] z-10 flex items-center justify-center cursor-pointer" onclick="window.location.href='/auth/login?next=https://ninitux.com'">
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span class="text-sm font-medium">Login required</span>
+                    </div>
+                </div>
                 <div class="flex items-start gap-4 mb-4">
                     <div class="w-12 h-12 rounded-xl bg-discord flex items-center justify-center text-2xl shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -157,7 +165,15 @@
             </div>
 
             <!-- RustDesk — teal -->
-            <div onclick="umami.track('click-rustdesk');showModal('rustdesk')" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 cursor-pointer hover:border-teal-500 hover:bg-slate-800/80 transition-all group">
+            <div id="rustdesk-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-teal-500 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
+                <div id="rustdesk-lock-overlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] z-10 flex items-center justify-center cursor-pointer" onclick="window.location.href='/auth/login?next=https://ninitux.com'">
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span class="text-sm font-medium">Login required</span>
+                    </div>
+                </div>
                 <div class="flex items-start gap-4 mb-4">
                     <div class="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center text-2xl shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -285,6 +301,14 @@
                 // YT card — remove lock overlay, direct link
                 ytCard.href = 'https://yt.ninitux.com';
                 document.getElementById('yt-lock-overlay').remove();
+                // Discord card — remove lock, enable modal
+                document.getElementById('discord-lock-overlay').remove();
+                document.getElementById('discord-card').classList.add('cursor-pointer');
+                document.getElementById('discord-card').onclick = () => { umami.track('click-discord'); showModal('discord'); };
+                // RustDesk card — remove lock, enable modal
+                document.getElementById('rustdesk-lock-overlay').remove();
+                document.getElementById('rustdesk-card').classList.add('cursor-pointer');
+                document.getElementById('rustdesk-card').onclick = () => { umami.track('click-rustdesk'); showModal('rustdesk'); };
                 // Track authenticated session
                 if (typeof umami !== 'undefined') umami.track('user-authenticated');
             }
