@@ -183,7 +183,8 @@
             </div>
         </div>
 
-        <!-- Admin -->
+        <!-- Admin (hidden until authenticated) -->
+        <div id="admin-section" class="hidden">
         <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Admin</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- Task Tracker (Plane) — indigo -->
@@ -217,6 +218,8 @@
                 </div>
                 <p class="text-sm text-slate-500">Privacy-focused website analytics. Self-hosted, no cookies, GDPR-compliant.</p>
             </a>
+        </div>
+
         </div>
 
         <!-- Support -->
@@ -303,6 +306,8 @@
                 document.getElementById('rustdesk-lock-overlay').remove();
                 document.getElementById('rustdesk-card').classList.add('cursor-pointer');
                 document.getElementById('rustdesk-card').onclick = () => { umami.track('click-rustdesk'); showModal('rustdesk'); };
+                // Show admin section
+                document.getElementById('admin-section').classList.remove('hidden');
                 // Track authenticated session
                 if (typeof umami !== 'undefined') umami.track('user-authenticated');
             }
