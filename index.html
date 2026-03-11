@@ -202,6 +202,22 @@
                 <p class="text-sm text-slate-500">Project management and issue tracking. Powered by Plane.</p>
             </div>
 
+            <!-- Forgejo Git — orange -->
+            <div id="git-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center text-2xl shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold transition-colors">Forgejo</h2>
+                        <p class="text-sm text-slate-400">Admin only</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500">Self-hosted Git forge. Lightweight alternative to GitHub/GitLab.</p>
+            </div>
+
             <!-- Umami Analytics — green -->
             <div id="analytics-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
                 <div class="flex items-start gap-4 mb-4">
@@ -310,6 +326,13 @@
                 tasksCard.querySelector('h2').classList.add('group-hover:text-indigo-400');
                 tasksCard.classList.add('group');
                 tasksCard.onclick = () => { umami.track('click-tasks'); window.location.href = 'https://tasks.ninitux.com'; };
+
+                const gitCard = document.getElementById('git-card');
+                gitCard.classList.remove('opacity-60');
+                gitCard.classList.add('cursor-pointer', 'hover:border-orange-500', 'hover:bg-slate-800/80');
+                gitCard.querySelector('h2').classList.add('group-hover:text-orange-400');
+                gitCard.classList.add('group');
+                gitCard.onclick = () => { umami.track('click-git'); window.location.href = 'https://git.ninitux.com'; };
 
                 const analyticsCard = document.getElementById('analytics-card');
                 analyticsCard.classList.remove('opacity-60');
