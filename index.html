@@ -249,6 +249,22 @@
                 </div>
                 <p class="text-sm text-slate-500">Browse and render Markdown files. Shareable links. Powered by Flatnotes.</p>
             </div>
+
+            <!-- PostgreSQL Web — emerald -->
+            <div id="pgweb-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold transition-colors">PostgreSQL Web</h2>
+                        <p class="text-sm text-slate-400">Admin only</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500">Web-based SQL client for sezam_db. Query, browse tables, export data.</p>
+            </div>
         </div>
 
         <!-- Support -->
@@ -363,6 +379,13 @@
                 docsCard.querySelector('h2').classList.add('group-hover:text-cyan-400');
                 docsCard.classList.add('group');
                 docsCard.onclick = () => { umami.track('click-docs'); window.location.href = 'https://docs.ninitux.com'; };
+
+                const pgwebCard = document.getElementById('pgweb-card');
+                pgwebCard.classList.remove('opacity-60');
+                pgwebCard.classList.add('cursor-pointer', 'hover:border-emerald-500', 'hover:bg-slate-800/80');
+                pgwebCard.querySelector('h2').classList.add('group-hover:text-emerald-400');
+                pgwebCard.classList.add('group');
+                pgwebCard.onclick = () => { umami.track('click-pgweb'); window.location.href = 'https://db.ninitux.com'; };
                 // Track authenticated session
                 if (typeof umami !== 'undefined') umami.track('user-authenticated');
             }
@@ -376,7 +399,7 @@
             .then(r => r.json())
             .then(data => {
                 if (data.tag_name) vpnVersion.textContent = data.tag_name;
-                const asset = data.assets?.find(a => a.name.endsWith('.zip'));
+                const asset = data.assets?.find(a => a.name.endsWith('-win.zip') && !a.name.includes('update'));
                 if (asset) vpnLink.href = asset.browser_download_url;
             })
             .catch(() => {});
