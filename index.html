@@ -1,421 +1,701 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ninitux.com</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🐧</text></svg>">
-    <script defer src="https://analytics.ninitux.com/script.js" data-website-id="7bbe4baf-47b2-4683-b3f4-dd9c1b734909"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        discord: '#5865F2',
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ninitux.com — VPN Router · Virtual Penguin Network</title>
+<meta name="description" content="VPN Router — Virtual Penguin Network. Process-based split-tunnel VPN router for Windows, macOS and Linux. Choose which apps go through the proxy.">
+<meta property="og:title" content="VPN Router — Virtual Penguin Network">
+<meta property="og:description" content="Process-based split-tunnel VPN router. Choose which apps go through the proxy.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ninitux.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🐧</text></svg>">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script defer src="https://analytics.ninitux.com/script.js" data-website-id="7bbe4baf-47b2-4683-b3f4-dd9c1b734909"></script>
+<script>
+  // Apply theme + lang ASAP to avoid flash
+  (function(){
+    try{
+      var t = localStorage.getItem('ninitux_theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      var l = localStorage.getItem('ninitux_lang') || (navigator.language||'en').toLowerCase().startsWith('ru') ? (localStorage.getItem('ninitux_lang') || ((navigator.language||'').toLowerCase().startsWith('ru') ? 'ru' : 'en')) : 'en';
+      document.documentElement.setAttribute('lang', l);
+    }catch(e){}
+  })();
+</script>
+<style>
+  :root{
+    --mono: ui-monospace, "JetBrains Mono", "SF Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  }
+  /* Dark (default) */
+  :root[data-theme="dark"]{
+    --bg:        #070A14;
+    --bg-1:      #0F1320;
+    --bg-2:      #1C2231;
+    --bg-3:      #232A3B;
+    --fg:        #EEF1F6;
+    --fg-mute:   #A6B0C2;
+    --fg-dim:    #6C788F;
+    --rule:      rgba(255,255,255,0.08);
+    --rule-strong: rgba(255,255,255,0.16);
+    --accent:    #38BDF8;
+    --accent-fg: #67E8F9;
+    --accent-bg: rgba(56,189,248,0.10);
+    --code-bg:   #1C2231;
+    --selection-fg: #070A14;
+  }
+  /* Light */
+  :root[data-theme="light"]{
+    --bg:        #FBFCFD;
+    --bg-1:      #F5F7FA;
+    --bg-2:      #EBEEF3;
+    --bg-3:      #DCE1E9;
+    --fg:        #0F1320;
+    --fg-mute:   #475067;
+    --fg-dim:    #94A0B2;
+    --rule:      rgba(15,19,32,0.08);
+    --rule-strong: rgba(15,19,32,0.16);
+    --accent:    #0284C7;
+    --accent-fg: #0369A1;
+    --accent-bg: rgba(2,132,199,0.08);
+    --code-bg:   #F5F7FA;
+    --selection-fg: #FFFFFF;
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{font-size:15px;line-height:1.55}
+  a{color:var(--accent-fg);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  code,pre,kbd{font-family:var(--mono)}
+  ::selection{background:var(--accent);color:var(--selection-fg)}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  header.site{
+    border-bottom:1px solid var(--rule);
+    padding:14px 0;
+    background:var(--bg);
+    position:sticky;top:0;z-index:10;
+    backdrop-filter:saturate(140%) blur(6px);
+  }
+  header.site .row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  header.site .brand{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--fg);font-size:15px}
+  header.site .brand .penguin{font-size:18px;line-height:1}
+  header.site nav{display:flex;align-items:center;gap:14px;font-size:13.5px}
+  header.site nav a.navlink{color:var(--fg-mute)}
+  header.site nav a.navlink:hover{color:var(--fg);text-decoration:none}
+
+  .iconbtn,.toggle-pair{
+    display:inline-flex;align-items:center;
+    border:1px solid var(--rule-strong);border-radius:6px;
+    background:transparent;color:var(--fg-mute);
+    height:30px;font:inherit;font-size:12px;cursor:pointer;
+  }
+  .iconbtn{padding:0 10px;gap:6px}
+  .iconbtn:hover{color:var(--fg);border-color:var(--accent)}
+  .toggle-pair{padding:2px;gap:0}
+  .toggle-pair button{
+    appearance:none;border:0;background:transparent;color:var(--fg-dim);
+    font:inherit;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;
+    padding:4px 8px;border-radius:4px;cursor:pointer;height:24px;
+  }
+  .toggle-pair button[aria-pressed="true"]{background:var(--accent-bg);color:var(--accent-fg)}
+  .toggle-pair button:hover{color:var(--fg)}
+
+  #auth-btn{display:inline-flex;align-items:center;gap:6px;padding:0 10px;height:30px;border:1px solid var(--rule-strong);border-radius:6px;color:var(--fg-mute);font-size:13px}
+  #auth-btn:hover{color:var(--fg);border-color:var(--accent);text-decoration:none}
+
+  /* Hero */
+  section.hero{padding:64px 0 48px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1fr 200px;gap:32px;align-items:start}
+  .mascot{
+    width:200px;height:200px;
+    background-image:url('penguin-dark.png?v=2');
+    background-size:contain;background-repeat:no-repeat;background-position:center top;
+    image-rendering:auto;
+    user-select:none;-webkit-user-drag:none;
+    margin-top:-8px;
+  }
+  :root[data-theme="dark"] .mascot{filter:invert(1)}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);
+    margin-bottom:18px;
+  }
+  .hero-eyebrow .penguin{font-size:14px}
+  .hero-eyebrow b{color:var(--accent-fg);font-weight:600;letter-spacing:.06em}
+  h1.title{font-size:56px;line-height:1.05;letter-spacing:-0.02em;font-weight:700;margin:0 0 14px}
+  p.lede{font-size:18px;line-height:1.5;color:var(--fg-mute);margin:0;max-width:62ch}
+  p.lede em{color:var(--fg);font-style:normal;font-weight:500}
+
+  /* Tabs */
+  .tabs{display:flex;gap:0;margin-top:36px;border-bottom:1px solid var(--rule)}
+  .tab{
+    appearance:none;background:transparent;border:0;border-bottom:2px solid transparent;
+    color:var(--fg-mute);padding:10px 14px;font:inherit;font-size:14px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;margin-bottom:-1px;
+  }
+  .tab:hover{color:var(--fg)}
+  .tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+  .tab .glyph{font-size:14px;opacity:.9}
+
+  /* Code block */
+  .code{
+    margin-top:16px;background:var(--code-bg);border:1px solid var(--rule);
+    border-radius:8px;display:flex;align-items:stretch;overflow:hidden;
+  }
+  .code pre{
+    margin:0;flex:1;padding:18px 18px;font-size:14.5px;line-height:1.55;
+    color:var(--fg);overflow-x:auto;white-space:pre;
+  }
+  .code pre .pmt{color:var(--fg-dim);user-select:none;margin-right:6px}
+  .code pre .cmd{color:var(--fg)}
+  .code pre .flag{color:var(--accent-fg)}
+  .code .copy{
+    appearance:none;background:transparent;border:0;border-left:1px solid var(--rule);
+    color:var(--fg-mute);padding:0 16px;cursor:pointer;font:inherit;font-size:12px;
+    display:flex;align-items:center;gap:6px;min-width:78px;justify-content:center;
+  }
+  .code .copy:hover{color:var(--fg);background:var(--bg-1)}
+  .code .copy.ok{color:#16A34A}
+  :root[data-theme="dark"] .code .copy.ok{color:#4ADE80}
+
+  /* Manual / version line */
+  .meta{
+    margin-top:14px;font-size:13px;color:var(--fg-dim);
+    display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;
+  }
+  .meta .label{color:var(--fg-dim)}
+  .meta a{color:var(--fg-mute)}
+  .meta a:hover{color:var(--fg);text-decoration:none}
+  .meta .ver{font-family:var(--mono);font-size:12px;color:var(--fg-dim)}
+  .meta .dot{color:var(--fg-dim);opacity:.5}
+  .meta-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:18px;align-items:baseline}
+  .meta-row a.releases{color:var(--accent-fg);font-size:13.5px}
+  .meta-row .req{font-size:13px;color:var(--fg-dim)}
+
+  /* Section heading */
+  section.block{padding:40px 0;border-top:1px solid var(--rule)}
+  h2.sec{
+    font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--fg-dim);margin:0 0 20px;
+  }
+  h2.sec::before{content:"# ";color:var(--accent);opacity:.7}
+
+  /* Features */
+  ul.features{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
+  ul.features li{font-size:14.5px;color:var(--fg);padding:6px 0;display:flex;align-items:baseline;gap:10px}
+  ul.features li::before{content:"—";color:var(--accent);flex:0 0 auto;font-family:var(--mono)}
+  ul.features li .note{color:var(--fg-dim);font-size:12.5px;margin-left:6px}
+
+  /* Steps */
+  ol.steps{list-style:none;padding:0;margin:0;counter-reset:step}
+  ol.steps li{
+    counter-increment:step;padding:10px 0 14px;border-bottom:1px dashed var(--rule);
+    display:grid;grid-template-columns:32px 1fr;gap:14px;align-items:baseline;
+  }
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(step,decimal-leading-zero);font-family:var(--mono);font-size:13px;color:var(--fg-dim)}
+  ol.steps li b{font-weight:600;color:var(--fg)}
+  ol.steps li p{margin:4px 0 0;color:var(--fg-mute);font-size:14px}
+  ol.steps li code{background:var(--code-bg);border:1px solid var(--rule);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--fg)}
+
+  /* Gallery (screenshots + guides) */
+  .gallery{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .gallery .tile{
+    position:relative;aspect-ratio:16/10;
+    background:var(--bg-2);border:1px solid var(--rule);border-radius:8px;
+    overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .gallery .tile.wide{grid-column:1 / -1;aspect-ratio:16/9}
+  .gallery .tile.empty{
+    background:
+      repeating-linear-gradient(45deg,transparent 0 14px,var(--rule) 14px 15px),
+      var(--bg-2);
+  }
+  .gallery .tile .cap{
+    padding:8px 12px;font-size:12px;font-family:var(--mono);
+    color:var(--fg-dim);background:linear-gradient(transparent, rgba(0,0,0,0.25));
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+    position:relative;z-index:1;
+  }
+  :root[data-theme="light"] .gallery .tile .cap{background:linear-gradient(transparent, rgba(0,0,0,0.06))}
+  .gallery .tile .cap .kind{
+    font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    border:1px solid var(--rule-strong);border-radius:3px;padding:1px 5px;color:var(--fg-dim);
+  }
+  .gallery img,.gallery video{width:100%;height:100%;object-fit:cover;display:block}
+  .gallery-note{margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono)}
+
+  /* Services */
+  table.services{width:100%;border-collapse:collapse;font-size:14px}
+  table.services tr{border-bottom:1px solid var(--rule)}
+  table.services tr:last-child{border-bottom:0}
+  table.services td{padding:10px 0;vertical-align:baseline}
+  table.services td.host{font-family:var(--mono);font-size:13px;color:var(--fg);width:38%;padding-right:24px;white-space:nowrap}
+  table.services td.host a{color:var(--fg)}
+  table.services td.host a:hover{color:var(--accent-fg);text-decoration:none}
+  table.services td.desc{color:var(--fg-mute);font-size:13.5px}
+  table.services .badge{
+    display:inline-block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--fg-dim);border:1px solid var(--rule-strong);border-radius:3px;
+    padding:1px 5px;margin-left:8px;vertical-align:1px;
+  }
+  table.services tr.locked td.host a{color:var(--fg-dim);pointer-events:none}
+  table.services tr.locked td.desc{color:var(--fg-dim)}
+
+  .auth-note{
+    margin-top:14px;font-size:13px;color:var(--fg-dim);
+    padding:10px 12px;border:1px dashed var(--rule-strong);border-radius:6px;
+    background:var(--accent-bg);
+  }
+  .auth-note.hidden{display:none}
+  .auth-note a{color:var(--accent-fg)}
+
+  /* Footer */
+  footer.site{border-top:1px solid var(--rule);padding:28px 0 56px;margin-top:24px;color:var(--fg-dim);font-size:13px}
+  footer.site .frow{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:baseline}
+  footer.site a{color:var(--fg-mute)}
+  footer.site a:hover{color:var(--fg);text-decoration:none}
+  footer.site .label{color:var(--fg-dim)}
+
+  /* i18n visibility */
+  :root[lang="en"] [data-i18n="ru"]{display:none}
+  :root[lang="ru"] [data-i18n="en"]{display:none}
+
+  /* Theme icon swap */
+  .theme-sun,.theme-moon{display:none}
+  :root[data-theme="dark"] .theme-sun{display:inline}
+  :root[data-theme="light"] .theme-moon{display:inline}
+
+  /* Mobile */
+  @media (max-width:640px){
+    .wrap{padding:0 18px}
+    h1.title{font-size:38px}
+    p.lede{font-size:16px}
+    section.hero{padding:36px 0 28px}
+    .hero-grid{grid-template-columns:1fr;gap:0}
+    .mascot{width:120px;height:120px;position:absolute;top:18px;right:18px;opacity:.85}
+    ul.features{grid-template-columns:1fr;gap:0}
+    table.services td.host{width:auto;display:block;padding:6px 0 2px}
+    table.services td.desc{display:block;padding:0 0 10px}
+    table.services tr{display:block;padding:6px 0}
+    .gallery{grid-template-columns:1fr}
+    .gallery .tile.wide{grid-column:auto}
+    .code pre{font-size:12.5px;padding:14px}
+    header.site nav{gap:8px;font-size:13px}
+    header.site nav a.navlink{display:none}
+    #auth-btn span#auth-label{display:none}
+    #auth-btn{padding:0 8px}
+  }
+</style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen">
-    <div class="max-w-5xl mx-auto px-6 py-16">
-        <header class="text-center mb-16">
-            <div class="flex items-center justify-between">
-                <div></div>
-                <div>
-                    <h1 class="text-4xl font-bold tracking-tight">ninitux.com</h1>
-                    <p class="mt-3 text-lg text-slate-400">Self-hosted services</p>
-                </div>
-                <a href="/auth/login?next=https://ninitux.com" id="auth-btn" data-umami-event="click-login" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-indigo-500 text-sm text-slate-300 hover:text-white transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                    </svg>
-                    Login
-                </a>
-            </div>
-        </header>
+<body>
 
-        <!-- Services -->
-        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Services</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <!-- WB Price Scheduler — purple -->
-            <a href="https://wb.ninitux.com" data-umami-event="click-wb" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-purple-500 hover:bg-slate-800/80 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-purple-400 transition-colors">WB Price Scheduler</h2>
-                        <p class="text-sm text-slate-400">For clients only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Commercial project. Automatic price changes on Wildberries by schedule. Web UI, Telegram bot, Google Sheets sync.</p>
-            </a>
+<header class="site">
+  <div class="wrap row">
+    <a class="brand" href="/" aria-label="ninitux.com">
+      <img class="brand-mascot" src="" alt="" width="22" height="22" style="display:block">
+      <span>ninitux.com</span>
+    </a>
+    <nav>
+      <a class="navlink" href="#how"><span data-i18n="en">How</span><span data-i18n="ru">Как</span></a>
+      <a class="navlink" href="#gallery"><span data-i18n="en">Screenshots</span><span data-i18n="ru">Скриншоты</span></a>
+      <a class="navlink" href="#services"><span data-i18n="en">Services</span><span data-i18n="ru">Сервисы</span></a>
+      <a class="navlink" href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener" data-umami-event="click-header-github"><span data-i18n="en">Source</span><span data-i18n="ru">Код</span></a>
 
-            <!-- YT Downloader — red -->
-            <a href="/auth/login?next=https://yt.ninitux.com" id="yt-card" data-umami-event="click-yt" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-red-500 hover:bg-slate-800/80 transition-all relative overflow-hidden">
-                <div id="yt-lock-overlay" class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-600 text-slate-400 text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    Login to access
-                </div>
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-red-400 transition-colors">YT Downloader</h2>
-                        <p class="text-sm text-slate-400" id="yt-status">Authorized access</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">YouTube video downloader. Web UI for yt-dlp. Authorized access via Telegram bot.</p>
-            </a>
+      <div class="toggle-pair" role="group" aria-label="Language">
+        <button id="lang-en" aria-pressed="false" data-lang="en">EN</button>
+        <button id="lang-ru" aria-pressed="false" data-lang="ru">RU</button>
+      </div>
 
-            <!-- Discord Music Bot — discord blurple -->
-            <div id="discord-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-discord hover:bg-slate-800/80 transition-all group relative overflow-hidden">
-                <a id="discord-lock-overlay" href="/auth/login?next=https://ninitux.com" class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-600 text-slate-400 hover:text-white hover:border-slate-400 text-xs transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    Login to access
-                </a>
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-discord flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-[#5865F2] transition-colors">Discord Music Bot</h2>
-                        <p class="text-sm text-slate-400">Access by request</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Discord bot for playing YouTube music in voice channels.</p>
-            </div>
+      <button id="theme-toggle" class="iconbtn" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="theme-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="theme-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+
+      <a href="/auth/login?next=https://ninitux.com" id="auth-btn" data-umami-event="click-login">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="auth-icon"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        <span id="auth-label" data-i18n-key="auth.login">Login</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">
+          <span><b>Virtual Penguin Network</b></span>
         </div>
-
-        <!-- Tools -->
-        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Tools</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <!-- VPN Router — blue -->
-            <div class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-blue-500 transition-all group">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-blue-400 transition-colors">VPN Router</h2>
-                        <p class="text-sm text-slate-400" id="vpn-version"></p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500 mb-4">Process-based split-tunnel VPN for Windows. Routes selected apps through VLESS+Reality.</p>
-                <div class="flex gap-3">
-                    <a href="#" id="vpn-download" data-umami-event="click-vpn-download" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                        Download
-                    </a>
-                    <a href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener" data-umami-event="click-vpn-github" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs font-medium transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                </div>
-            </div>
-
-            <!-- VPN Router Android — green -->
-            <div class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-green-500 transition-all group">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-green-400 transition-colors">VPN Router Android</h2>
-                        <p class="text-sm text-slate-400" id="vpn-android-version"></p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500 mb-4">Split-tunnel VPN for Android. Routes selected apps through VLESS+Reality.</p>
-                <div class="flex gap-3">
-                    <a href="#" id="vpn-android-download" data-umami-event="click-vpn-android-download" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-medium transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                        Download APK
-                    </a>
-                    <a href="https://github.com/PavelLizunov/vpnrouter-android" target="_blank" rel="noopener" data-umami-event="click-vpn-android-github" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs font-medium transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                </div>
-            </div>
-
-            <!-- RustDesk — teal -->
-            <div id="rustdesk-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-teal-500 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
-                <a id="rustdesk-lock-overlay" href="/auth/login?next=https://ninitux.com" class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-600 text-slate-400 hover:text-white hover:border-slate-400 text-xs transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    Login to access
-                </a>
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-teal-400 transition-colors">RustDesk</h2>
-                        <p class="text-sm text-slate-400">Access by request</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Self-hosted remote desktop server.</p>
-            </div>
-        </div>
-
-        <!-- Admin -->
-        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Admin</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <!-- Task Tracker (Plane) — indigo -->
-            <div id="tasks-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold transition-colors">Task Tracker</h2>
-                        <p class="text-sm text-slate-400">Admin only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Project management and issue tracking. Powered by Plane.</p>
-            </div>
-
-            <!-- Forgejo Git — orange -->
-            <div id="git-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold transition-colors">Forgejo</h2>
-                        <p class="text-sm text-slate-400">Admin only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Self-hosted Git forge. Lightweight alternative to GitHub/GitLab.</p>
-            </div>
-
-            <!-- Umami Analytics — green -->
-            <div id="analytics-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold transition-colors">Umami Analytics</h2>
-                        <p class="text-sm text-slate-400">Admin only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Privacy-focused website analytics. Self-hosted, no cookies, GDPR-compliant.</p>
-            </div>
-
-            <!-- Markdown Viewer — cyan -->
-            <div id="docs-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold transition-colors">Markdown Viewer</h2>
-                        <p class="text-sm text-slate-400">Admin only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Browse and render Markdown files. Shareable links. Powered by Flatnotes.</p>
-            </div>
-
-            <!-- PostgreSQL Web — emerald -->
-            <div id="pgweb-card" class="block rounded-2xl bg-slate-800 border border-slate-700 p-6 opacity-60 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold transition-colors">PostgreSQL Web</h2>
-                        <p class="text-sm text-slate-400">Admin only</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Web-based SQL client for sezam_db. Query, browse tables, export data.</p>
-            </div>
-        </div>
-
-        <!-- Support -->
-        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Support</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Virtual Penguin Network — orange/amber -->
-            <a href="https://boosty.to/ninitux" target="_blank" rel="noopener" data-umami-event="click-boosty" class="block group rounded-2xl bg-slate-800 border border-slate-700 p-6 hover:border-amber-500 hover:bg-slate-800/80 transition-all">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-600 flex items-center justify-center text-2xl shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold group-hover:text-amber-400 transition-colors">Virtual Penguin Network</h2>
-                        <p class="text-sm text-slate-400">Boosty</p>
-                    </div>
-                </div>
-                <p class="text-sm text-slate-500">Support the project. Vhod v les.</p>
-            </a>
-        </div>
+        <h1 class="title">VPN Router</h1>
+        <p class="lede">
+          <span data-i18n="en"><em>Process-based split-tunnel VPN router</em> for Windows, macOS and Linux. You pick which apps go through the proxy — everything else stays direct.</span>
+          <span data-i18n="ru"><em>Process-based split-tunnel VPN-роутер</em> для Windows, macOS и Linux. Вы выбираете приложения, которые ходят через прокси — всё остальное идёт напрямую.</span>
+        </p>
+      </div>
+      <div class="mascot" role="img" aria-label="Virtual Penguin Network mascot"></div>
     </div>
 
-    <!-- Service modal -->
-    <div id="svc-modal" onclick="hideModal(event)" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center">
-        <div class="bg-slate-800 border border-slate-600 rounded-2xl p-6 max-w-md w-full mx-4 relative">
-            <button onclick="hideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl leading-none">&times;</button>
-            <h3 id="svc-title" class="text-xl font-semibold mb-3"></h3>
-            <p id="svc-desc" class="text-sm text-slate-400 mb-5 leading-relaxed"></p>
-            <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" onclick="umami.track('click-telegram-bot')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                Request access via bot
-            </a>
-        </div>
+    <div class="tabs" role="tablist" aria-label="Install platform">
+      <button class="tab" role="tab" aria-selected="false" data-os="linux"><span class="glyph">🐧</span>Linux</button>
+      <button class="tab" role="tab" aria-selected="false" data-os="mac"><span class="glyph">🍎</span>macOS</button>
+      <button class="tab" role="tab" aria-selected="false" data-os="win"><span class="glyph">🪟</span>Windows</button>
     </div>
 
-    <script>
-        const serviceInfo = {
-            discord: {
-                title: 'Discord Music Bot',
-                desc: 'Bot for playing YouTube music in Discord voice channels. Supports queue, skip, pause/resume. To get access, send a request through our Telegram bot — the admin will add you to the server.'
-            },
-            rustdesk: {
-                title: 'RustDesk',
-                desc: 'Self-hosted remote desktop server (alternative to TeamViewer/AnyDesk). Secure, encrypted connections through our relay. To get the server address and credentials, send a request through our Telegram bot.'
-            }
-        };
+    <!-- Linux -->
+    <div class="code" data-pane="linux" hidden>
+<pre><span class="pmt">$</span><span class="cmd">curl <span class="flag">-fsSL</span> https://vpn.ninitux.com/install.sh | sudo sh</span></pre>
+      <button class="copy" data-copy="curl -fsSL https://vpn.ninitux.com/install.sh | sudo sh" data-umami-event="copy-install-linux"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
+    </div>
+    <div class="meta" data-pane="linux" hidden>
+      <span class="label" data-i18n="en">manual:</span><span class="label" data-i18n="ru">вручную:</span>
+      <a href="#" data-asset-suffix="-linux-amd64.deb" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-deb">.deb <span class="ver" data-ver></span></a>
+      <span class="dot">·</span>
+      <a href="#" data-asset-suffix=".AppImage" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-appimage">.AppImage <span class="ver" data-ver></span></a>
+      <span class="dot">·</span>
+      <a href="#" data-asset-suffix="-linux.tar.gz" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-targz">.tar.gz <span class="ver" data-ver></span></a>
+    </div>
 
-        function showModal(svc) {
-            const info = serviceInfo[svc];
-            document.getElementById('svc-title').textContent = info.title;
-            document.getElementById('svc-desc').textContent = info.desc;
-            const modal = document.getElementById('svc-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    <!-- macOS -->
+    <div class="code" data-pane="mac" hidden>
+<pre><span class="pmt">$</span><span class="cmd">brew install <span class="flag">--cask</span> pavellizunov/vpnrouter/vpnrouter</span></pre>
+      <button class="copy" data-copy="brew install --cask pavellizunov/vpnrouter/vpnrouter" data-umami-event="copy-install-mac"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
+    </div>
+    <div class="meta" data-pane="mac" hidden>
+      <span class="label" data-i18n="en">manual:</span><span class="label" data-i18n="ru">вручную:</span>
+      <a href="#" data-asset-suffix="-mac.dmg" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-dmg">.dmg <span class="ver" data-ver></span></a>
+      <span class="dot">·</span>
+      <a href="#" data-asset-suffix="-mac.zip" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-mac-zip">.zip <span data-i18n="en">(raw .app)</span><span data-i18n="ru">(raw .app)</span> <span class="ver" data-ver></span></a>
+    </div>
+
+    <!-- Windows -->
+    <div class="code" data-pane="win" hidden>
+<pre><span class="pmt">&gt;</span><span class="cmd">iwr <span class="flag">-useb</span> https://vpn.ninitux.com/install.ps1 | iex</span></pre>
+      <button class="copy" data-copy="iwr -useb https://vpn.ninitux.com/install.ps1 | iex" data-umami-event="copy-install-win"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
+    </div>
+    <div class="meta" data-pane="win" hidden>
+      <span class="label" data-i18n="en">manual:</span><span class="label" data-i18n="ru">вручную:</span>
+      <a href="#" data-asset-match="win-zip" data-fallback="https://github.com/PavelLizunov/VPNRouter/releases/latest" data-umami-event="dl-win-zip">.zip <span class="ver" data-ver></span></a>
+    </div>
+
+    <div class="meta-row">
+      <a class="releases" href="https://github.com/PavelLizunov/VPNRouter/releases" target="_blank" rel="noopener" data-umami-event="click-releases">
+        <span data-i18n="en">→ All releases on GitHub</span><span data-i18n="ru">→ Все релизы на GitHub</span>
+      </a>
+      <span class="req">
+        <span data-i18n="en">Requires admin / sudo for the TUN adapter.</span>
+        <span data-i18n="ru">Нужны права admin / sudo для TUN-адаптера.</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="block" id="features">
+    <h2 class="sec"><span data-i18n="en">features</span><span data-i18n="ru">возможности</span></h2>
+    <ul class="features">
+      <li><span data-i18n="en">Per-process routing</span><span data-i18n="ru">Маршрутизация по процессам</span><span class="note"><span data-i18n="en">live process list</span><span data-i18n="ru">живой список</span></span></li>
+      <li><span data-i18n="en">VLESS + Reality</span><span data-i18n="ru">VLESS + Reality</span><span class="note"><span data-i18n="en">built-in</span><span data-i18n="ru">встроено</span></span></li>
+      <li><span data-i18n="en">Custom sing-box configs</span><span data-i18n="ru">Свои sing-box конфиги</span><span class="note">JSON · TUIC · Hysteria2 · SS</span></li>
+      <li><span data-i18n="en">Subscription URLs</span><span data-i18n="ru">Subscription URL</span><span class="note"><span data-i18n="en">auto-refresh</span><span data-i18n="ru">авто-обновление</span></span></li>
+      <li><span data-i18n="en">~25 000 free public configs</span><span data-i18n="ru">~25 000 публичных конфигов</span><span class="note"><span data-i18n="en">refreshed every 6h</span><span data-i18n="ru">обновляются раз в 6 часов</span></span></li>
+      <li><span data-i18n="en">Auto-update</span><span data-i18n="ru">Авто-обновление</span><span class="note"><span data-i18n="en">SHA256-verified</span><span data-i18n="ru">с проверкой SHA256</span></span></li>
+      <li><span data-i18n="en">DPI bypass (Zapret)</span><span data-i18n="ru">DPI bypass (Zapret)</span><span class="note"><span data-i18n="en">Windows only</span><span data-i18n="ru">только Windows</span></span></li>
+      <li><span data-i18n="en">Open source</span><span data-i18n="ru">Open source</span><span class="note">GPL-3.0</span></li>
+    </ul>
+  </section>
+
+  <!-- HOW -->
+  <section class="block" id="how">
+    <h2 class="sec"><span data-i18n="en">how it works</span><span data-i18n="ru">как это работает</span></h2>
+    <ol class="steps">
+      <li>
+        <div data-i18n="en">
+          <b>Install</b> — run the one-liner above for your OS, or grab a manual build from Releases.
+          <p>Windows needs admin. macOS needs a one-time sudoers entry. Linux uses POSIX capabilities.</p>
+        </div>
+        <div data-i18n="ru">
+          <b>Установить</b> — выполните команду для вашей ОС или скачайте сборку с Releases.
+          <p>Windows требует admin. macOS — однократный sudoers. Linux — POSIX capabilities.</p>
+        </div>
+      </li>
+      <li>
+        <div data-i18n="en">
+          <b>Open the app</b> — paste a <code>subscription URL</code>, drop in your own sing-box JSON, or use the <em>Free</em> tab.
+          <p>Subscriptions and the public pool merge into one server list. One-click TCP+TLS test on any server.</p>
+        </div>
+        <div data-i18n="ru">
+          <b>Откройте приложение</b> — вставьте <code>subscription URL</code>, свой sing-box JSON или используйте вкладку <em>Free</em>.
+          <p>Подписки и публичный пул сливаются в один список серверов. Тест TCP+TLS в один клик.</p>
+        </div>
+      </li>
+      <li>
+        <div data-i18n="en">
+          <b>Pick which apps go through the tunnel</b> — selected processes route through the proxy, everything else stays direct.
+          <p>ETW watches new processes and hot-reloads the sing-box config without reconnecting.</p>
+        </div>
+        <div data-i18n="ru">
+          <b>Выберите приложения для туннеля</b> — выбранные процессы идут через прокси, всё остальное напрямую.
+          <p>ETW следит за новыми процессами и горячо обновляет конфиг sing-box без переподключения.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="block" id="gallery">
+    <h2 class="sec"><span data-i18n="en">screenshots &amp; guides</span><span data-i18n="ru">скриншоты и гайды</span></h2>
+    <div class="gallery">
+      <figure class="tile wide empty" data-asset="guide-main">
+        <!-- <video src="media/guide-main.webm" poster="media/guide-main.jpg" controls muted loop playsinline></video> -->
+        <figcaption class="cap">
+          <span><span data-i18n="en">Main flow — install → subscribe → pick apps</span><span data-i18n="ru">Основной флоу — установка → подписка → приложения</span></span>
+          <span class="kind">webm</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tile empty" data-asset="shot-manual">
+        <!-- <img src="media/shot-manual.png" alt="Manual server setup"> -->
+        <figcaption class="cap">
+          <span><span data-i18n="en">Manual — paste your VLESS+Reality</span><span data-i18n="ru">Manual — ваш VLESS+Reality</span></span>
+          <span class="kind">png</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tile empty" data-asset="shot-subscribe">
+        <!-- <img src="media/shot-subscribe.png" alt="Subscription URL"> -->
+        <figcaption class="cap">
+          <span><span data-i18n="en">Subscribe — one URL, many servers</span><span data-i18n="ru">Subscribe — один URL, много серверов</span></span>
+          <span class="kind">png</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tile empty" data-asset="shot-apps">
+        <!-- <img src="media/shot-apps.png" alt="App selection"> -->
+        <figcaption class="cap">
+          <span><span data-i18n="en">Applications — pick processes for the tunnel</span><span data-i18n="ru">Applications — выбор процессов</span></span>
+          <span class="kind">png</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tile empty" data-asset="shot-free">
+        <!-- <img src="media/shot-free.png" alt="Free pool"> -->
+        <figcaption class="cap">
+          <span><span data-i18n="en">Free — ≈25k public configs, refreshed every 6h</span><span data-i18n="ru">Free — ≈25 тыс публичных конфигов, обн. каждые 6 ч</span></span>
+          <span class="kind">png</span>
+        </figcaption>
+      </figure>
+    </div>
+    <p class="gallery-note">
+      <span data-i18n="en"># placeholder — drop files into <code>media/</code> and uncomment each tile's &lt;img&gt; or &lt;video&gt;</span>
+      <span data-i18n="ru"># плейсхолдер — положите файлы в <code>media/</code> и раскомментируйте &lt;img&gt;/&lt;video&gt; в каждой плитке</span>
+    </p>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="block" id="services">
+    <h2 class="sec"><span data-i18n="en">other services</span><span data-i18n="ru">другие сервисы</span></h2>
+    <table class="services">
+      <tbody>
+        <tr>
+          <td class="host"><a href="https://wb.ninitux.com" data-umami-event="svc-wb">wb.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">WB Pricing tasks</span><span data-i18n="ru">WB — цены и задачи</span> <span class="badge"><span data-i18n="en">commercial</span><span data-i18n="ru">коммерч.</span></span></td>
+        </tr>
+        <tr>
+          <td class="host"><a href="https://md.ninitux.com" data-umami-event="svc-md">md.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">Markdown viewer (Flatnotes)</span><span data-i18n="ru">Markdown viewer (Flatnotes)</span></td>
+        </tr>
+        <tr>
+          <td class="host"><a href="https://docs.ninitux.com" data-umami-event="svc-docs">docs.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">Docs</span><span data-i18n="ru">Документация</span></td>
+        </tr>
+        <tr class="admin locked" data-svc="git">
+          <td class="host"><a href="https://git.ninitux.com" data-umami-event="svc-git">git.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">Forgejo — self-hosted git</span><span data-i18n="ru">Forgejo — self-hosted git</span> <span class="badge">admin</span></td>
+        </tr>
+        <tr class="admin locked" data-svc="analytics">
+          <td class="host"><a href="https://analytics.ninitux.com" data-umami-event="svc-analytics">analytics.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">Umami analytics</span><span data-i18n="ru">Umami analytics</span> <span class="badge">admin</span></td>
+        </tr>
+        <tr class="admin locked" data-svc="db">
+          <td class="host"><a href="https://db.ninitux.com" data-umami-event="svc-db">db.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">pgweb — PostgreSQL client</span><span data-i18n="ru">pgweb — PostgreSQL клиент</span> <span class="badge">admin</span></td>
+        </tr>
+        <tr class="admin locked" data-svc="tasks">
+          <td class="host"><a href="https://tasks.ninitux.com" data-umami-event="svc-tasks">tasks.ninitux.com</a></td>
+          <td class="desc"><span data-i18n="en">Plane — issue tracker</span><span data-i18n="ru">Plane — трекер задач</span> <span class="badge">admin</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="auth-note" id="auth-note">
+      <span data-i18n="en">Admin services unlock after auth via</span>
+      <span data-i18n="ru">Admin-сервисы открываются после авторизации через</span>
+      <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" data-umami-event="click-auth-bot">@ninitux_auth_bot</a>.
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap frow">
+    <span class="label"><span data-i18n="en">source —</span><span data-i18n="ru">код —</span></span>
+    <a href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener" data-umami-event="click-footer-vpn">github.com/PavelLizunov/VPNRouter</a>
+    <span class="label"><span data-i18n="en">site —</span><span data-i18n="ru">сайт —</span></span>
+    <a href="https://github.com/PavelLizunov/ninitux-landing" target="_blank" rel="noopener" data-umami-event="click-footer-site">github.com/PavelLizunov/ninitux-landing</a>
+    <span class="label"><span data-i18n="en">support —</span><span data-i18n="ru">поддержать —</span></span>
+    <a href="https://boosty.to/ninitux" target="_blank" rel="noopener" data-umami-event="click-boosty">boosty.to/ninitux</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ── Theme ───────────────────────────────────────────────────
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme-toggle');
+  const brandMascot = document.querySelector('.brand-mascot');
+  function syncBrandMascot(){
+    if (!brandMascot) return;
+    brandMascot.src = 'penguin-dark.png?v=2';
+    brandMascot.style.filter = root.getAttribute('data-theme') === 'dark' ? 'invert(1)' : 'none';
+  }
+  syncBrandMascot();
+  themeBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    syncBrandMascot();
+    try{ localStorage.setItem('ninitux_theme', next); }catch(e){}
+    if (typeof umami !== 'undefined') umami.track('toggle-theme-' + next);
+  });
+
+  // ── Language ────────────────────────────────────────────────
+  const langButtons = document.querySelectorAll('.toggle-pair button[data-lang]');
+  function setLang(lang){
+    root.setAttribute('lang', lang);
+    langButtons.forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'));
+    try{ localStorage.setItem('ninitux_lang', lang); }catch(e){}
+    // Auth label re-translation
+    const lbl = document.getElementById('auth-label');
+    if (lbl){
+      const key = lbl.dataset.i18nKey;
+      const dict = {
+        'auth.login':  {en:'Login',  ru:'Войти'},
+        'auth.logout': {en:'Logout', ru:'Выйти'}
+      };
+      if (dict[key]) lbl.textContent = dict[key][lang];
+    }
+  }
+  langButtons.forEach(b => b.addEventListener('click', () => {
+    setLang(b.dataset.lang);
+    if (typeof umami !== 'undefined') umami.track('toggle-lang-' + b.dataset.lang);
+  }));
+  let savedLang = null;
+  try{ savedLang = localStorage.getItem('ninitux_lang'); }catch(e){}
+  setLang(savedLang || (((navigator.language||'').toLowerCase().startsWith('ru')) ? 'ru' : 'en'));
+
+  // ── OS tabs ─────────────────────────────────────────────────
+  const tabs = [...document.querySelectorAll('.tab')];
+  const panes = ['linux','mac','win'];
+  function detectOS(){
+    const ua = (navigator.userAgent||'').toLowerCase();
+    const plat = (navigator.platform||'').toLowerCase();
+    if (ua.includes('windows') || plat.includes('win')) return 'win';
+    if (ua.includes('mac') || plat.includes('mac')) return 'mac';
+    return 'linux';
+  }
+  function selectOS(os){
+    tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.os === os ? 'true' : 'false'));
+    panes.forEach(p => {
+      document.querySelectorAll(`[data-pane="${p}"]`).forEach(el => { el.hidden = (p !== os); });
+    });
+    try{ localStorage.setItem('ninitux_os', os); }catch(e){}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => selectOS(t.dataset.os)));
+  let initial = null;
+  try{ initial = localStorage.getItem('ninitux_os'); }catch(e){}
+  selectOS(initial && panes.includes(initial) ? initial : detectOS());
+
+  // ── Copy ────────────────────────────────────────────────────
+  document.querySelectorAll('.copy').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy;
+      try{ await navigator.clipboard.writeText(text); }
+      catch(e){
+        const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');}catch(_){}
+        ta.remove();
+      }
+      const orig = btn.innerHTML;
+      const lang = root.getAttribute('lang');
+      btn.innerHTML = lang === 'ru' ? 'скопировано' : 'copied';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ok'); }, 1400);
+    });
+  });
+
+  // ── Releases API ───────────────────────────────────────────
+  function fmtSize(b){
+    if (!b && b !== 0) return '';
+    if (b < 1024*1024) return (b/1024).toFixed(0)+' KB';
+    return (b/(1024*1024)).toFixed(1)+' MB';
+  }
+  fetch('https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const tag = data.tag_name || '';
+      const assets = data.assets || [];
+      document.querySelectorAll('.meta a[data-asset-suffix], .meta a[data-asset-match]').forEach(a => {
+        let asset = null;
+        if (a.dataset.assetSuffix){
+          asset = assets.find(x => x.name.endsWith(a.dataset.assetSuffix));
+        } else if (a.dataset.assetMatch === 'win-zip'){
+          asset = assets.find(x => x.name.endsWith('-win.zip') && !x.name.includes('update') && !x.name.endsWith('.sha256'));
         }
-
-        function hideModal(e) {
-            if (e && e.target !== e.currentTarget) return;
-            const modal = document.getElementById('svc-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+        if (asset){
+          a.href = asset.browser_download_url;
+          const ver = a.querySelector('[data-ver]');
+          if (ver) ver.textContent = '· ' + tag + ' · ' + fmtSize(asset.size);
+        } else {
+          a.href = a.dataset.fallback;
         }
+      });
+    })
+    .catch(() => {
+      document.querySelectorAll('.meta a[data-asset-suffix], .meta a[data-asset-match]').forEach(a => { a.href = a.dataset.fallback; });
+    });
 
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') hideModal(); });
+  // ── Auth ────────────────────────────────────────────────────
+  fetch('/auth/check').then(r => {
+    if (!r.ok) return;
+    const btn = document.getElementById('auth-btn');
+    btn.href = '/auth/logout';
+    btn.setAttribute('data-umami-event', 'click-logout');
+    const lbl = document.getElementById('auth-label');
+    lbl.dataset.i18nKey = 'auth.logout';
+    lbl.textContent = root.getAttribute('lang') === 'ru' ? 'Выйти' : 'Logout';
+    document.getElementById('auth-icon').innerHTML = '<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>';
 
-        fetch('/auth/check').then(r => {
-            const btn = document.getElementById('auth-btn');
-            const ytCard = document.getElementById('yt-card');
-            const ytStatus = document.getElementById('yt-status');
-            if (r.ok) {
-                // Logged in — show Logout button
-                btn.href = '/auth/logout';
-                btn.setAttribute('data-umami-event', 'click-logout');
-                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout';
-                // YT card — remove lock overlay, direct link
-                ytCard.href = 'https://yt.ninitux.com';
-                document.getElementById('yt-lock-overlay').remove();
-                // Discord card — remove lock, enable modal
-                document.getElementById('discord-lock-overlay').remove();
-                document.getElementById('discord-card').classList.add('cursor-pointer');
-                document.getElementById('discord-card').onclick = () => { umami.track('click-discord'); showModal('discord'); };
-                // RustDesk card — remove lock, enable modal
-                document.getElementById('rustdesk-lock-overlay').remove();
-                document.getElementById('rustdesk-card').classList.add('cursor-pointer');
-                document.getElementById('rustdesk-card').onclick = () => { umami.track('click-rustdesk'); showModal('rustdesk'); };
-                // Admin cards — make clickable
-                const tasksCard = document.getElementById('tasks-card');
-                tasksCard.classList.remove('opacity-60');
-                tasksCard.classList.add('cursor-pointer', 'hover:border-indigo-500', 'hover:bg-slate-800/80');
-                tasksCard.querySelector('h2').classList.add('group-hover:text-indigo-400');
-                tasksCard.classList.add('group');
-                tasksCard.onclick = () => { umami.track('click-tasks'); window.location.href = 'https://tasks.ninitux.com'; };
+    document.querySelectorAll('tr.admin.locked').forEach(tr => {
+      tr.classList.remove('locked');
+      const a = tr.querySelector('a');
+      if (a){ a.style.color = 'var(--fg)'; a.style.pointerEvents = ''; }
+      const desc = tr.querySelector('td.desc');
+      if (desc) desc.style.color = 'var(--fg-mute)';
+    });
+    const note = document.getElementById('auth-note');
+    if (note) note.classList.add('hidden');
 
-                const gitCard = document.getElementById('git-card');
-                gitCard.classList.remove('opacity-60');
-                gitCard.classList.add('cursor-pointer', 'hover:border-orange-500', 'hover:bg-slate-800/80');
-                gitCard.querySelector('h2').classList.add('group-hover:text-orange-400');
-                gitCard.classList.add('group');
-                gitCard.onclick = () => { umami.track('click-git'); window.location.href = 'https://git.ninitux.com'; };
-
-                const analyticsCard = document.getElementById('analytics-card');
-                analyticsCard.classList.remove('opacity-60');
-                analyticsCard.classList.add('cursor-pointer', 'hover:border-emerald-500', 'hover:bg-slate-800/80');
-                analyticsCard.querySelector('h2').classList.add('group-hover:text-emerald-400');
-                analyticsCard.classList.add('group');
-                analyticsCard.onclick = () => { umami.track('click-analytics'); window.location.href = 'https://analytics.ninitux.com'; };
-
-                const docsCard = document.getElementById('docs-card');
-                docsCard.classList.remove('opacity-60');
-                docsCard.classList.add('cursor-pointer', 'hover:border-cyan-500', 'hover:bg-slate-800/80');
-                docsCard.querySelector('h2').classList.add('group-hover:text-cyan-400');
-                docsCard.classList.add('group');
-                docsCard.onclick = () => { umami.track('click-docs'); window.location.href = 'https://docs.ninitux.com'; };
-
-                const pgwebCard = document.getElementById('pgweb-card');
-                pgwebCard.classList.remove('opacity-60');
-                pgwebCard.classList.add('cursor-pointer', 'hover:border-emerald-500', 'hover:bg-slate-800/80');
-                pgwebCard.querySelector('h2').classList.add('group-hover:text-emerald-400');
-                pgwebCard.classList.add('group');
-                pgwebCard.onclick = () => { umami.track('click-pgweb'); window.location.href = 'https://db.ninitux.com'; };
-                // Track authenticated session
-                if (typeof umami !== 'undefined') umami.track('user-authenticated');
-            }
-        });
-
-        const vpnLink = document.getElementById('vpn-download');
-        const vpnVersion = document.getElementById('vpn-version');
-        vpnLink.href = 'https://github.com/PavelLizunov/VPNRouter/releases/latest';
-
-        fetch('https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest')
-            .then(r => r.json())
-            .then(data => {
-                if (data.tag_name) vpnVersion.textContent = data.tag_name;
-                const asset = data.assets?.find(a => a.name.endsWith('-win.zip') && !a.name.includes('update'));
-                if (asset) vpnLink.href = asset.browser_download_url;
-            })
-            .catch(() => {});
-
-        const vpnAndroidLink = document.getElementById('vpn-android-download');
-        const vpnAndroidVersion = document.getElementById('vpn-android-version');
-        vpnAndroidLink.href = 'https://github.com/PavelLizunov/vpnrouter-android/releases/latest';
-
-        fetch('https://api.github.com/repos/PavelLizunov/vpnrouter-android/releases/latest')
-            .then(r => r.json())
-            .then(data => {
-                if (data.tag_name) vpnAndroidVersion.textContent = data.tag_name;
-                const asset = data.assets?.find(a => a.name.endsWith('.apk'));
-                if (asset) vpnAndroidLink.href = asset.browser_download_url;
-            })
-            .catch(() => {});
-    </script>
+    if (typeof umami !== 'undefined') umami.track('user-authenticated');
+  }).catch(()=>{});
+})();
+</script>
 </body>
 </html>
