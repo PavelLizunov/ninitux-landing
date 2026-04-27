@@ -167,6 +167,20 @@
   .code .copy.ok{color:#16A34A}
   :root[data-theme="dark"] .code .copy.ok{color:#4ADE80}
 
+  /* Install hint (steps above code block) */
+  .hint{
+    margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono);
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .hint .ln{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline}
+  .hint .step{color:var(--fg-mute)}
+  .hint kbd{
+    display:inline-block;font-family:var(--mono);font-size:11px;
+    color:var(--fg);background:var(--code-bg);border:1px solid var(--rule-strong);
+    border-bottom-width:2px;border-radius:4px;padding:1px 6px;line-height:1.4;
+  }
+  .hint .arrow{color:var(--fg-dim);opacity:.5}
+
   /* Manual / version line */
   .meta{
     margin-top:14px;font-size:13px;color:var(--fg-dim);
@@ -375,6 +389,16 @@
     </div>
 
     <!-- Linux -->
+    <div class="hint" data-pane="linux" hidden>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">1. Open Terminal</span><span data-i18n="ru">1. Откройте терминал</span></span>
+        <span class="arrow">·</span>
+        <span><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd></span>
+      </div>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">2. Paste &amp; run:</span><span data-i18n="ru">2. Вставьте и выполните:</span></span>
+      </div>
+    </div>
     <div class="code" data-pane="linux" hidden>
 <pre><span class="pmt">$</span><span class="cmd">curl <span class="flag">-fsSL</span> https://vpn.ninitux.com/install.sh | sudo sh</span></pre>
       <button class="copy" data-copy="curl -fsSL https://vpn.ninitux.com/install.sh | sudo sh" data-umami-event="copy-install-linux"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
@@ -389,6 +413,16 @@
     </div>
 
     <!-- macOS -->
+    <div class="hint" data-pane="mac" hidden>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">1. Open Terminal</span><span data-i18n="ru">1. Откройте Terminal</span></span>
+        <span class="arrow">·</span>
+        <span><kbd>⌘</kbd> + <kbd>Space</kbd> → <span data-i18n="en">type</span><span data-i18n="ru">наберите</span> <kbd>Terminal</kbd></span>
+      </div>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">2. Paste &amp; run:</span><span data-i18n="ru">2. Вставьте и выполните:</span></span>
+      </div>
+    </div>
     <div class="code" data-pane="mac" hidden>
 <pre><span class="pmt">$</span><span class="cmd">brew install <span class="flag">--cask</span> pavellizunov/vpnrouter/vpnrouter</span></pre>
       <button class="copy" data-copy="brew install --cask pavellizunov/vpnrouter/vpnrouter" data-umami-event="copy-install-mac"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
@@ -401,6 +435,16 @@
     </div>
 
     <!-- Windows -->
+    <div class="hint" data-pane="win" hidden>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">1. Open PowerShell as Administrator</span><span data-i18n="ru">1. Откройте PowerShell от имени администратора</span></span>
+        <span class="arrow">·</span>
+        <span><kbd>Win</kbd> + <kbd>X</kbd> → <span data-i18n="en">Terminal (Admin)</span><span data-i18n="ru">Терминал (админ)</span></span>
+      </div>
+      <div class="ln">
+        <span class="step"><span data-i18n="en">2. Paste &amp; run:</span><span data-i18n="ru">2. Вставьте и выполните:</span></span>
+      </div>
+    </div>
     <div class="code" data-pane="win" hidden>
 <pre><span class="pmt">&gt;</span><span class="cmd">iwr <span class="flag">-useb</span> https://vpn.ninitux.com/install.ps1 | iex</span></pre>
       <button class="copy" data-copy="iwr -useb https://vpn.ninitux.com/install.ps1 | iex" data-umami-event="copy-install-win"><span data-i18n="en">copy</span><span data-i18n="ru">копировать</span></button>
