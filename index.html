@@ -234,6 +234,27 @@
   .gallery img,.gallery video{width:100%;height:100%;object-fit:cover;display:block}
   .gallery-note{margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono)}
 
+  /* Services (collapsible) */
+  details.services-details{margin:0}
+  details.services-details > summary{
+    list-style:none;cursor:pointer;
+    display:flex;align-items:center;gap:10px;
+    margin:0 0 0;padding:0;
+    user-select:none;
+  }
+  details.services-details > summary::-webkit-details-marker{display:none}
+  details.services-details > summary::marker{content:""}
+  details.services-details > summary .chev{
+    display:inline-block;font-size:11px;color:var(--fg-dim);
+    transition:transform .15s ease;width:10px;text-align:center;
+  }
+  details.services-details[open] > summary .chev{transform:rotate(90deg)}
+  details.services-details > summary .count{color:var(--fg-dim);font-weight:400;font-size:12px;letter-spacing:0;text-transform:none;margin-left:2px}
+  details.services-details > summary:hover{color:var(--fg)}
+  details.services-details > summary:hover .chev{color:var(--fg-mute)}
+  details.services-details > table.services{margin-top:18px}
+  details.services-details > .auth-note{margin-top:14px}
+
   /* Services */
   table.services{width:100%;border-collapse:collapse;font-size:14px}
   table.services tr{border-bottom:1px solid var(--rule)}
@@ -504,44 +525,50 @@
 
   <!-- SERVICES -->
   <section class="block" id="services">
-    <h2 class="sec"><span data-i18n="en">other services</span><span data-i18n="ru">другие сервисы</span></h2>
-    <table class="services">
-      <tbody>
-        <tr>
-          <td class="host"><a href="https://wb.ninitux.com" data-umami-event="svc-wb">wb.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">WB Pricing tasks</span><span data-i18n="ru">WB — цены и задачи</span> <span class="badge"><span data-i18n="en">commercial</span><span data-i18n="ru">коммерч.</span></span></td>
-        </tr>
-        <tr>
-          <td class="host"><a href="https://md.ninitux.com" data-umami-event="svc-md">md.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">Markdown viewer (Flatnotes)</span><span data-i18n="ru">Markdown viewer (Flatnotes)</span></td>
-        </tr>
-        <tr>
-          <td class="host"><a href="https://docs.ninitux.com" data-umami-event="svc-docs">docs.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">Docs</span><span data-i18n="ru">Документация</span></td>
-        </tr>
-        <tr class="admin locked" data-svc="git">
-          <td class="host"><a href="https://git.ninitux.com" data-umami-event="svc-git">git.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">Forgejo — self-hosted git</span><span data-i18n="ru">Forgejo — self-hosted git</span> <span class="badge">admin</span></td>
-        </tr>
-        <tr class="admin locked" data-svc="analytics">
-          <td class="host"><a href="https://analytics.ninitux.com" data-umami-event="svc-analytics">analytics.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">Umami analytics</span><span data-i18n="ru">Umami analytics</span> <span class="badge">admin</span></td>
-        </tr>
-        <tr class="admin locked" data-svc="db">
-          <td class="host"><a href="https://db.ninitux.com" data-umami-event="svc-db">db.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">pgweb — PostgreSQL client</span><span data-i18n="ru">pgweb — PostgreSQL клиент</span> <span class="badge">admin</span></td>
-        </tr>
-        <tr class="admin locked" data-svc="tasks">
-          <td class="host"><a href="https://tasks.ninitux.com" data-umami-event="svc-tasks">tasks.ninitux.com</a></td>
-          <td class="desc"><span data-i18n="en">Plane — issue tracker</span><span data-i18n="ru">Plane — трекер задач</span> <span class="badge">admin</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="auth-note" id="auth-note">
-      <span data-i18n="en">Admin services unlock after auth via</span>
-      <span data-i18n="ru">Admin-сервисы открываются после авторизации через</span>
-      <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" data-umami-event="click-auth-bot">@ninitux_auth_bot</a>.
-    </div>
+    <details class="services-details" id="services-details">
+      <summary class="sec sec-summary">
+        <span class="chev" aria-hidden="true">▸</span>
+        <span data-i18n="en">other services</span><span data-i18n="ru">другие сервисы</span>
+        <span class="count">(7)</span>
+      </summary>
+      <table class="services">
+        <tbody>
+          <tr>
+            <td class="host"><a href="https://wb.ninitux.com" data-umami-event="svc-wb">wb.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">WB Pricing tasks</span><span data-i18n="ru">WB — цены и задачи</span> <span class="badge"><span data-i18n="en">commercial</span><span data-i18n="ru">коммерч.</span></span></td>
+          </tr>
+          <tr>
+            <td class="host"><a href="https://md.ninitux.com" data-umami-event="svc-md">md.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">Markdown viewer (Flatnotes)</span><span data-i18n="ru">Markdown viewer (Flatnotes)</span></td>
+          </tr>
+          <tr class="admin locked" data-svc="docs">
+            <td class="host"><a href="https://docs.ninitux.com" data-umami-event="svc-docs">docs.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">Docs</span><span data-i18n="ru">Документация</span> <span class="badge">admin</span></td>
+          </tr>
+          <tr class="admin locked" data-svc="git">
+            <td class="host"><a href="https://git.ninitux.com" data-umami-event="svc-git">git.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">Forgejo — self-hosted git</span><span data-i18n="ru">Forgejo — self-hosted git</span> <span class="badge">admin</span></td>
+          </tr>
+          <tr class="admin locked" data-svc="analytics">
+            <td class="host"><a href="https://analytics.ninitux.com" data-umami-event="svc-analytics">analytics.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">Umami analytics</span><span data-i18n="ru">Umami analytics</span> <span class="badge">admin</span></td>
+          </tr>
+          <tr class="admin locked" data-svc="db">
+            <td class="host"><a href="https://db.ninitux.com" data-umami-event="svc-db">db.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">pgweb — PostgreSQL client</span><span data-i18n="ru">pgweb — PostgreSQL клиент</span> <span class="badge">admin</span></td>
+          </tr>
+          <tr class="admin locked" data-svc="tasks">
+            <td class="host"><a href="https://tasks.ninitux.com" data-umami-event="svc-tasks">tasks.ninitux.com</a></td>
+            <td class="desc"><span data-i18n="en">Plane — issue tracker</span><span data-i18n="ru">Plane — трекер задач</span> <span class="badge">admin</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="auth-note" id="auth-note">
+        <span data-i18n="en">Admin services unlock after auth via</span>
+        <span data-i18n="ru">Admin-сервисы открываются после авторизации через</span>
+        <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" data-umami-event="click-auth-bot">@ninitux_auth_bot</a>.
+      </div>
+    </details>
   </section>
 
 </main>
@@ -672,6 +699,21 @@
     .catch(() => {
       document.querySelectorAll('.meta a[data-asset-suffix], .meta a[data-asset-match]').forEach(a => { a.href = a.dataset.fallback; });
     });
+
+  // ── Services details (auto-open on hash/nav) ───────────────
+  const svcDetails = document.getElementById('services-details');
+  function openServicesIfTargeted(){
+    if (location.hash === '#services' && svcDetails && !svcDetails.open){
+      svcDetails.open = true;
+    }
+  }
+  openServicesIfTargeted();
+  window.addEventListener('hashchange', openServicesIfTargeted);
+  document.querySelectorAll('a[href="#services"]').forEach(a => {
+    a.addEventListener('click', () => {
+      if (svcDetails) svcDetails.open = true;
+    });
+  });
 
   // ── Auth ────────────────────────────────────────────────────
   fetch('/auth/check').then(r => {
