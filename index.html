@@ -183,7 +183,7 @@
 
   /* Section heading */
   section.block{padding:40px 0;border-top:1px solid var(--rule)}
-  h2.sec{
+  h2.sec, .sec{
     font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
     color:var(--fg-dim);margin:0 0 20px;
   }
@@ -245,13 +245,13 @@
   details.services-details > summary::-webkit-details-marker{display:none}
   details.services-details > summary::marker{content:""}
   details.services-details > summary .chev{
-    display:inline-block;font-size:11px;color:var(--fg-dim);
+    display:inline-block;font-size:11px;color:var(--accent);opacity:.7;
     transition:transform .15s ease;width:10px;text-align:center;
   }
-  details.services-details[open] > summary .chev{transform:rotate(90deg)}
+  details.services-details[open] > summary .chev{transform:rotate(90deg);opacity:1}
   details.services-details > summary .count{color:var(--fg-dim);font-weight:400;font-size:12px;letter-spacing:0;text-transform:none;margin-left:2px}
   details.services-details > summary:hover{color:var(--fg)}
-  details.services-details > summary:hover .chev{color:var(--fg-mute)}
+  details.services-details > summary:hover .chev{opacity:1}
   details.services-details > table.services{margin-top:18px}
   details.services-details > .auth-note{margin-top:14px}
 
