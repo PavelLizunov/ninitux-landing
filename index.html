@@ -256,7 +256,7 @@
     font-size:10px;letter-spacing:.08em;text-transform:uppercase;
     border:1px solid var(--rule-strong);border-radius:3px;padding:1px 5px;color:var(--fg-dim);
   }
-  .gallery img,.gallery video{width:100%;height:100%;object-fit:cover;display:block}
+  .gallery img,.gallery video{width:100%;height:100%;object-fit:contain;display:block;background:var(--bg-1)}
   .gallery-note{margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono)}
 
   /* Services */
@@ -583,7 +583,7 @@
           <source src="media/guide-main.webm" type="video/webm">
         </video>
         <figcaption class="cap">
-          <span><span data-i18n="en">Main flow — install → subscribe → pick apps</span><span data-i18n="ru">Основной флоу — установка → подписка → приложения</span></span>
+          <span><span data-i18n="en">One screen, one URL, VPN running.</span><span data-i18n="ru">Один экран — один URL — VPN запущен.</span></span>
           <span class="kind">webm</span>
         </figcaption>
       </figure>
@@ -594,7 +594,7 @@
           <source src="media/guide-settings.webm" type="video/webm">
         </video>
         <figcaption class="cap">
-          <span><span data-i18n="en">Advanced settings — one click away</span><span data-i18n="ru">Advanced — один клик до настроек</span></span>
+          <span><span data-i18n="en">Advanced controls one click away — never crowd the daily-use surface.</span><span data-i18n="ru">Расширенные настройки одним кликом — не мешают повседневному use-case.</span></span>
           <span class="kind">webm</span>
         </figcaption>
       </figure>
@@ -602,7 +602,7 @@
       <figure class="tile" data-asset="shot-subscribe">
         <img src="media/shot-subscribe.png" alt="Subscription URL" loading="lazy">
         <figcaption class="cap">
-          <span><span data-i18n="en">Subscribe — one URL, many servers</span><span data-i18n="ru">Subscribe — один URL, много серверов</span></span>
+          <span><span data-i18n="en">Paste a subscription URL — servers refresh on their own.</span><span data-i18n="ru">Вставьте subscription URL — серверы обновляются сами.</span></span>
           <span class="kind">png</span>
         </figcaption>
       </figure>
@@ -614,7 +614,7 @@
           <source src="media/guide-apps.webm" type="video/webm">
         </video>
         <figcaption class="cap">
-          <span><span data-i18n="en">Applications — pick processes for the tunnel</span><span data-i18n="ru">Applications — выбор процессов</span></span>
+          <span><span data-i18n="en">Route only the apps that need it. Pick from presets or roll your own group.</span><span data-i18n="ru">Только нужные приложения через VPN. Готовые группы или ваша собственная подборка.</span></span>
           <span class="kind">webm</span>
         </figcaption>
       </figure>
@@ -625,7 +625,7 @@
           <source src="media/guide-free.webm" type="video/webm">
         </video>
         <figcaption class="cap">
-          <span><span data-i18n="en">Free — ≈25k public configs, refreshed every 6h</span><span data-i18n="ru">Free — ≈25 тыс публичных конфигов, обн. каждые 6 ч</span></span>
+          <span><span data-i18n="en">≈25 000 public configs. Probed for real connectivity, refreshed every 6 hours.</span><span data-i18n="ru">Около 25 000 публичных конфигов. Реальная проверка работоспособности, обновление каждые 6 часов.</span></span>
           <span class="kind">webm</span>
         </figcaption>
       </figure>
