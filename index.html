@@ -257,6 +257,64 @@
     border:1px solid var(--rule-strong);border-radius:3px;padding:1px 5px;color:var(--fg-dim);
   }
   .gallery img,.gallery video{width:100%;height:100%;object-fit:contain;display:block;background:var(--bg-1)}
+  .gallery .tile{cursor:zoom-in;transition:border-color .15s ease}
+  .gallery .tile:hover{border-color:var(--rule-strong)}
+
+  /* Lightbox */
+  .lightbox{
+    position:fixed;inset:0;z-index:100;
+    display:none;align-items:center;justify-content:center;
+    padding:24px;
+    background:rgba(0,0,0,0.85);
+    backdrop-filter:blur(4px);
+    animation:lb-fade .15s ease-out;
+  }
+  :root[data-theme="light"] .lightbox{background:rgba(15,19,32,0.78)}
+  .lightbox.open{display:flex}
+  @keyframes lb-fade{from{opacity:0}to{opacity:1}}
+  .lightbox-content{
+    position:relative;
+    max-width:min(1400px, 95vw);max-height:90vh;
+    display:flex;flex-direction:column;gap:12px;
+    animation:lb-pop .2s ease-out;
+  }
+  @keyframes lb-pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+  .lightbox-media{
+    background:var(--bg-1);border:1px solid var(--rule);border-radius:8px;
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    min-height:200px;
+  }
+  .lightbox-media video,.lightbox-media img{
+    max-width:100%;max-height:calc(90vh - 80px);
+    width:auto;height:auto;display:block;
+  }
+  .lightbox-cap{
+    color:var(--fg);font-size:14px;line-height:1.45;
+    padding:0 4px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  }
+  .lightbox-cap .lb-text{flex:1;min-width:0}
+  .lightbox-cap .lb-tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--fg-dim);border:1px solid var(--rule-strong);border-radius:3px;
+    padding:1px 6px;flex:0 0 auto;
+  }
+  .lightbox-close{
+    position:absolute;top:-44px;right:0;
+    appearance:none;background:transparent;border:1px solid var(--rule-strong);
+    color:var(--fg-mute);font:inherit;font-size:13px;
+    width:32px;height:32px;border-radius:6px;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+  .lightbox-close:hover{color:var(--fg);border-color:var(--accent)}
+  .lightbox-close svg{width:14px;height:14px}
+  body.lb-open{overflow:hidden}
+  @media (max-width:640px){
+    .lightbox{padding:12px}
+    .lightbox-close{top:-40px;width:30px;height:30px}
+    .lightbox-cap{font-size:13px}
+  }
   .gallery-note{margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono)}
 
   /* Services */
@@ -773,6 +831,20 @@
 
 </main>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-cap-text" aria-hidden="true">
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close" title="Esc">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="lightbox-media" id="lightbox-media"></div>
+    <div class="lightbox-cap">
+      <span class="lb-text" id="lightbox-cap-text"></span>
+      <span class="lb-tag" id="lightbox-cap-tag"></span>
+    </div>
+  </div>
+</div>
+
 <footer class="site">
   <div class="wrap frow">
     <span class="label"><span data-i18n="en">source —</span><span data-i18n="ru">код —</span></span>
@@ -916,6 +988,98 @@
     .catch(() => {
       document.querySelectorAll('.meta a[data-asset-suffix], .meta a[data-asset-match]').forEach(a => { a.href = a.dataset.fallback; });
     });
+
+  // ── Lightbox (gallery) ─────────────────────────────────────
+  const lightbox = document.getElementById('lightbox');
+  const lbMedia = document.getElementById('lightbox-media');
+  const lbCapText = document.getElementById('lightbox-cap-text');
+  const lbCapTag = document.getElementById('lightbox-cap-tag');
+  const lbClose = document.getElementById('lightbox-close');
+  let lbLastFocus = null;
+
+  function lbOpen(figure){
+    if (!figure) return;
+    const media = figure.querySelector('video, img');
+    if (!media) return;
+
+    // Build cloned media for lightbox
+    lbMedia.innerHTML = '';
+    let clone;
+    if (media.tagName === 'VIDEO'){
+      clone = document.createElement('video');
+      clone.controls = true;
+      clone.autoplay = true;
+      clone.loop = true;
+      clone.muted = true;
+      clone.playsInline = true;
+      clone.setAttribute('playsinline', '');
+      // Resolve current poster respecting localized swaps
+      const currentPoster = media.getAttribute('poster') || '';
+      if (currentPoster) clone.poster = currentPoster;
+      // Copy <source> children with their (possibly localized) src
+      media.querySelectorAll('source').forEach(s => {
+        const src = document.createElement('source');
+        src.src = s.src;
+        if (s.type) src.type = s.type;
+        clone.appendChild(src);
+      });
+    } else {
+      clone = document.createElement('img');
+      clone.src = media.src;
+      clone.alt = media.alt || '';
+    }
+    lbMedia.appendChild(clone);
+
+    // Caption — pull the visible (current language) text from figcaption
+    const cap = figure.querySelector('figcaption');
+    if (cap){
+      const lang = root.getAttribute('lang') || 'en';
+      const visibleText = cap.querySelector(`span > span[data-i18n="${lang}"]`);
+      lbCapText.textContent = visibleText ? visibleText.textContent.trim() : '';
+      const tag = cap.querySelector('.kind');
+      lbCapTag.textContent = tag ? tag.textContent.trim() : '';
+    } else {
+      lbCapText.textContent = '';
+      lbCapTag.textContent = '';
+    }
+
+    lbLastFocus = document.activeElement;
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lb-open');
+    lbClose.focus();
+  }
+
+  function lbCloseFn(){
+    if (!lightbox.classList.contains('open')) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lb-open');
+    // Stop & release the cloned video
+    const v = lbMedia.querySelector('video');
+    if (v){ try{ v.pause(); }catch(e){} v.removeAttribute('src'); v.load(); }
+    lbMedia.innerHTML = '';
+    if (lbLastFocus && lbLastFocus.focus) lbLastFocus.focus();
+  }
+
+  // Wire tile clicks
+  document.querySelectorAll('.gallery .tile').forEach(tile => {
+    tile.setAttribute('tabindex', '0');
+    tile.setAttribute('role', 'button');
+    tile.addEventListener('click', () => lbOpen(tile));
+    tile.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); lbOpen(tile); }
+    });
+  });
+
+  // Close: backdrop click, button, Esc
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lbCloseFn();
+  });
+  lbClose.addEventListener('click', lbCloseFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lbCloseFn();
+  });
 
   // ── Anchors / details auto-open ────────────────────────────
   function openDetailsByHash(){
