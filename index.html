@@ -576,50 +576,60 @@
   <section class="block" id="gallery">
     <h2 class="sec"><span data-i18n="en">screenshots &amp; guides</span><span data-i18n="ru">скриншоты и гайды</span><a class="anchor" href="#gallery" aria-label="Anchor link">#</a></h2>
     <div class="gallery">
-      <figure class="tile wide empty" data-asset="guide-main">
-        <!-- <video src="media/guide-main.webm" poster="media/guide-main.jpg" controls muted loop playsinline></video> -->
+      <figure class="tile wide" data-asset="guide-main">
+        <video data-video-base="guide-main" data-video-i18n="true"
+               poster="media/guide-main.jpg"
+               autoplay loop muted playsinline preload="metadata">
+          <source src="media/guide-main.webm" type="video/webm">
+        </video>
         <figcaption class="cap">
           <span><span data-i18n="en">Main flow — install → subscribe → pick apps</span><span data-i18n="ru">Основной флоу — установка → подписка → приложения</span></span>
           <span class="kind">webm</span>
         </figcaption>
       </figure>
 
-      <figure class="tile empty" data-asset="shot-manual">
-        <!-- <img src="media/shot-manual.png" alt="Manual server setup"> -->
+      <figure class="tile" data-asset="guide-settings">
+        <video poster="media/guide-settings.jpg"
+               autoplay loop muted playsinline preload="metadata">
+          <source src="media/guide-settings.webm" type="video/webm">
+        </video>
         <figcaption class="cap">
-          <span><span data-i18n="en">Manual — paste your VLESS+Reality</span><span data-i18n="ru">Manual — ваш VLESS+Reality</span></span>
-          <span class="kind">png</span>
+          <span><span data-i18n="en">Advanced settings — one click away</span><span data-i18n="ru">Advanced — один клик до настроек</span></span>
+          <span class="kind">webm</span>
         </figcaption>
       </figure>
 
-      <figure class="tile empty" data-asset="shot-subscribe">
-        <!-- <img src="media/shot-subscribe.png" alt="Subscription URL"> -->
+      <figure class="tile" data-asset="shot-subscribe">
+        <img src="media/shot-subscribe.png" alt="Subscription URL" loading="lazy">
         <figcaption class="cap">
           <span><span data-i18n="en">Subscribe — one URL, many servers</span><span data-i18n="ru">Subscribe — один URL, много серверов</span></span>
           <span class="kind">png</span>
         </figcaption>
       </figure>
 
-      <figure class="tile empty" data-asset="shot-apps">
-        <!-- <img src="media/shot-apps.png" alt="App selection"> -->
+      <figure class="tile" data-asset="guide-apps">
+        <video data-video-base="guide-apps" data-video-i18n="true"
+               poster="media/guide-apps.jpg"
+               autoplay loop muted playsinline preload="metadata">
+          <source src="media/guide-apps.webm" type="video/webm">
+        </video>
         <figcaption class="cap">
           <span><span data-i18n="en">Applications — pick processes for the tunnel</span><span data-i18n="ru">Applications — выбор процессов</span></span>
-          <span class="kind">png</span>
+          <span class="kind">webm</span>
         </figcaption>
       </figure>
 
-      <figure class="tile empty" data-asset="shot-free">
-        <!-- <img src="media/shot-free.png" alt="Free pool"> -->
+      <figure class="tile" data-asset="guide-free">
+        <video poster="media/guide-free.jpg"
+               autoplay loop muted playsinline preload="metadata">
+          <source src="media/guide-free.webm" type="video/webm">
+        </video>
         <figcaption class="cap">
           <span><span data-i18n="en">Free — ≈25k public configs, refreshed every 6h</span><span data-i18n="ru">Free — ≈25 тыс публичных конфигов, обн. каждые 6 ч</span></span>
-          <span class="kind">png</span>
+          <span class="kind">webm</span>
         </figcaption>
       </figure>
     </div>
-    <p class="gallery-note">
-      <span data-i18n="en"># placeholder — drop files into <code>media/</code> and uncomment each tile's &lt;img&gt; or &lt;video&gt;</span>
-      <span data-i18n="ru"># плейсхолдер — положите файлы в <code>media/</code> и раскомментируйте &lt;img&gt;/&lt;video&gt; в каждой плитке</span>
-    </p>
   </section>
 
   <!-- PRIVACY / TELEMETRY -->
@@ -796,6 +806,22 @@
 
   // ── Language ────────────────────────────────────────────────
   const langButtons = document.querySelectorAll('.toggle-pair button[data-lang]');
+  function syncLocalizedVideos(lang){
+    document.querySelectorAll('video[data-video-base][data-video-i18n="true"]').forEach(v => {
+      const base = v.dataset.videoBase;
+      const suffix = lang === 'ru' ? '.ru' : '';
+      const newPoster = `media/${base}${suffix}.jpg`;
+      const newSrc = `media/${base}${suffix}.webm`;
+      if (v.poster.indexOf(newPoster) === -1) v.poster = newPoster;
+      const source = v.querySelector('source');
+      if (source && !source.src.endsWith(newSrc)){
+        source.src = newSrc;
+        v.load();
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(()=>{});
+      }
+    });
+  }
   function setLang(lang){
     root.setAttribute('lang', lang);
     langButtons.forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'));
@@ -810,6 +836,7 @@
       };
       if (dict[key]) lbl.textContent = dict[key][lang];
     }
+    syncLocalizedVideos(lang);
   }
   langButtons.forEach(b => b.addEventListener('click', () => {
     setLang(b.dataset.lang);
