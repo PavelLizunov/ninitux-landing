@@ -146,6 +146,20 @@
   .tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
   .tab .glyph{font-size:14px;opacity:.9}
 
+  /* Hint above the install code block */
+  .hint{
+    margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono);
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .hint .ln{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline}
+  .hint .step{color:var(--fg-mute)}
+  .hint kbd{
+    display:inline-block;font-family:var(--mono);font-size:11px;
+    color:var(--fg);background:var(--code-bg);border:1px solid var(--rule-strong);
+    border-bottom-width:2px;border-radius:4px;padding:1px 6px;line-height:1.4;
+  }
+  .hint .arrow{color:var(--fg-dim);opacity:.5}
+
   /* Code block */
   .code{
     margin-top:16px;background:var(--code-bg);border:1px solid var(--rule);
@@ -167,20 +181,6 @@
   .code .copy.ok{color:#16A34A}
   :root[data-theme="dark"] .code .copy.ok{color:#4ADE80}
 
-  /* Install hint (steps above code block) */
-  .hint{
-    margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono);
-    display:flex;flex-direction:column;gap:4px;
-  }
-  .hint .ln{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline}
-  .hint .step{color:var(--fg-mute)}
-  .hint kbd{
-    display:inline-block;font-family:var(--mono);font-size:11px;
-    color:var(--fg);background:var(--code-bg);border:1px solid var(--rule-strong);
-    border-bottom-width:2px;border-radius:4px;padding:1px 6px;line-height:1.4;
-  }
-  .hint .arrow{color:var(--fg-dim);opacity:.5}
-
   /* Manual / version line */
   .meta{
     margin-top:14px;font-size:13px;color:var(--fg-dim);
@@ -196,12 +196,23 @@
   .meta-row .req{font-size:13px;color:var(--fg-dim)}
 
   /* Section heading */
-  section.block{padding:40px 0;border-top:1px solid var(--rule)}
-  h2.sec, .sec{
+  section.block{padding:40px 0;border-top:1px solid var(--rule);scroll-margin-top:80px}
+  section.hero{scroll-margin-top:80px}
+  h2.sec{
     font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
     color:var(--fg-dim);margin:0 0 20px;
+    display:flex;align-items:baseline;gap:8px;
   }
   h2.sec::before{content:"# ";color:var(--accent);opacity:.7}
+  h2.sec a.anchor{
+    color:var(--fg-dim);opacity:0;transition:opacity .15s ease;
+    font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:0;
+    text-transform:none;text-decoration:none;
+  }
+  h2.sec:hover a.anchor,h2.sec a.anchor:focus{opacity:.7}
+  h2.sec a.anchor:hover{opacity:1;color:var(--accent-fg);text-decoration:none}
+  details.priv > summary[id]{position:relative;scroll-margin-top:80px}
+  section.block[id]{scroll-margin-top:80px}
 
   /* Features */
   ul.features{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
@@ -248,27 +259,6 @@
   .gallery img,.gallery video{width:100%;height:100%;object-fit:cover;display:block}
   .gallery-note{margin-top:14px;font-size:12.5px;color:var(--fg-dim);font-family:var(--mono)}
 
-  /* Services (collapsible) */
-  details.services-details{margin:0}
-  details.services-details > summary{
-    list-style:none;cursor:pointer;
-    display:flex;align-items:center;gap:10px;
-    margin:0 0 0;padding:0;
-    user-select:none;
-  }
-  details.services-details > summary::-webkit-details-marker{display:none}
-  details.services-details > summary::marker{content:""}
-  details.services-details > summary .chev{
-    display:inline-block;font-size:11px;color:var(--accent);opacity:.7;
-    transition:transform .15s ease;width:10px;text-align:center;
-  }
-  details.services-details[open] > summary .chev{transform:rotate(90deg);opacity:1}
-  details.services-details > summary .count{color:var(--fg-dim);font-weight:400;font-size:12px;letter-spacing:0;text-transform:none;margin-left:2px}
-  details.services-details > summary:hover{color:var(--fg)}
-  details.services-details > summary:hover .chev{opacity:1}
-  details.services-details > table.services{margin-top:18px}
-  details.services-details > .auth-note{margin-top:14px}
-
   /* Services */
   table.services{width:100%;border-collapse:collapse;font-size:14px}
   table.services tr{border-bottom:1px solid var(--rule)}
@@ -293,6 +283,70 @@
   }
   .auth-note.hidden{display:none}
   .auth-note a{color:var(--accent-fg)}
+
+  /* Privacy / spoilers — match site type system */
+  .priv-lede{
+    font-size:14.5px;color:var(--fg);
+    margin:0 0 18px;
+  }
+  .priv-lede b{color:var(--fg);font-weight:600}
+  .priv-lede em{color:var(--fg-mute);font-style:normal}
+  details.priv{
+    border-top:1px solid var(--rule);
+    padding:0;
+  }
+  details.priv:last-of-type{border-bottom:1px solid var(--rule)}
+  details.priv > summary{
+    list-style:none;cursor:pointer;
+    padding:14px 0;
+    font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--fg-dim);
+    display:flex;align-items:center;gap:10px;
+    user-select:none;
+    transition:color .12s ease;
+  }
+  details.priv > summary::-webkit-details-marker{display:none}
+  details.priv > summary::before{
+    content:"+";font-family:var(--mono);font-weight:400;
+    color:var(--accent);opacity:.85;
+    width:14px;display:inline-block;font-size:14px;text-align:center;
+    letter-spacing:0;
+  }
+  details.priv[open] > summary::before{content:"−"}
+  details.priv > summary:hover{color:var(--fg)}
+  details.priv .priv-body{
+    padding:6px 0 22px 24px;
+    font-size:14px;color:var(--fg-mute);
+  }
+  details.priv .priv-body p{margin:0 0 10px;line-height:1.55}
+  details.priv .priv-body p:last-child{margin-bottom:0}
+  details.priv .priv-body code{font-family:var(--mono);font-size:13px;color:var(--fg)}
+  .priv-tags{display:flex;flex-wrap:wrap;gap:6px 8px;margin:6px 0 12px}
+  .priv-tags span{
+    font-family:var(--mono);font-size:11.5px;color:var(--fg-dim);
+    padding:2px 7px;border:1px solid var(--rule);border-radius:3px;
+    text-transform:none;letter-spacing:0;font-weight:400;
+  }
+  ul.priv-conn{list-style:none;padding:0;margin:0}
+  ul.priv-conn li{
+    padding:8px 0;display:grid;grid-template-columns:200px 1fr;gap:14px;
+    align-items:baseline;border-bottom:1px dashed var(--rule);
+  }
+  ul.priv-conn li:last-child{border-bottom:0}
+  ul.priv-conn .k{font-family:var(--mono);font-size:13px;color:var(--fg);white-space:nowrap;font-weight:500}
+  ul.priv-conn .v{color:var(--fg-mute);font-size:13.5px}
+  .priv-verify{
+    background:var(--code-bg);border:1px solid var(--rule);border-radius:6px;
+    padding:14px 16px;margin-top:10px;
+    font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--fg);
+    overflow-x:auto;white-space:pre;
+  }
+  .priv-verify .c{color:var(--fg-dim)}
+  .priv-verify .p{color:var(--fg-dim)}
+  @media (max-width:640px){
+    ul.priv-conn li{grid-template-columns:1fr;gap:2px}
+    details.priv > summary{font-size:12px}
+  }
 
   /* Footer */
   footer.site{border-top:1px solid var(--rule);padding:28px 0 56px;margin-top:24px;color:var(--fg-dim);font-size:13px}
@@ -343,6 +397,7 @@
     <nav>
       <a class="navlink" href="#how"><span data-i18n="en">How</span><span data-i18n="ru">Как</span></a>
       <a class="navlink" href="#gallery"><span data-i18n="en">Screenshots</span><span data-i18n="ru">Скриншоты</span></a>
+      <a class="navlink" href="#privacy"><span data-i18n="en">Privacy</span><span data-i18n="ru">Приватность</span></a>
       <a class="navlink" href="#services"><span data-i18n="en">Services</span><span data-i18n="ru">Сервисы</span></a>
       <a class="navlink" href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener" data-umami-event="click-header-github"><span data-i18n="en">Source</span><span data-i18n="ru">Код</span></a>
 
@@ -467,7 +522,7 @@
 
   <!-- FEATURES -->
   <section class="block" id="features">
-    <h2 class="sec"><span data-i18n="en">features</span><span data-i18n="ru">возможности</span></h2>
+    <h2 class="sec"><span data-i18n="en">features</span><span data-i18n="ru">возможности</span><a class="anchor" href="#features" aria-label="Anchor link">#</a></h2>
     <ul class="features">
       <li><span data-i18n="en">Per-process routing</span><span data-i18n="ru">Маршрутизация по процессам</span><span class="note"><span data-i18n="en">live process list</span><span data-i18n="ru">живой список</span></span></li>
       <li><span data-i18n="en">VLESS + Reality</span><span data-i18n="ru">VLESS + Reality</span><span class="note"><span data-i18n="en">built-in</span><span data-i18n="ru">встроено</span></span></li>
@@ -482,7 +537,7 @@
 
   <!-- HOW -->
   <section class="block" id="how">
-    <h2 class="sec"><span data-i18n="en">how it works</span><span data-i18n="ru">как это работает</span></h2>
+    <h2 class="sec"><span data-i18n="en">how it works</span><span data-i18n="ru">как это работает</span><a class="anchor" href="#how" aria-label="Anchor link">#</a></h2>
     <ol class="steps">
       <li>
         <div data-i18n="en">
@@ -519,7 +574,7 @@
 
   <!-- GALLERY -->
   <section class="block" id="gallery">
-    <h2 class="sec"><span data-i18n="en">screenshots &amp; guides</span><span data-i18n="ru">скриншоты и гайды</span></h2>
+    <h2 class="sec"><span data-i18n="en">screenshots &amp; guides</span><span data-i18n="ru">скриншоты и гайды</span><a class="anchor" href="#gallery" aria-label="Anchor link">#</a></h2>
     <div class="gallery">
       <figure class="tile wide empty" data-asset="guide-main">
         <!-- <video src="media/guide-main.webm" poster="media/guide-main.jpg" controls muted loop playsinline></video> -->
@@ -567,50 +622,117 @@
     </p>
   </section>
 
+  <!-- PRIVACY / TELEMETRY -->
+  <section class="block" id="privacy">
+    <h2 class="sec"><span data-i18n="en">telemetry</span><span data-i18n="ru">телеметрия</span><a class="anchor" href="#privacy" aria-label="Anchor link">#</a></h2>
+
+    <p class="priv-lede">
+      <span data-i18n="en"><b>telemetry: none</b> <em>— no analytics, no crash reports, no device IDs.</em></span>
+      <span data-i18n="ru"><b>телеметрия: нет</b> <em>— ни аналитики, ни отчётов о падениях, ни идентификаторов устройства.</em></span>
+    </p>
+
+    <details class="priv" id="privacy-not-in-app">
+      <summary><span data-i18n="en">what's <u>not</u> in the app</span><span data-i18n="ru">чего нет в приложении</span></summary>
+      <div class="priv-body">
+        <div class="priv-tags">
+          <span>Sentry</span><span>Crashlytics</span><span>Mixpanel</span><span>GA</span>
+          <span>AppMetrica</span><span>Yandex.Metrika</span><span>Firebase</span><span>Amplitude</span>
+          <span data-i18n="en">ad SDKs</span><span data-i18n="ru">рекламные SDK</span>
+          <span data-i18n="en">device IDs</span><span data-i18n="ru">device ID</span>
+          <span data-i18n="en">install UUIDs</span><span data-i18n="ru">install UUID</span>
+        </div>
+        <p>
+          <span data-i18n="en">No third-party trackers. No remote crash upload. The app does not phone home with usage data.</span>
+          <span data-i18n="ru">Никаких трекеров третьих сторон. Падения не отправляются на сервер. Приложение не «звонит домой» с данными использования.</span>
+        </p>
+      </div>
+    </details>
+
+    <details class="priv" id="privacy-connections">
+      <summary><span data-i18n="en">outgoing connections the app makes</span><span data-i18n="ru">исходящие соединения приложения</span></summary>
+      <div class="priv-body">
+        <ul class="priv-conn">
+          <li><span class="k">vpn.ninitux.com</span><span class="v"><span data-i18n="en">update check &amp; SHA256-verified binary download</span><span data-i18n="ru">проверка версии и скачивание обновлений с проверкой SHA256</span></span></li>
+          <li><span class="k"><span data-i18n="en">your VLESS / sing-box</span><span data-i18n="ru">ваши VLESS / sing-box</span></span><span class="v"><span data-i18n="en">the actual VPN tunnel — from your subscriptions or pasted configs</span><span data-i18n="ru">сам VPN-тоннель — из подписок или вставленных конфигов</span></span></li>
+          <li><span class="k"><span data-i18n="en">free pool</span><span data-i18n="ru">free-пул</span></span><span class="v"><span data-i18n="en">public VLESS list, refreshed every 6h — only when the Free tab is open</span><span data-i18n="ru">публичный список VLESS, обновляется раз в 6 ч — только при открытой вкладке Free</span></span></li>
+          <li><span class="k">api.github.com</span><span class="v"><span data-i18n="en">release manifest for the auto-updater — optional, can be disabled</span><span data-i18n="ru">манифест релизов для авто-обновления — можно отключить</span></span></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="priv" id="privacy-verify">
+      <summary><span data-i18n="en">verify yourself</span><span data-i18n="ru">проверить самостоятельно</span></summary>
+      <div class="priv-body">
+        <p>
+          <span data-i18n="en">Source is open. Grep it for known SDKs, or watch the actual traffic at runtime.</span>
+          <span data-i18n="ru">Исходники открыты. Поищите известные SDK или посмотрите реальный трафик в рантайме.</span>
+        </p>
+        <div class="priv-verify" data-i18n="en"><span class="c"># grep the source for known SDKs</span>
+<span class="p">$</span> git clone https://github.com/PavelLizunov/VPNRouter
+<span class="p">$</span> grep -rE "(sentry|crashlytic|mixpanel|appmetrica|firebase-analytics|amplitude)" .
+
+<span class="c"># or watch live traffic</span>
+<span class="p">$</span> sudo tcpdump -i any        <span class="c"># Linux / macOS</span>
+<span class="p">&gt;</span> pktmon start               <span class="c"># Windows</span></div>
+        <div class="priv-verify" data-i18n="ru"><span class="c"># поиск известных SDK в исходниках</span>
+<span class="p">$</span> git clone https://github.com/PavelLizunov/VPNRouter
+<span class="p">$</span> grep -rE "(sentry|crashlytic|mixpanel|appmetrica|firebase-analytics|amplitude)" .
+
+<span class="c"># или живой трафик</span>
+<span class="p">$</span> sudo tcpdump -i any        <span class="c"># Linux / macOS</span>
+<span class="p">&gt;</span> pktmon start               <span class="c"># Windows</span></div>
+        <p style="margin-top:14px">
+          <span data-i18n="en"><em>About this site:</em> ninitux.com uses self-hosted Umami for traffic counting (no cookies, no third parties). The app itself talks to nothing on this site.</span>
+          <span data-i18n="ru"><em>Про этот сайт:</em> ninitux.com использует self-hosted Umami для подсчёта посещений (без cookies, без третьих сторон). Само приложение к этому сайту не обращается.</span>
+        </p>
+      </div>
+    </details>
+
+  </section>
+
   <!-- SERVICES -->
   <section class="block" id="services">
-    <details class="services-details" id="services-details">
-      <summary class="sec sec-summary">
-        <span class="chev" aria-hidden="true">▸</span>
-        <span data-i18n="en">other services</span><span data-i18n="ru">другие сервисы</span>
-        <span class="count">(7)</span>
-      </summary>
-      <table class="services">
-        <tbody>
-          <tr>
-            <td class="host"><a href="https://wb.ninitux.com" data-umami-event="svc-wb">wb.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">WB Pricing tasks</span><span data-i18n="ru">WB — цены и задачи</span> <span class="badge"><span data-i18n="en">commercial</span><span data-i18n="ru">коммерч.</span></span></td>
-          </tr>
-          <tr>
-            <td class="host"><a href="https://md.ninitux.com" data-umami-event="svc-md">md.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">Markdown viewer (Flatnotes)</span><span data-i18n="ru">Markdown viewer (Flatnotes)</span></td>
-          </tr>
-          <tr class="admin locked" data-svc="docs">
-            <td class="host"><a href="https://docs.ninitux.com" data-umami-event="svc-docs">docs.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">Docs</span><span data-i18n="ru">Документация</span> <span class="badge">admin</span></td>
-          </tr>
-          <tr class="admin locked" data-svc="git">
-            <td class="host"><a href="https://git.ninitux.com" data-umami-event="svc-git">git.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">Forgejo — self-hosted git</span><span data-i18n="ru">Forgejo — self-hosted git</span> <span class="badge">admin</span></td>
-          </tr>
-          <tr class="admin locked" data-svc="analytics">
-            <td class="host"><a href="https://analytics.ninitux.com" data-umami-event="svc-analytics">analytics.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">Umami analytics</span><span data-i18n="ru">Umami analytics</span> <span class="badge">admin</span></td>
-          </tr>
-          <tr class="admin locked" data-svc="db">
-            <td class="host"><a href="https://db.ninitux.com" data-umami-event="svc-db">db.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">pgweb — PostgreSQL client</span><span data-i18n="ru">pgweb — PostgreSQL клиент</span> <span class="badge">admin</span></td>
-          </tr>
-          <tr class="admin locked" data-svc="tasks">
-            <td class="host"><a href="https://tasks.ninitux.com" data-umami-event="svc-tasks">tasks.ninitux.com</a></td>
-            <td class="desc"><span data-i18n="en">Plane — issue tracker</span><span data-i18n="ru">Plane — трекер задач</span> <span class="badge">admin</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="auth-note" id="auth-note">
-        <span data-i18n="en">Admin services unlock after auth via</span>
-        <span data-i18n="ru">Admin-сервисы открываются после авторизации через</span>
-        <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" data-umami-event="click-auth-bot">@ninitux_auth_bot</a>.
+    <h2 class="sec"><span data-i18n="en">other services</span><span data-i18n="ru">другие сервисы</span><a class="anchor" href="#services" aria-label="Anchor link">#</a></h2>
+    <details class="priv" id="services-list">
+      <summary><span data-i18n="en">domains &amp; admin tools</span><span data-i18n="ru">домены и admin-инструменты</span></summary>
+      <div class="priv-body">
+        <table class="services">
+          <tbody>
+            <tr>
+              <td class="host"><a href="https://wb.ninitux.com" data-umami-event="svc-wb">wb.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">WB Pricing tasks</span><span data-i18n="ru">WB — цены и задачи</span> <span class="badge"><span data-i18n="en">commercial</span><span data-i18n="ru">коммерч.</span></span></td>
+            </tr>
+            <tr>
+              <td class="host"><a href="https://md.ninitux.com" data-umami-event="svc-md">md.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">Markdown viewer (Flatnotes)</span><span data-i18n="ru">Markdown viewer (Flatnotes)</span></td>
+            </tr>
+            <tr class="admin locked" data-svc="docs">
+              <td class="host"><a href="https://docs.ninitux.com" data-umami-event="svc-docs">docs.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">Docs</span><span data-i18n="ru">Документация</span> <span class="badge">admin</span></td>
+            </tr>
+            <tr class="admin locked" data-svc="git">
+              <td class="host"><a href="https://git.ninitux.com" data-umami-event="svc-git">git.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">Forgejo — self-hosted git</span><span data-i18n="ru">Forgejo — self-hosted git</span> <span class="badge">admin</span></td>
+            </tr>
+            <tr class="admin locked" data-svc="analytics">
+              <td class="host"><a href="https://analytics.ninitux.com" data-umami-event="svc-analytics">analytics.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">Umami analytics</span><span data-i18n="ru">Umami analytics</span> <span class="badge">admin</span></td>
+            </tr>
+            <tr class="admin locked" data-svc="db">
+              <td class="host"><a href="https://db.ninitux.com" data-umami-event="svc-db">db.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">pgweb — PostgreSQL client</span><span data-i18n="ru">pgweb — PostgreSQL клиент</span> <span class="badge">admin</span></td>
+            </tr>
+            <tr class="admin locked" data-svc="tasks">
+              <td class="host"><a href="https://tasks.ninitux.com" data-umami-event="svc-tasks">tasks.ninitux.com</a></td>
+              <td class="desc"><span data-i18n="en">Plane — issue tracker</span><span data-i18n="ru">Plane — трекер задач</span> <span class="badge">admin</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="auth-note" id="auth-note">
+          <span data-i18n="en">Admin services unlock after auth via</span>
+          <span data-i18n="ru">Admin-сервисы открываются после авторизации через</span>
+          <a href="https://t.me/ninitux_auth_bot" target="_blank" rel="noopener" data-umami-event="click-auth-bot">@ninitux_auth_bot</a>.
+        </div>
       </div>
     </details>
   </section>
@@ -744,18 +866,29 @@
       document.querySelectorAll('.meta a[data-asset-suffix], .meta a[data-asset-match]').forEach(a => { a.href = a.dataset.fallback; });
     });
 
-  // ── Services details (auto-open on hash/nav) ───────────────
-  const svcDetails = document.getElementById('services-details');
-  function openServicesIfTargeted(){
-    if (location.hash === '#services' && svcDetails && !svcDetails.open){
-      svcDetails.open = true;
+  // ── Anchors / details auto-open ────────────────────────────
+  function openDetailsByHash(){
+    const hash = location.hash.replace('#','');
+    if (!hash) return;
+    // Direct match: <details id="...">
+    const direct = document.getElementById(hash);
+    if (direct && direct.tagName === 'DETAILS'){
+      direct.open = true;
+      direct.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+    // Section match: open all <details> within that section
+    if (direct && direct.tagName === 'SECTION'){
+      direct.querySelectorAll('details').forEach(d => { d.open = true; });
     }
   }
-  openServicesIfTargeted();
-  window.addEventListener('hashchange', openServicesIfTargeted);
-  document.querySelectorAll('a[href="#services"]').forEach(a => {
-    a.addEventListener('click', () => {
-      if (svcDetails) svcDetails.open = true;
+  openDetailsByHash();
+  window.addEventListener('hashchange', openDetailsByHash);
+  // Click on anchor "#" copies URL to clipboard
+  document.querySelectorAll('h2.sec a.anchor').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const url = location.origin + location.pathname + a.getAttribute('href');
+      try{ navigator.clipboard.writeText(url); }catch(_){}
     });
   });
 
