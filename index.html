@@ -333,7 +333,7 @@
     align-items:baseline;border-bottom:1px dashed var(--rule);
   }
   ul.priv-conn li:last-child{border-bottom:0}
-  ul.priv-conn .k{font-family:var(--mono);font-size:13px;color:var(--fg);white-space:nowrap;font-weight:500}
+  ul.priv-conn .k{font-family:var(--mono);font-size:13px;color:var(--fg);font-weight:500;word-break:break-word;overflow-wrap:anywhere;line-height:1.45}
   ul.priv-conn .v{color:var(--fg-mute);font-size:13.5px}
   .priv-verify{
     background:var(--code-bg);border:1px solid var(--rule);border-radius:6px;
@@ -651,12 +651,36 @@
     <details class="priv" id="privacy-connections">
       <summary><span data-i18n="en">outgoing connections the app makes</span><span data-i18n="ru">исходящие соединения приложения</span></summary>
       <div class="priv-body">
+        <p style="margin:0 0 10px;font-family:var(--mono);font-size:12px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:.06em">
+          <span data-i18n="en">automatic</span><span data-i18n="ru">автоматически</span>
+        </p>
         <ul class="priv-conn">
-          <li><span class="k">vpn.ninitux.com</span><span class="v"><span data-i18n="en">update check &amp; SHA256-verified binary download</span><span data-i18n="ru">проверка версии и скачивание обновлений с проверкой SHA256</span></span></li>
-          <li><span class="k"><span data-i18n="en">your VLESS / sing-box</span><span data-i18n="ru">ваши VLESS / sing-box</span></span><span class="v"><span data-i18n="en">the actual VPN tunnel — from your subscriptions or pasted configs</span><span data-i18n="ru">сам VPN-тоннель — из подписок или вставленных конфигов</span></span></li>
-          <li><span class="k"><span data-i18n="en">free pool</span><span data-i18n="ru">free-пул</span></span><span class="v"><span data-i18n="en">public VLESS list, refreshed every 6h — only when the Free tab is open</span><span data-i18n="ru">публичный список VLESS, обновляется раз в 6 ч — только при открытой вкладке Free</span></span></li>
-          <li><span class="k">api.github.com</span><span class="v"><span data-i18n="en">release manifest for the auto-updater — optional, can be disabled</span><span data-i18n="ru">манифест релизов для авто-обновления — можно отключить</span></span></li>
+          <li><span class="k">api.github.com</span><span class="v"><span data-i18n="en">release manifest for the auto-updater — can be disabled in settings</span><span data-i18n="ru">манифест релизов для авто-обновления — можно отключить в настройках</span></span></li>
+          <li><span class="k">github.com/PavelLizunov/<wbr>VPNRouter/releases/<wbr>.../pool.json</span><span class="v"><span data-i18n="en">free pool index — fetched only while the Free tab is open</span><span data-i18n="ru">индекс free-пула — запрашивается только при открытой вкладке Free</span></span></li>
         </ul>
+
+        <p style="margin:18px 0 10px;font-family:var(--mono);font-size:12px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:.06em">
+          <span data-i18n="en">on user action only</span><span data-i18n="ru">только по действию пользователя</span>
+        </p>
+        <ul class="priv-conn">
+          <li><span class="k">gstatic.com<wbr>/generate_204</span><span class="v"><span data-i18n="en">connectivity probe (Google's HTTP 204) — when you click "test connection"</span><span data-i18n="ru">проверка коннекта (HTTP 204) — при нажатии «проверить подключение»</span></span></li>
+          <li><span class="k">cloudflare.com<wbr>/cdn-cgi/trace</span><span class="v"><span data-i18n="en">IP / connectivity check</span><span data-i18n="ru">проверка IP и коннекта</span></span></li>
+          <li><span class="k">ip-api.com</span><span class="v"><span data-i18n="en">GeoIP for free-pool servers — when sorting / filtering by country</span><span data-i18n="ru">GeoIP для free-серверов — при сортировке / фильтрации по стране</span></span></li>
+          <li><span class="k">ipleak.net</span><span class="v"><span data-i18n="en">leak test — manual</span><span data-i18n="ru">leak-тест — вручную</span></span></li>
+          <li><span class="k">speed.cloudflare.com<br>ash-speed.hetzner.com<br>proof.ovh.net</span><span class="v"><span data-i18n="en">speed test — manual</span><span data-i18n="ru">speed-тест — вручную</span></span></li>
+        </ul>
+
+        <p style="margin:18px 0 10px;font-family:var(--mono);font-size:12px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:.06em">
+          <span data-i18n="en">user-controlled</span><span data-i18n="ru">контролируется пользователем</span>
+        </p>
+        <ul class="priv-conn">
+          <li><span class="k"><span data-i18n="en">your VLESS / sing-box</span><span data-i18n="ru">ваши VLESS / sing-box</span></span><span class="v"><span data-i18n="en">the actual VPN tunnel — from your subscriptions or pasted configs</span><span data-i18n="ru">сам VPN-тоннель — из подписок или вставленных конфигов</span></span></li>
+        </ul>
+
+        <p style="margin-top:18px;font-size:12.5px;color:var(--fg-dim)">
+          <span data-i18n="en"><b style="color:var(--fg-mute)">Note:</b> <code>vpn.ninitux.com</code> is the install-script URL only — the running app never calls it. <a href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener">Verify in source</a>.</span>
+          <span data-i18n="ru"><b style="color:var(--fg-mute)">Примечание:</b> <code>vpn.ninitux.com</code> — это URL только для установочного скрипта; запущенное приложение туда не обращается. <a href="https://github.com/PavelLizunov/VPNRouter" target="_blank" rel="noopener">Проверить в исходниках</a>.</span>
+        </p>
       </div>
     </details>
 
