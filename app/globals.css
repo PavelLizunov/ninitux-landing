@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Заглушка: токены v4 будут наполнены в Phase 2. Сейчас минимум чтобы build не падал. */
+:root {
+  --cream: #FFFBEC;
+  --ink: #0A0907;
+}
+html, body { margin: 0; padding: 0; background: var(--cream); color: var(--ink); }
