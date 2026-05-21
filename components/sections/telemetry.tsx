@@ -32,7 +32,7 @@ export function Telemetry() {
     <section className="section" id="telemetry">
       <div className="section-h">
         <div className="num" style={{ color: "var(--red)" }}>
-          06
+          05
         </div>
         <h2>
           <T ru="Телеметрия:" en="Telemetry:" />{" "}

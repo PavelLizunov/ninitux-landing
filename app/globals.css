@@ -847,8 +847,11 @@ footer.bigfoot .legal{
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width:980px){
   .wrap{padding:0 18px}
+  /* Stack vertically. Penguin goes ABOVE the headline via `order:-1` so it
+     doesn't jump 700px below the CTA pills — keeps it near the top where
+     users expect a hero illustration on narrow viewports. */
   .hero-grid{grid-template-columns:1fr;gap:18px}
-  .hero-pen-wrap{width:240px;margin:18px auto 8px}
+  .hero-pen-wrap{width:200px;margin:0 auto 12px;order:-1}
   .sticker-1,.sticker-2,.sticker-3{position:absolute}
   .os-grid{grid-template-columns:1fr}
   .feat-grid > div{grid-column:span 12 !important}

@@ -141,7 +141,7 @@ export function FAQ() {
     <section className="section" id="faq">
       <div className="section-h">
         <div className="num" style={{ color: "var(--blue)" }}>
-          07
+          06
         </div>
         <h2>
           <T ru="Частые" en="Common" />{" "}

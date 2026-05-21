@@ -26,7 +26,7 @@ export function Services() {
     <section className="section" id="services">
       <div className="section-h">
         <div className="num" style={{ color: "var(--blue)" }}>
-          09
+          07
         </div>
         <h2>
           <T ru="Остальной" en="The rest of the" />{" "}

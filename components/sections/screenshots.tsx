@@ -193,7 +193,7 @@ export function Screenshots() {
 
       {openTile && (
         <div
-          className="lightbox open"
+          className="lightbox show"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -219,13 +219,14 @@ export function Screenshots() {
                   autoPlay
                   loop
                   playsInline
-                  style={{ maxWidth: "100%", maxHeight: "80vh" }}
+                  style={{ width: "100%", height: "100%", objectFit: "contain", background: "#000" }}
                 />
               ) : openTile.media ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={openTile.media.src}
                   alt={openTile.en.title}
-                  style={{ maxWidth: "100%", maxHeight: "80vh" }}
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
                 />
               ) : null}
             </div>
