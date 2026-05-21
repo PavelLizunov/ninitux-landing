@@ -5,10 +5,13 @@ import { T } from "@/components/i18n/t";
 
 /**
  * Support — tip card + star count from GitHub. Live count via api.github.com,
- * fallback "1.2k".
+ * fallback shows the last known real value (currently 2).
  */
 export function Support() {
-  const [stars, setStars] = useState("1.2k");
+  // Honest default — don't pretend there are thousands of stars when there
+  // aren't. If GitHub API is reachable, the real count overrides this; if
+  // it isn't, the visible value is still truthful (just slightly stale).
+  const [stars, setStars] = useState("2");
 
   useEffect(() => {
     fetch("https://api.github.com/repos/PavelLizunov/VPNRouter")

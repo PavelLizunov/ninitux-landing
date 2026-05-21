@@ -20,8 +20,11 @@ function fmtSize(bytes: number) {
  * penguin sticker on the right with 3 attached stickers (wobble animation).
  */
 export function Hero() {
-  const [version, setVersion] = useState("v0.7.4");
-  const [size, setSize] = useState("~14 MB");
+  // Placeholders below are bumped to the latest real release so users with
+  // a failed GitHub API call (rate-limit/offline) see a plausible value
+  // instead of fiction. The live fetch below overrides them on success.
+  const [version, setVersion] = useState("v2.35.0");
+  const [size, setSize] = useState("60.8 MB");
 
   useEffect(() => {
     fetch("https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest")
