@@ -11,8 +11,10 @@
    ───────────────────────────────────────────────────────────────────── */
 
 @theme inline {
-  /* Animation tokens — гарантируют что keyframes попадут в финальный bundle */
-  --animate-marquee:       scroll 38s linear infinite;
+  /* Animation tokens — гарантируют что keyframes попадут в финальный bundle.
+     marquee-loop -> for the top marquee, tripled content, wraps at -33.333%
+     scroll       -> simpler scroll for decorative pseudo marquees in feat/tele */
+  --animate-marquee:       marquee-loop 38s linear infinite;
   --animate-marquee-fast:  scroll 25s linear infinite;
   --animate-marquee-slow:  scroll 30s linear infinite;
   --animate-eyebrow-blink: blink 1.1s steps(2) infinite;
@@ -82,6 +84,11 @@ button{font-family:inherit}
 .marquee .track{display:inline-flex;gap:32px;animation:var(--animate-marquee);padding-right:32px;will-change:transform}
 .marquee .track span{display:inline-flex;align-items:center;gap:8px}
 .marquee .track .dot{color:var(--pink)}
+/* Main marquee wraps by exactly ONE copy of tripled content. With items
+   tripled and padding-right == gap (32px), one third of total width is
+   exactly one copy + its trailing gap, so item[N] lands on item[0]'s
+   position at the wrap point. */
+@keyframes marquee-loop{from{transform:translateX(0)}to{transform:translateX(-33.3333%)}}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 /* Marquee stays animated even under reduced-motion (slow horizontal text
    scroll is considered vestibular-safe and is core to the design). */

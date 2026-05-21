@@ -12,14 +12,21 @@ const ITEMS = [
 /**
  * Full-width black bar at the top with lime monospaced text scrolling left.
  * Rendered OUTSIDE .wrap so the background stretches edge-to-edge.
- * Items doubled so the animation loops seamlessly at -50% translateX.
+ *
+ * Items TRIPLED so the wrap is seamless on any viewport wider than one set.
+ * (A doubled marquee leaves a gap on viewports wider than half the track —
+ * at 1400px viewport with ~2700px track, half = 1350px < 1400px = ~50px gap.
+ * Tripling keeps the visible window inside the loop region at any moment.)
+ *
+ * Animation: translateX(0) → translateX(-33.333%) over the cycle. At that
+ * point, item[N] sits exactly where item[0] was → visually identical → loop.
  */
 export function Marquee() {
-  const doubled = [...ITEMS, ...ITEMS];
+  const tripled = [...ITEMS, ...ITEMS, ...ITEMS];
   return (
     <div className="marquee" aria-hidden="true">
       <div className="track">
-        {doubled.map((item, idx) => (
+        {tripled.map((item, idx) => (
           <span key={idx}>
             <span className="dot">●</span> <T ru={item.ru} en={item.en} />
           </span>
