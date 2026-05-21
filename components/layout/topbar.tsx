@@ -11,7 +11,6 @@ const NAV = [
   { href: "#features", ru: "фичи", en: "features" },
   { href: "#how", ru: "как", en: "how" },
   { href: "#screenshots", ru: "скрины", en: "shots" },
-  { href: "#compare", ru: "сравнение", en: "compare" },
   { href: "#telemetry", ru: "телеметрия", en: "telemetry" },
   { href: "#faq", ru: "FAQ", en: "FAQ" },
   { href: "#services", ru: "сервисы", en: "services" },
@@ -51,38 +50,40 @@ export function Topbar() {
   return (
     <>
       <header className={scrolled ? "topbar scrolled" : "topbar"} id="topbar">
-        <Link className="brand" href="/" aria-label="ninitux.com">
-          <span className="star">★</span> ninitux.com
-        </Link>
-        <nav className="nav">
-          {NAV.map((item) => (
-            <a key={item.href} className="nl" href={item.href}>
-              <T ru={item.ru} en={item.en} />
+        <div className="topbar-inner">
+          <Link className="brand" href="/" aria-label="ninitux.com">
+            <span className="star">★</span> ninitux.com
+          </Link>
+          <nav className="nav">
+            {NAV.map((item) => (
+              <a key={item.href} className="nl" href={item.href}>
+                <T ru={item.ru} en={item.en} />
+              </a>
+            ))}
+            <LangToggle />
+            <a
+              className="auth-btn"
+              id="auth-btn"
+              href={authed ? "/auth/logout" : "/auth/login?next=https://ninitux.com"}
+              data-umami-event={authed ? "click-logout" : "click-login"}
+            >
+              {authed ? (
+                <T ru="Выйти" en="Logout" />
+              ) : (
+                <T ru="Войти" en="Login" />
+              )}
             </a>
-          ))}
-          <LangToggle />
-          <a
-            className="auth-btn"
-            id="auth-btn"
-            href={authed ? "/auth/logout" : "/auth/login?next=https://ninitux.com"}
-            data-umami-event={authed ? "click-logout" : "click-login"}
-          >
-            {authed ? (
-              <T ru="Выйти" en="Logout" />
-            ) : (
-              <T ru="Войти" en="Login" />
-            )}
-          </a>
-        </nav>
-        <div className="nav-mobile">
-          <button
-            type="button"
-            id="mobile-open"
-            aria-label="menu"
-            onClick={() => setDrawerOpen(true)}
-          >
-            ≡
-          </button>
+          </nav>
+          <div className="nav-mobile">
+            <button
+              type="button"
+              id="mobile-open"
+              aria-label="menu"
+              onClick={() => setDrawerOpen(true)}
+            >
+              ≡
+            </button>
+          </div>
         </div>
       </header>
       {drawerOpen && <MobileDrawer onClose={() => setDrawerOpen(false)} />}

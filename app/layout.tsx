@@ -99,11 +99,12 @@ export default function RootLayout({
     <html lang="en" data-lang="en" suppressHydrationWarning className={fontVars}>
       <body>
         <LangProvider>
-          {/* Marquee is full-width — rendered OUTSIDE .wrap so its black
-              background stretches edge-to-edge. */}
+          {/* Marquee and Topbar are full-width — rendered OUTSIDE .wrap so
+              their backgrounds (and sticky topbar) span the viewport.
+              Each centers its OWN content via an internal wrap (.topbar-inner). */}
           <Marquee />
+          <Topbar />
           <div className="wrap">
-            <Topbar />
             <main>{children}</main>
             <Footer />
           </div>

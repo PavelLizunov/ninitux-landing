@@ -8,10 +8,8 @@ const ITEMS = [
   { href: "#features", ru: "фичи", en: "features" },
   { href: "#how", ru: "как работает", en: "how it works" },
   { href: "#screenshots", ru: "скриншоты", en: "screenshots" },
-  { href: "#compare", ru: "сравнение", en: "comparison" },
   { href: "#telemetry", ru: "телеметрия", en: "telemetry" },
   { href: "#faq", ru: "FAQ", en: "FAQ" },
-  { href: "#roadmap", ru: "планы", en: "roadmap" },
   { href: "#services", ru: "другие сервисы", en: "other services" },
 ] as const;
 
