@@ -137,7 +137,8 @@ button{font-family:inherit}
 
 /* ── HERO ───────────────────────────────────────────── */
 .hero{position:relative;padding:36px 0 56px}
-.hero-grid{display:grid;grid-template-columns:1fr 320px;gap:36px;align-items:start}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:36px;align-items:start}
+.hero-grid > *{min-width:0}
 
 .eyebrow{
   display:inline-flex;align-items:center;gap:10px;
@@ -152,8 +153,13 @@ button{font-family:inherit}
 
 h1.headline{
   font-family:var(--display);font-weight:800;
-  font-size:clamp(56px, 10vw, 144px);line-height:0.86;letter-spacing:-0.04em;
+  /* Russian letters (приложений, маршрутизация) are wider in Unbounded than
+     equivalent English. Cap at 96px on wide viewports so a single word
+     doesn't push the right column (penguin) off-screen. */
+  font-size:clamp(48px, 7.5vw, 96px);line-height:0.92;letter-spacing:-0.03em;
   margin:0 0 22px;color:var(--ink);
+  overflow-wrap:break-word;word-break:normal;
+  hyphens:auto;
 }
 h1.headline .pop{
   background:var(--pink);color:var(--cream);padding:0 14px;display:inline-block;
@@ -179,9 +185,24 @@ h1.headline .underline{
 }
 .lede em{font-style:normal;background:var(--sky);padding:0 6px;border-radius:5px;font-weight:600;color:var(--ink)}
 
-/* hero penguin sticker */
+/* hero penguin sticker
+   NOTE about the layered structure: ``.hero-pen`` has a ``filter`` (drop-shadow)
+   which establishes a new stacking context. A ``::before`` with z-index:-1 on
+   such an element does NOT go behind the parent's background — it sits inside
+   the parent's context and on top of the parent's background painting.
+   That painted the yellow plate ON TOP of the penguin image, hiding it.
+   Fix: put the yellow plate on the WRAP (no filter, normal stacking), and
+   keep the penguin image as a child layered above it. */
+.hero-pen-wrap{position:relative;isolation:isolate}
+.hero-pen-wrap::before{
+  content:"";position:absolute;inset:-22px -14px -14px -14px;
+  background:var(--yellow);
+  border:3px solid var(--ink);border-radius:22px;
+  z-index:0;
+  box-shadow:9px 9px 0 var(--ink);
+}
 .hero-pen{
-  position:relative;width:100%;aspect-ratio:1;
+  position:relative;z-index:1;width:100%;aspect-ratio:1;
   background:url('/penguin-sketch.png') center/contain no-repeat;
   transform:rotate(6deg);
   filter:drop-shadow(4px 6px 0 var(--pink));
@@ -192,14 +213,6 @@ h1.headline .underline{
   50%{transform:rotate(2deg) translateY(-6px)}
 }
 @media (prefers-reduced-motion: reduce){.hero-pen{animation:none}}
-.hero-pen::before{
-  content:"";position:absolute;inset:-22px -14px -14px -14px;
-  background:var(--yellow);
-  border:3px solid var(--ink);border-radius:22px;
-  z-index:-1;
-  box-shadow:9px 9px 0 var(--ink);
-}
-.hero-pen-wrap{position:relative}
 .hero-sticker{
   position:absolute;display:inline-flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;
