@@ -68,12 +68,12 @@ export function Hero() {
           <p className="lede" data-i18n="en">
             <em>Pick which programs go through the proxy</em> — Slack, your
             torrent client, that one website. Everything else stays direct, on
-            the open net. <b>Windows, macOS, Linux.</b> Open source.
+            the open net. <b>Windows, macOS, Linux, Android.</b> Open source.
           </p>
           <p className="lede" data-i18n="ru">
             <em>Выберите какие приложения идут через прокси</em> — Slack,
             торрент-клиент, один сайт. Всё остальное идёт напрямую, по обычной
-            сети. <b>Windows, macOS, Linux.</b> Open source.
+            сети. <b>Windows, macOS, Linux, Android.</b> Open source.
           </p>
 
           <div className="cta-row">

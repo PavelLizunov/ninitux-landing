@@ -6,7 +6,7 @@ const ITEMS = [
   { ru: "НОЛЬ телеметрии", en: "ZERO telemetry" },
   { ru: "VLESS + Reality + sing-box", en: "VLESS + Reality + sing-box" },
   { ru: "GPL-3.0 · open source", en: "GPL-3.0 · open source" },
-  { ru: "windows · macos · linux", en: "windows · macos · linux" },
+  { ru: "windows · macos · linux · android", en: "windows · macos · linux · android" },
 ];
 
 /**

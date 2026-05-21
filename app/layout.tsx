@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ninitux.com"),
   title: "ninitux.com ★ VPN Router — Virtual Penguin Network",
   description:
-    "Process-based split-tunnel VPN router for Windows, macOS and Linux. Pick which apps go through the proxy — everything else stays direct.",
+    "Process-based split-tunnel VPN router for Windows, macOS, Linux and Android. Pick which apps go through the proxy — everything else stays direct.",
   applicationName: "ninitux.com",
   authors: [{ name: "Pavel Lizunov", url: "https://ninitux.com" }],
   keywords: [

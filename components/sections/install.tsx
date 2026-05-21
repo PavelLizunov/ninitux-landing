@@ -169,10 +169,13 @@ export function Install() {
             <span className="glyph">🐧</span> Linux
           </h3>
           <p className="blurb" data-i18n="en">
-            curl, sudo, capabilities. No system daemon, no full-root nonsense.
+            Debian / Ubuntu / Mint / Pop. Signed apt repo, POSIX capabilities
+            — no full-root daemon. Updates via <code>apt upgrade</code>.
           </p>
           <p className="blurb" data-i18n="ru">
-            curl, sudo, capabilities. Без системного демона, без полного root.
+            Debian / Ubuntu / Mint / Pop. Подписанный apt-репо, POSIX
+            capabilities — без полного root. Обновления через{" "}
+            <code>apt upgrade</code>.
           </p>
           <div className="cmd-box">
             <div className="cmd">
@@ -211,10 +214,12 @@ export function Install() {
             <span className="glyph">🍎</span> macOS
           </h3>
           <p className="blurb" data-i18n="en">
-            Signed cask. One sudoers entry, never asked again. utun adapter.
+            Apple Silicon. Auto-strips Gatekeeper quarantine. One-time
+            sudoers prompt, then passwordless. <code>brew upgrade</code>.
           </p>
           <p className="blurb" data-i18n="ru">
-            Подписанный cask. Один раз sudoers и больше не спрашивает. utun.
+            Apple Silicon. Снимает Gatekeeper quarantine автоматически. Один
+            раз sudoers, дальше без пароля. <code>brew upgrade</code>.
           </p>
           <div className="cmd-box">
             <div className="cmd">
@@ -233,7 +238,7 @@ export function Install() {
             <span className="kbd">Terminal</span>
           </div>
           <ManualLinks specs={MAC_ASSETS} release={release} />
-          <span className="req">macOS 12+ · Apple Silicon &amp; Intel</span>
+          <span className="req">macOS 12+ · Apple Silicon only</span>
         </div>
 
         {/* Windows */}
@@ -249,10 +254,12 @@ export function Install() {
             <span className="glyph">🪟</span> Windows
           </h3>
           <p className="blurb" data-i18n="en">
-            TUN driver + ETW listener + optional Zapret module for DPI bypass.
+            Windows 10/11 x64. Auto-elevates via UAC, registers in Start
+            Menu. Optional Zapret bundled for DPI bypass.
           </p>
           <p className="blurb" data-i18n="ru">
-            TUN-драйвер + ETW listener + опциональный Zapret для DPI bypass.
+            Windows 10/11 x64. Авто-elevate через UAC, регистрируется в
+            Start Menu. Опциональный Zapret для DPI bypass.
           </p>
           <div className="cmd-box">
             <div className="cmd">

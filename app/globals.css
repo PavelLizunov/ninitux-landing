@@ -868,7 +868,12 @@ footer.bigfoot .legal{
   .shot.wide,.shot.tall,.shot.med{grid-column:span 1}
   .roadmap{grid-template-columns:1fr 1fr}
   .faq-grid{grid-template-columns:1fr}
-  .support{grid-template-columns:1fr}
+  .support{grid-template-columns:1fr;padding:22px}
+  /* Inline-block em with rotate can't wrap on narrow screens, pushing the
+     support card past 360px viewport. Drop the chip styling on mobile —
+     the heading reads fine as plain text. */
+  .support h3 em{display:inline;background:transparent;color:var(--ink);padding:0;transform:none;border-radius:0}
+  .support h3{overflow-wrap:break-word;word-break:normal}
   h1.headline{font-size:clamp(44px,12vw,80px)}
   .section-h .num{font-size:54px}
 }

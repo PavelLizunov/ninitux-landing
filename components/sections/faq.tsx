@@ -82,17 +82,46 @@ const FAQS: Q[] = [
     a: {
       en: (
         <>
-          Not yet. iOS and Android are on the roadmap (see{" "}
-          <a href="#roadmap">roadmap</a>) but not in 2026 H1. For now, mobile
-          users can use a sing-box-compatible client and import the same
+          <b>Android — yes, shipping.</b> Grab{" "}
+          <code>VPNRouter-v*-android.apk</code> from{" "}
+          <a
+            href="https://github.com/PavelLizunov/VPNRouter/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Releases
+          </a>
+          . Android 6.0+ (API 23), arm64/arm/x64/x86 universal. Uses
+          Android&apos;s <code>VpnService</code> (no root). Live-preview QR
+          scanner, paste-and-go subscription, self-update via in-app banner.
+          <br />
+          <br />
+          <b>iOS — not planned.</b> Apple&apos;s VPN entitlement + App Store
+          review aren&apos;t worth the effort for a personal project. Use a
+          sing-box compatible iOS client (e.g. ShadowRocket) with the same
           subscription URL.
         </>
       ),
       ru: (
         <>
-          Пока нет. iOS и Android в планах (см.{" "}
-          <a href="#roadmap">роадмап</a>), но не в первой половине 2026. Сейчас
-          на телефоне — sing-box совместимый клиент с той же subscription URL.
+          <b>Android — да, релизится.</b> Скачайте{" "}
+          <code>VPNRouter-v*-android.apk</code> с{" "}
+          <a
+            href="https://github.com/PavelLizunov/VPNRouter/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Releases
+          </a>
+          . Android 6.0+ (API 23), arm64/arm/x64/x86 universal. Использует{" "}
+          <code>VpnService</code> Android (без root). Live-preview QR-сканер,
+          paste-and-go подписка, само-обновление через in-app баннер.
+          <br />
+          <br />
+          <b>iOS — не планируется.</b> VPN entitlement у Apple + App Store
+          review не стоят усилий для личного проекта. На iOS — sing-box
+          совместимый клиент (например, ShadowRocket) с той же subscription
+          URL.
         </>
       ),
     },
