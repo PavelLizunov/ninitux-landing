@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { T } from "@/components/i18n/t";
 
-type OS = "linux" | "mac" | "win";
+type OS = "linux" | "mac" | "win" | "android";
 
 interface Release {
   tag_name: string;
@@ -118,10 +118,74 @@ function ManualLinks({
 }
 
 /**
- * Install section — 3 OS cards (Linux/macOS/Windows), each with badge, blurb,
- * cmd-box with copy button, terminal-open hint with kbd keys, manual download
- * links pulled from GitHub Releases API. The detected OS gets `.detected`
- * outlined dash and shows "your OS" tag.
+ * Android card — sideload-only, no Play Store, no one-liner. So instead of
+ * a cmd-box + copy button it shows a single big "Download .apk" CTA pulled
+ * from the latest GitHub Release. Matches the same `.os-card` skeleton as
+ * the other three so the grid stays consistent.
+ */
+function AndroidCard({
+  detected,
+  release,
+}: {
+  detected: boolean;
+  release: Release | null;
+}) {
+  const asset = release?.assets.find((a) => a.name.endsWith("-android.apk"));
+  const href = asset?.browser_download_url ?? FALLBACK;
+  const verSize = asset
+    ? `· ${release?.tag_name ?? ""} · ${fmtSize(asset.size)}`
+    : "";
+
+  return (
+    <div
+      className={detected ? "os-card detected" : "os-card"}
+      data-os="android"
+    >
+      <span className="badge">apk · sideload</span>
+      <span className="detected-tag">
+        <T ru="ваша OS" en="your OS" />
+      </span>
+      <h3>
+        <span className="glyph">🤖</span> Android
+      </h3>
+      <p className="blurb" data-i18n="en">
+        Android 6.0+ (API 23). Universal APK — arm64 / arm / x64 / x86.
+        Sideload, no Play Store. Self-update via in-app banner.
+      </p>
+      <p className="blurb" data-i18n="ru">
+        Android 6.0+ (API 23). Universal APK — arm64 / arm / x64 / x86.
+        Sideload, без Play Store. Само-обновление через in-app баннер.
+      </p>
+      <a
+        className="apk-btn"
+        href={href}
+        data-umami-event="dl-apk"
+      >
+        <span className="glyph">↓</span>{" "}
+        <T ru="Скачать .apk" en="Download .apk" />{" "}
+        <span className="ver">{verSize}</span>
+      </a>
+      <div className="hint">
+        <T ru="разрешить sideload:" en="allow sideload:" />
+        <span className="kbd">Settings</span> →{" "}
+        <span className="kbd">Apps</span> →{" "}
+        <span className="kbd">Install unknown</span>
+      </div>
+      <span className="req" data-i18n="en">
+        only 3 perms · CAMERA · INTERNET · VPN_SERVICE
+      </span>
+      <span className="req" data-i18n="ru">
+        всего 3 пермишена · CAMERA · INTERNET · VPN_SERVICE
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Install section — 4 OS cards (Linux / macOS / Windows / Android). The first
+ * three share a one-liner + copy button shape; Android instead has a single
+ * big download CTA (no Play Store, sideload-only). Cards pulled from GitHub
+ * Releases API. Detected OS gets `.detected` outlined dash + "your OS" tag.
  */
 export function Install() {
   const [detected, setDetected] = useState<OS | null>(null);
@@ -131,7 +195,9 @@ export function Install() {
     const ua = (navigator.userAgent || "").toLowerCase();
     const plat = (navigator.platform || "").toLowerCase();
     let next: OS = "linux";
-    if (ua.includes("windows") || plat.includes("win")) next = "win";
+    // Check Android first — Android UAs also contain "linux" (it's a kernel).
+    if (ua.includes("android")) next = "android";
+    else if (ua.includes("windows") || plat.includes("win")) next = "win";
     else if (ua.includes("mac") || plat.includes("mac")) next = "mac";
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDetected(next);
@@ -284,6 +350,9 @@ export function Install() {
             нужен админ · Windows 10 / 11
           </span>
         </div>
+
+        {/* Android */}
+        <AndroidCard detected={detected === "android"} release={release} />
       </div>
 
       <p

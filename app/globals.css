@@ -289,7 +289,9 @@ h1.headline .underline{
 }
 
 /* ── INSTALL ───────────────────────────────────────── */
-.os-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.os-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media (min-width:1100px){.os-grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:560px){.os-grid{grid-template-columns:1fr}}
 .os-card{
   background:var(--cream);border:3px solid var(--ink);border-radius:18px;
   padding:22px;position:relative;
@@ -304,6 +306,8 @@ h1.headline .underline{
 .os-card:nth-child(2):hover{box-shadow:9px 9px 0 var(--pink)}
 .os-card:nth-child(3){box-shadow:7px 7px 0 var(--blue)}
 .os-card:nth-child(3):hover{box-shadow:9px 9px 0 var(--blue)}
+.os-card:nth-child(4){box-shadow:7px 7px 0 var(--mint)}
+.os-card:nth-child(4):hover{box-shadow:9px 9px 0 var(--mint)}
 .os-card.detected{outline:3px dashed var(--ink);outline-offset:6px}
 
 .os-card .badge{
@@ -315,6 +319,7 @@ h1.headline .underline{
 .os-card:nth-child(1) .badge{background:var(--lime);color:var(--ink)}
 .os-card:nth-child(2) .badge{background:var(--pink);color:var(--cream)}
 .os-card:nth-child(3) .badge{background:var(--blue);color:var(--cream)}
+.os-card:nth-child(4) .badge{background:var(--mint);color:var(--ink)}
 .os-card .detected-tag{
   position:absolute;top:-15px;right:20px;
   background:var(--yellow);color:var(--ink);border:2px solid var(--ink);
@@ -348,6 +353,22 @@ h1.headline .underline{
 }
 .cmd-box .copy:hover{background:var(--pink);color:var(--cream)}
 .cmd-box .copy.ok{background:var(--lime);color:var(--ink)}
+
+/* Android-only: APK download CTA. Replaces .cmd-box on the Android card,
+   visually balanced with it (~same height, same vertical rhythm). */
+.apk-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--ink);color:var(--lime);
+  border:2px solid var(--ink);border-radius:10px;
+  font-family:var(--sans);font-weight:700;font-size:14px;
+  padding:14px 16px;text-decoration:none;letter-spacing:.02em;
+  transition:transform .12s, background .12s;
+  text-align:center;line-height:1.2;
+}
+.apk-btn:hover{background:var(--mint);color:var(--ink);transform:translate(-1px,-1px);text-decoration:none}
+.apk-btn .glyph{font-size:18px;font-weight:800}
+.apk-btn .ver{font-family:var(--mono);font-size:11px;color:var(--ink-mute);font-weight:400;letter-spacing:0;display:block;margin-left:6px}
+.apk-btn:hover .ver{color:var(--ink-2)}
 
 .os-card .manual{
   display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:11px;align-items:center;
@@ -853,7 +874,9 @@ footer.bigfoot .legal{
   .hero-grid{grid-template-columns:1fr;gap:18px}
   .hero-pen-wrap{width:200px;margin:0 auto 12px;order:-1}
   .sticker-1,.sticker-2,.sticker-3{position:absolute}
-  .os-grid{grid-template-columns:1fr}
+  /* .os-grid responsive handled at the section's own scope: 4 cols ≥1100,
+     2 cols default, 1 col ≤560. The earlier blanket 1-col override here
+     killed the intermediate 2×2 layout — removed. */
   .feat-grid > div{grid-column:span 12 !important}
   .feat-bigstat{grid-template-columns:1fr}
   .how-grid{grid-template-columns:1fr}
