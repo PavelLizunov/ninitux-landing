@@ -227,7 +227,7 @@ export function Install() {
           className={detected === "linux" ? "os-card detected" : "os-card"}
           data-os="linux"
         >
-          <span className="badge">apt · pacman · curl</span>
+          <span className="badge">apt · deb · curl</span>
           <span className="detected-tag">
             <T ru="ваша OS" en="your OS" />
           </span>
