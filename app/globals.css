@@ -337,11 +337,15 @@ h1.headline .underline{
 
 .cmd-box{
   background:var(--ink);color:var(--lime);border-radius:10px;
-  font-family:var(--mono);font-size:13.5px;
-  display:grid;grid-template-columns:1fr auto;
+  font-family:var(--mono);font-size:12px;line-height:1.3;
+  display:grid;grid-template-columns:1fr auto;align-items:center;
   border:2px solid var(--ink);
+  height:52px;
 }
-.cmd-box .cmd{padding:14px 16px;overflow-x:auto;white-space:pre;font-weight:400}
+/* Smaller mono in cmd helps the one-liner fit inside the 4-col card width
+   (~147px content area at 1400px viewport). On wider cards (≤3-col), it
+   stays just as readable. */
+.cmd-box .cmd{padding:0 14px;overflow-x:auto;white-space:pre;font-weight:400}
 .cmd-box .cmd .pmt{color:var(--pink);margin-right:6px;user-select:none}
 .cmd-box .cmd .flag{color:var(--yellow)}
 .cmd-box .cmd .url{color:var(--sky);text-decoration:underline;text-decoration-style:dotted}
@@ -354,20 +358,21 @@ h1.headline .underline{
 .cmd-box .copy:hover{background:var(--pink);color:var(--cream)}
 .cmd-box .copy.ok{background:var(--lime);color:var(--ink)}
 
-/* Android-only: APK download CTA. Replaces .cmd-box on the Android card,
-   visually balanced with it (~same height, same vertical rhythm). */
+/* Android-only: APK download CTA. Matches .cmd-box exactly — same height
+   (min 52px), same border, same rounded ink box — so the row of 4 cards
+   has consistent vertical rhythm regardless of card type. */
 .apk-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
   background:var(--ink);color:var(--lime);
   border:2px solid var(--ink);border-radius:10px;
-  font-family:var(--sans);font-weight:700;font-size:14px;
-  padding:14px 16px;text-decoration:none;letter-spacing:.02em;
+  font-family:var(--sans);font-weight:700;font-size:13px;
+  padding:0 14px;min-height:52px;text-decoration:none;letter-spacing:.02em;
   transition:transform .12s, background .12s;
-  text-align:center;line-height:1.2;
+  text-align:center;line-height:1.1;flex-wrap:wrap;
 }
 .apk-btn:hover{background:var(--mint);color:var(--ink);transform:translate(-1px,-1px);text-decoration:none}
-.apk-btn .glyph{font-size:18px;font-weight:800}
-.apk-btn .ver{font-family:var(--mono);font-size:11px;color:var(--ink-mute);font-weight:400;letter-spacing:0;display:block;margin-left:6px}
+.apk-btn .glyph{font-size:16px;font-weight:800}
+.apk-btn .ver{font-family:var(--mono);font-size:10px;color:var(--ink-mute);font-weight:400;letter-spacing:0;margin:0;white-space:nowrap}
 .apk-btn:hover .ver{color:var(--ink-2)}
 
 .os-card .manual{
