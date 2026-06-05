@@ -1,12 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { T } from "@/components/i18n/t";
-
-interface Release {
-  tag_name: string;
-  assets: Array<{ name: string; size: number; browser_download_url: string }>;
-}
+import type { Release } from "@/lib/github";
 
 function fmtSize(bytes: number) {
   if (!bytes && bytes !== 0) return "";
@@ -16,31 +9,22 @@ function fmtSize(bytes: number) {
 
 /**
  * Hero — eyebrow + multi-line headline with pop/yel/strike/underline,
- * lede, CTA row with live version from GitHub Releases API, trust pills,
- * penguin sticker on the right with 3 attached stickers (wobble animation).
+ * lede, CTA row, trust pills, penguin sticker with 3 attached stickers.
+ *
+ * `release` is fetched server-side in app/page.tsx (cached 10min) and passed
+ * down — no more client fetch race where href stayed on fallback long enough
+ * for the user to click. If fetch failed, we fall back to the latest known
+ * version string so the visible info is still truthful.
  */
-export function Hero() {
-  // Placeholders below are bumped to the latest real release so users with
-  // a failed GitHub API call (rate-limit/offline) see a plausible value
-  // instead of fiction. The live fetch below overrides them on success.
-  const [version, setVersion] = useState("v2.35.0");
-  const [size, setSize] = useState("60.8 MB");
-
-  useEffect(() => {
-    fetch("https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest")
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: Release) => {
-        if (data.tag_name) setVersion(data.tag_name);
-        const winAsset = data.assets?.find(
-          (a) =>
-            a.name.endsWith("-win.zip") &&
-            !a.name.includes("update") &&
-            !a.name.endsWith(".sha256"),
-        );
-        if (winAsset) setSize(fmtSize(winAsset.size));
-      })
-      .catch(() => {});
-  }, []);
+export function Hero({ release }: { release: Release | null }) {
+  const version = release?.tag_name ?? "v2.35.0";
+  const winAsset = release?.assets.find(
+    (a) =>
+      a.name.endsWith("-win.zip") &&
+      !a.name.includes("update") &&
+      !a.name.endsWith(".sha256"),
+  );
+  const size = winAsset ? fmtSize(winAsset.size) : "60.8 MB";
 
   return (
     <section className="hero" id="top">

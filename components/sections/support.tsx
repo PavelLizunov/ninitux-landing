@@ -1,30 +1,19 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { T } from "@/components/i18n/t";
 
 /**
- * Support — tip card + star count from GitHub. Live count via api.github.com,
- * fallback shows the last known real value (currently 2).
+ * Support — tip card + star count from GitHub.
+ *
+ * `stars` is fetched server-side in app/page.tsx (cached 30min) and passed
+ * down. Null → honest fallback "2" (last known real value).
  */
-export function Support() {
-  // Honest default — don't pretend there are thousands of stars when there
-  // aren't. If GitHub API is reachable, the real count overrides this; if
-  // it isn't, the visible value is still truthful (just slightly stale).
-  const [stars, setStars] = useState("2");
+function fmtStars(n: number | null): string {
+  if (n === null) return "2";
+  if (n < 1000) return String(n);
+  return (n / 1000).toFixed(1) + "k";
+}
 
-  useEffect(() => {
-    fetch("https://api.github.com/repos/PavelLizunov/VPNRouter")
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: { stargazers_count?: number }) => {
-        if (typeof data.stargazers_count === "number") {
-          const n = data.stargazers_count;
-          if (n < 1000) setStars(String(n));
-          else setStars((n / 1000).toFixed(1) + "k");
-        }
-      })
-      .catch(() => {});
-  }, []);
+export function Support({ stars }: { stars: number | null }) {
+  const display = fmtStars(stars);
 
   return (
     <section className="section">
@@ -69,7 +58,7 @@ export function Support() {
         </div>
         <div className="star-card">
           <div className="big" id="star-count">
-            {stars}
+            {display}
           </div>
           <div className="sub">
             ★ <T ru="на GitHub" en="on GitHub" />

@@ -2,13 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { T } from "@/components/i18n/t";
+import type { Release } from "@/lib/github";
 
 type OS = "linux" | "mac" | "win" | "android";
-
-interface Release {
-  tag_name: string;
-  assets: Array<{ name: string; size: number; browser_download_url: string }>;
-}
 
 const FALLBACK = "https://github.com/PavelLizunov/VPNRouter/releases/latest";
 
@@ -187,9 +183,13 @@ function AndroidCard({
  * big download CTA (no Play Store, sideload-only). Cards pulled from GitHub
  * Releases API. Detected OS gets `.detected` outlined dash + "your OS" tag.
  */
-export function Install() {
+export function Install({ release }: { release: Release | null }) {
+  // Only OS detection stays client-side (depends on navigator). Release data
+  // is now passed as a server-rendered prop so download links carry the
+  // correct browser_download_url in the very first HTML byte — clicking the
+  // APK button no longer redirects to the GitHub release page while waiting
+  // for a client fetch to resolve.
   const [detected, setDetected] = useState<OS | null>(null);
-  const [release, setRelease] = useState<Release | null>(null);
 
   useEffect(() => {
     const ua = (navigator.userAgent || "").toLowerCase();
@@ -201,11 +201,6 @@ export function Install() {
     else if (ua.includes("mac") || plat.includes("mac")) next = "mac";
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDetected(next);
-
-    fetch("https://api.github.com/repos/PavelLizunov/VPNRouter/releases/latest")
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: Release) => setRelease(data))
-      .catch(() => {});
   }, []);
 
   return (
