@@ -81,7 +81,7 @@ function ManualLinks({
   release,
 }: {
   specs: AssetLinkSpec[];
-  release: Release | null;
+  release: Release;
 }) {
   return (
     <div className="manual">
@@ -89,7 +89,7 @@ function ManualLinks({
         <T ru="вручную:" en="manual:" />
       </span>
       {specs.map((spec) => {
-        const asset = release?.assets.find((a) => {
+        const asset = release.assets.find((a) => {
           if (spec.match === "win-zip") {
             return (
               a.name.endsWith("-win.zip") &&
@@ -99,9 +99,11 @@ function ManualLinks({
           }
           return spec.suffix ? a.name.endsWith(spec.suffix) : false;
         });
+        // release is always non-null with direct URLs, but a specific suffix
+        // might not exist in this version — fall back to releases/latest then.
         const href = asset?.browser_download_url ?? FALLBACK;
         const ver = asset
-          ? `· ${release?.tag_name ?? ""} · ${fmtSize(asset.size)}`
+          ? `· ${release.tag_name}${asset.size ? ` · ${fmtSize(asset.size)}` : ""}`
           : "";
         return (
           <a key={spec.label} href={href} data-umami-event={spec.event}>
@@ -124,12 +126,15 @@ function AndroidCard({
   release,
 }: {
   detected: boolean;
-  release: Release | null;
+  release: Release;
 }) {
-  const asset = release?.assets.find((a) => a.name.endsWith("-android.apk"));
+  const asset = release.assets.find((a) => a.name.endsWith("-android.apk"));
+  // Deterministic direct .apk URL — github.com 302 redirect resolves it to
+  // the CDN with Content-Disposition: attachment, so the browser downloads
+  // immediately. FALLBACK only if the android suffix somehow isn't built.
   const href = asset?.browser_download_url ?? FALLBACK;
   const verSize = asset
-    ? `· ${release?.tag_name ?? ""} · ${fmtSize(asset.size)}`
+    ? `· ${release.tag_name}${asset.size ? ` · ${fmtSize(asset.size)}` : ""}`
     : "";
 
   return (
@@ -183,7 +188,7 @@ function AndroidCard({
  * big download CTA (no Play Store, sideload-only). Cards pulled from GitHub
  * Releases API. Detected OS gets `.detected` outlined dash + "your OS" tag.
  */
-export function Install({ release }: { release: Release | null }) {
+export function Install({ release }: { release: Release }) {
   // Only OS detection stays client-side (depends on navigator). Release data
   // is now passed as a server-rendered prop so download links carry the
   // correct browser_download_url in the very first HTML byte — clicking the

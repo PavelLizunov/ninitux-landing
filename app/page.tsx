@@ -25,6 +25,7 @@ export default async function Home() {
     <>
       <Hero release={release} />
       <Install release={release} />
+      {/* release is always non-null now (deterministic from redirect/fallback) */}
       <Features />
       <How />
       <Screenshots />

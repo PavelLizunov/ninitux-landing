@@ -16,15 +16,16 @@ function fmtSize(bytes: number) {
  * for the user to click. If fetch failed, we fall back to the latest known
  * version string so the visible info is still truthful.
  */
-export function Hero({ release }: { release: Release | null }) {
-  const version = release?.tag_name ?? "v2.35.0";
-  const winAsset = release?.assets.find(
+export function Hero({ release }: { release: Release }) {
+  const version = release.tag_name;
+  const winAsset = release.assets.find(
     (a) =>
       a.name.endsWith("-win.zip") &&
       !a.name.includes("update") &&
       !a.name.endsWith(".sha256"),
   );
-  const size = winAsset ? fmtSize(winAsset.size) : "60.8 MB";
+  // size may be 0 if the HEAD size probe failed — show version only then.
+  const size = winAsset && winAsset.size ? fmtSize(winAsset.size) : "";
 
   return (
     <section className="hero" id="top">
@@ -73,8 +74,14 @@ export function Hero({ release }: { release: Release | null }) {
               ★ <T ru="Поставить звезду на GitHub" en="Star on GitHub" />
             </a>
             <span className="cta-meta">
-              <T ru="последняя" en="latest" /> <b id="hero-ver">{version}</b> ·{" "}
-              <b id="hero-size">{size}</b> · sha256 ✓
+              <T ru="последняя" en="latest" /> <b id="hero-ver">{version}</b>
+              {size ? (
+                <>
+                  {" · "}
+                  <b id="hero-size">{size}</b>
+                </>
+              ) : null}{" "}
+              · sha256 ✓
             </span>
           </div>
 
