@@ -43,7 +43,13 @@ export function Footer() {
           <h5>Maintainer</h5>
           <p>P. Lizunov</p>
           <p>
-            <a href="https://t.me/ninitux_auth_bot">@ninitux_auth_bot</a>
+            <a
+              href="https://github.com/PavelLizunov"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              github.com/PavelLizunov
+            </a>
           </p>
           <p style={{ color: "rgba(255,255,255,0.6)" }}>
             <T
