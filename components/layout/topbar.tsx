@@ -13,22 +13,18 @@ const NAV = [
   { href: "#screenshots", ru: "скрины", en: "shots" },
   { href: "#telemetry", ru: "телеметрия", en: "telemetry" },
   { href: "#faq", ru: "FAQ", en: "FAQ" },
-  { href: "#services", ru: "сервисы", en: "services" },
 ] as const;
 
 /**
  * Sticky topbar with ninitux brand sticker (★ ninitux.com), section nav,
- * lang toggle and login button. When scrolled > 12px, adds `.scrolled`
- * class — that triggers ink border + lime shadow underline.
+ * lang toggle. When scrolled > 12px, adds `.scrolled` class — that triggers
+ * ink border + lime shadow underline.
  *
  * Rendered INSIDE .wrap (matches main.html structure).
- *
- * The /auth/check call happens on mount: if 200, Login → Logout.
  */
 export function Topbar() {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
     function onScroll() {
@@ -37,14 +33,6 @@ export function Topbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    fetch("/auth/check")
-      .then((r) => {
-        if (r.ok) setAuthed(true);
-      })
-      .catch(() => {});
   }, []);
 
   return (
@@ -61,18 +49,6 @@ export function Topbar() {
               </a>
             ))}
             <LangToggle />
-            <a
-              className="auth-btn"
-              id="auth-btn"
-              href={authed ? "/auth/logout" : "/auth/login?next=https://ninitux.com"}
-              data-umami-event={authed ? "click-logout" : "click-login"}
-            >
-              {authed ? (
-                <T ru="Выйти" en="Logout" />
-              ) : (
-                <T ru="Войти" en="Login" />
-              )}
-            </a>
           </nav>
           <div className="nav-mobile">
             <button

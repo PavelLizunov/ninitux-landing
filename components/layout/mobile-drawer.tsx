@@ -10,7 +10,6 @@ const ITEMS = [
   { href: "#screenshots", ru: "скриншоты", en: "screenshots" },
   { href: "#telemetry", ru: "телеметрия", en: "telemetry" },
   { href: "#faq", ru: "FAQ", en: "FAQ" },
-  { href: "#services", ru: "другие сервисы", en: "other services" },
 ] as const;
 
 /**

@@ -40,18 +40,6 @@ export function Footer() {
           </p>
         </div>
         <div>
-          <h5>Sister sites</h5>
-          <p>
-            <a href="https://edu.ninitux.com">edu.ninitux.com</a>
-          </p>
-          <p>
-            <a href="https://docs.ninitux.com">docs.ninitux.com</a>
-          </p>
-          <p>
-            <a href="https://md.ninitux.com">md.ninitux.com</a>
-          </p>
-        </div>
-        <div>
           <h5>Maintainer</h5>
           <p>P. Lizunov</p>
           <p>

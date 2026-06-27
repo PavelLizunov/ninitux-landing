@@ -5,7 +5,6 @@ import { How } from "@/components/sections/how";
 import { Screenshots } from "@/components/sections/screenshots";
 import { Telemetry } from "@/components/sections/telemetry";
 import { FAQ } from "@/components/sections/faq";
-import { Services } from "@/components/sections/services";
 import { Support } from "@/components/sections/support";
 import { getLatestRelease, getStarCount } from "@/lib/github";
 
@@ -31,7 +30,6 @@ export default async function Home() {
       <Screenshots />
       <Telemetry />
       <FAQ />
-      <Services />
       <Support stars={stars} />
     </>
   );
