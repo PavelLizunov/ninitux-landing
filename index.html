@@ -75,6 +75,14 @@
   code,pre,kbd{font-family:var(--mono)}
   ::selection{background:var(--accent);color:var(--selection-fg)}
 
+  .skip-link{
+    position:fixed;top:8px;left:8px;z-index:1000;
+    padding:8px 12px;border:1px solid var(--accent);border-radius:6px;
+    background:var(--bg);color:var(--fg);
+    transform:translateY(calc(-100% - 16px));
+  }
+  .skip-link:focus{transform:translateY(0)}
+
   .wrap{max-width:760px;margin:0 auto;padding:0 24px}
 
   /* Header */
@@ -468,6 +476,8 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main-content"><span data-i18n="en">Skip to content</span><span data-i18n="ru">Перейти к содержимому</span></a>
+
 <header class="site">
   <div class="wrap row">
     <a class="brand" href="/" aria-label="ninitux.com">
@@ -499,7 +509,7 @@
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main-content">
 
   <!-- HERO -->
   <section class="hero">
