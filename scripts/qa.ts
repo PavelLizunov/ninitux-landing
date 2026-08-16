@@ -112,6 +112,14 @@ async function run() {
   if (detected.length === 1) ok("exactly one OS detected", `${detected.length} card(s)`);
   else fail("exactly one OS detected", `got ${detected.length}`);
 
+  const androidHref = await page.$eval(
+    '.os-card[data-os="android"] .apk-btn',
+    (el) => (el as HTMLAnchorElement).href,
+  );
+  if (/VPNRouter-v[^/]+-android-arm64\.apk$/.test(androidHref))
+    ok("Android download points to the published ARM64 APK");
+  else fail("Android download points to the published ARM64 APK", androidHref);
+
   // Test 6: copy button increments after click
   const copyClicked = await page.evaluate(() => {
     const btn = document.querySelector<HTMLButtonElement>(

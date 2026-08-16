@@ -128,7 +128,9 @@ function AndroidCard({
   detected: boolean;
   release: Release;
 }) {
-  const asset = release.assets.find((a) => a.name.endsWith("-android.apk"));
+  const asset = release.assets.find((a) =>
+    a.name.endsWith("-android-arm64.apk"),
+  );
   // Deterministic direct .apk URL — github.com 302 redirect resolves it to
   // the CDN with Content-Disposition: attachment, so the browser downloads
   // immediately. FALLBACK only if the android suffix somehow isn't built.
@@ -150,12 +152,12 @@ function AndroidCard({
         <span className="glyph">🤖</span> Android
       </h3>
       <p className="blurb" data-i18n="en">
-        Android 6.0+ (API 23). Universal APK — arm64 / arm / x64 / x86.
-        Sideload, no Play Store. Self-update via in-app banner.
+        Android 6.0+ (API 23), ARM64. Sideload, no Play Store. Self-update
+        via in-app banner.
       </p>
       <p className="blurb" data-i18n="ru">
-        Android 6.0+ (API 23). Universal APK — arm64 / arm / x64 / x86.
-        Sideload, без Play Store. Само-обновление через in-app баннер.
+        Android 6.0+ (API 23), ARM64. Sideload, без Play Store.
+        Самообновление через баннер в приложении.
       </p>
       <a
         className="apk-btn"
