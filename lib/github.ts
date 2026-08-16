@@ -58,7 +58,7 @@ const ASSET_SUFFIXES = [
   "linux-amd64.deb", // Debian/Ubuntu
   "linux-x86_64.AppImage", // portable
   "linux.tar.gz", // raw tarball
-  "android.apk", // Android sideload
+  "android-arm64.apk", // Android sideload (the published APK is ARM64-only)
 ] as const;
 
 /**
@@ -66,7 +66,7 @@ const ASSET_SUFFIXES = [
  * (network down at render time). Guarantees we never emit a bare
  * `releases/latest` page link for a download. Bump on each review.
  */
-const FALLBACK_TAG = "v2.42.0";
+const FALLBACK_TAG = "v2.49.3";
 
 function buildAssets(tag: string): ReleaseAsset[] {
   return ASSET_SUFFIXES.map((suffix) => {
