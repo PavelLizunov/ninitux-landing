@@ -8,26 +8,21 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "check": "bun run lint && bun run type-check && bun run build"
+    "check": "bun run lint && bun run type-check && bun run build",
+    "e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "lucide-react": "^0.469.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.5.5"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
-    "lighthouse": "^13.3.0",
     "puppeteer-core": "^25.0.4",
-    "tailwindcss": "^4",
     "typescript": "^5"
   },
   "ignoreScripts": [

@@ -4,7 +4,9 @@ services:
     container_name: ninitux-landing
     restart: unless-stopped
     ports:
-      - "127.0.0.1:18910:3000"
+      # The reverse proxy (Caddy) runs on another host of the LAN, so the port
+      # is published on all interfaces, as on the production host.
+      - "18910:3000"
     environment:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
