@@ -22,9 +22,9 @@ const ITEMS: Item[] = [
     a: {
       ru: (
         <>
-          VPNRouter это программа, а не VPN-сервис: своих серверов у неё нет. Ссылку даёт ваш VPN-сервис. Обычно
-          она называется «подписка», «ключ» или «конфиг» и начинается с https://, vless://, hysteria2://, tuic://
-          или ss://. Нет своего сервиса? В приложении есть{" "}
+          VPNRouter — это программа, а не VPN-сервис: своих серверов у неё нет. Ссылку для подключения даёт ваш
+          VPN-сервис, обычно в личном кабинете. Её называют «подписка», «ключ» или «конфиг», и начинается она с
+          https://, vless://, hysteria2://, tuic:// или ss://. Нет своего сервиса? В приложении есть{" "}
           <a href="#guide" data-guide-link="free">
             бесплатные публичные серверы
           </a>
@@ -33,9 +33,10 @@ const ITEMS: Item[] = [
       ),
       en: (
         <>
-          VPNRouter is a program, not a VPN service: it has no servers of its own. The link comes from your VPN
-          service. It is usually called a “subscription”, a “key” or a “config” and starts with https://, vless://,
-          hysteria2://, tuic:// or ss://. No service of your own? The app comes with{" "}
+          VPNRouter is a program, not a VPN service: it has no servers of its own. The connection link comes from
+          your VPN service, usually from your account page. It is called a “subscription”, a “key” or a “config”
+          and starts with https://, vless://, hysteria2://, tuic:// or ss://. No service of your own? The app comes
+          with{" "}
           <a href="#guide" data-guide-link="free">
             free public servers
           </a>
@@ -48,8 +49,8 @@ const ITEMS: Item[] = [
     id: "difference",
     q: { ru: "Чем это отличается от обычного VPN?", en: "How is it different from a regular VPN?" },
     a: {
-      ru: "Обычный VPN пускает через себя весь трафик компьютера. VPNRouter по умолчанию пускает через VPN только выбранные программы: браузеры, Discord, Telegram. Игры, банки и остальное идут напрямую. Если нужен весь трафик, на главном экране есть переключатель «Весь трафик».",
-      en: "A regular VPN takes all the traffic of your computer. By default VPNRouter sends only the chosen programs through the VPN: browsers, Discord, Telegram. Games, banking and the rest go direct. If you need everything, there is an “All traffic” switch on the home screen.",
+      ru: "Многие VPN-программы пускают через себя весь трафик компьютера. VPNRouter по умолчанию пускает через VPN только выбранные программы: браузеры, Discord, Telegram. Игры, банки и остальное идут напрямую. Если нужен весь трафик, на главном экране есть переключатель «Весь трафик».",
+      en: "Many VPN programs take all the traffic of your computer. By default VPNRouter sends only the chosen programs through the VPN: browsers, Discord, Telegram. Games, banking and the rest go direct. If you need everything, there is an “All traffic” switch on the home screen.",
     },
   },
   {
@@ -61,16 +62,18 @@ const ITEMS: Item[] = [
     a: {
       ru: (
         <>
-          Нет. Windows показывает это окно для любой программы без платной цифровой подписи, а у VPNRouter её нет.
-          Нажмите «Подробнее», затем «Выполнить в любом случае». Хотите проверить файл? Рядом с каждым файлом на{" "}
-          <a href={RELEASES_URL}>странице релизов</a> лежит его контрольная сумма (.sha256).
+          Само это окно не значит, что в файле вирус. Windows показывает его для программ без цифровой подписи, а у
+          VPNRouter её нет. Если вы скачали файл с этого сайта, нажмите «Подробнее», затем «Выполнить в любом
+          случае». Рядом с каждым файлом на <a href={RELEASES_URL}>странице релизов</a> лежит его контрольная сумма
+          (.sha256): по ней можно проверить, что файл скачался без изменений.
         </>
       ),
       en: (
         <>
-          No. Windows shows this window for any program without a paid code-signing certificate, and VPNRouter has
-          none. Click “More info”, then “Run anyway”. Want to verify the file? Next to every file on the{" "}
-          <a href={RELEASES_URL}>releases page</a> there is its checksum (.sha256).
+          The window alone does not mean the file has a virus. Windows shows it for programs without a digital
+          signature, and VPNRouter has none. If you downloaded the file from this site, click “More info”, then
+          “Run anyway”. Next to every file on the <a href={RELEASES_URL}>releases page</a> there is its checksum
+          (.sha256): with it you can check that the file arrived unchanged.
         </>
       ),
     },
@@ -125,16 +128,16 @@ const ITEMS: Item[] = [
     id: "data",
     q: { ru: "Собирает ли приложение мои данные?", en: "Does the app collect my data?" },
     a: {
-      ru: "Нет: в нём нет рекламы, аккаунтов и сбора статистики, а отчёты о сбоях остаются на вашем компьютере. Важно другое: ваш трафик видит тот, кто держит VPN-сервер. Выбирайте сервис, которому доверяете.",
-      en: "No: it has no ads, no accounts and no usage statistics, and crash reports stay on your computer. Something else matters: whoever runs the VPN server can see your traffic. Choose a service you trust.",
+      ru: "Нет: в нём нет рекламы, аккаунтов и сбора статистики, а отчёты о сбоях остаются на вашем устройстве. Важно другое: тот, кто держит VPN-сервер, видит, к каким сайтам вы подключаетесь, а незашифрованные данные может и прочитать. Выбирайте сервис, которому доверяете.",
+      en: "No: it has no ads, no accounts and no usage statistics, and crash reports stay on your device. Something else matters: whoever runs the VPN server can see which sites you connect to, and can read data that is not encrypted. Choose a service you trust.",
     },
   },
   {
     id: "remove",
     q: { ru: "Как удалить?", en: "How do I remove it?" },
     a: {
-      ru: "Windows: «Параметры», затем «Приложения», затем VPNRouter и «Удалить». Android: как любое приложение. macOS: перетащите VPNRouter из «Программ» в корзину. Linux: команда sudo apt remove vpnrouter.",
-      en: "Windows: Settings, then Apps, then VPNRouter and Uninstall. Android: like any other app. macOS: drag VPNRouter from Applications to the Trash. Linux: the command sudo apt remove vpnrouter.",
+      ru: "Windows: «Параметры», затем «Приложения», затем VPNRouter и «Удалить». Android: как любое приложение. macOS: перетащите VPNRouter из «Программ» в корзину. Linux: если ставили командой или файлом .deb, выполните sudo apt remove vpnrouter; если запускали AppImage, просто удалите этот файл.",
+      en: "Windows: Settings, then Apps, then VPNRouter and Uninstall. Android: like any other app. macOS: drag VPNRouter from Applications to the Trash. Linux: if you installed with the command or the .deb file, run sudo apt remove vpnrouter; if you ran the AppImage, just delete that file.",
     },
   },
 ];

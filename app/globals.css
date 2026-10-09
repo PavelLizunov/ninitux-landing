@@ -56,6 +56,8 @@ kbd{
   border:2px solid var(--ink);border-bottom-width:4px;border-radius:7px;padding:1px 7px;background:var(--white);
 }
 
+.keys{white-space:nowrap}
+
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter)}
 
 /* Both languages are in the markup; the inactive one is hidden. */
@@ -348,6 +350,9 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
 .footer-legal{grid-column:1/-1;font-size:14px;color:var(--ink-mute)}
 
 /* ── Narrow screens ────────────────────────────────── */
+@media (max-width:1180px){
+  .hero-pen{right:-14px}
+}
 @media (max-width:940px){
   .hero{grid-template-columns:minmax(0,1fr);gap:44px;padding:36px 0 56px}
   .hero-demo{max-width:360px}
@@ -355,7 +360,7 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
   .os-panel{grid-template-columns:minmax(0,1fr);padding:24px}
   .st{grid-template-columns:minmax(0,1fr);grid-template-areas:"screen" "caption" "controls" "steps";grid-template-rows:none}
   .st-screen{max-width:392px;justify-self:center}
-  .st[data-variant="full"] .st-caption{display:grid;max-width:392px;width:100%;justify-self:center;min-height:118px}
+  .st[data-variant="full"] .st-caption{display:grid;max-width:392px;width:100%;justify-self:center}
   .st-controls{padding-left:0;justify-content:center;margin-top:6px}
   .st-steps{margin-top:30px}
   .benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -371,6 +376,8 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
   .seg{margin-left:auto}
   .section{padding:46px 0}
   .guide-tabs{grid-template-columns:minmax(0,1fr)}
+  /* Room for the longest caption, so the page below does not jump between steps. */
+  .st .st-caption,.st[data-variant="full"] .st-caption{min-height:150px}
   .os-tabs{grid-template-columns:repeat(2,1fr)}
   .btn-big{width:100%;font-size:19px;padding:17px 18px}
   .os-panel{padding:18px;box-shadow:var(--shadow-s)}

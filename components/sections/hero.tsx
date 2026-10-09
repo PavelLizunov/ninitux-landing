@@ -117,7 +117,8 @@ export function Hero({ release }: { release: Release }) {
           <T
             ru={
               <>
-                ссылка на VPN-сервер от вашего VPN-сервиса. Нет такой? В приложении есть{" "}
+                ссылка для подключения от вашего VPN-сервиса (её называют подпиской или ключом). Нет такой? В
+                приложении есть{" "}
                 <a href="#guide" data-guide-link="free">
                   бесплатные публичные серверы
                 </a>
@@ -126,7 +127,8 @@ export function Hero({ release }: { release: Release }) {
             }
             en={
               <>
-                a VPN server link from your VPN service. Do not have one? The app comes with{" "}
+                a connection link from your VPN service (often called a subscription or a key). Do not have one?
+                The app comes with{" "}
                 <a href="#guide" data-guide-link="free">
                   free public servers
                 </a>

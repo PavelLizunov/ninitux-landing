@@ -55,8 +55,8 @@ export const GUIDES: Guide[] = [
         "paste",
         { ru: "Вставьте ссылку в поле «Конфиг VPN»", en: "Paste your link into “VPN config”" },
         {
-          ru: "Это ссылка от вашего VPN-сервиса. Она начинается с https:// или vless://.",
-          en: "It is the link from your VPN service. It starts with https:// or vless://.",
+          ru: "Скопируйте ссылку для подключения в личном кабинете вашего VPN-сервиса. Её ещё называют подпиской или ключом.",
+          en: "Copy the connection link from your account at your VPN service. It is often called a subscription or a key.",
         },
       ),
       step(

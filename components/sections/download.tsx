@@ -118,7 +118,7 @@ export function Download({ release }: { release: Release }) {
       <p className="downloading" role="status">
         <T
           ru="Загрузка началась. Пока файл скачивается, посмотрите шаги ниже."
-          en="The download has started. While the file is coming, look at the steps below."
+          en="The download has started. While the file downloads, look at the steps below."
         />
       </p>
 
@@ -154,14 +154,15 @@ export function Download({ release }: { release: Release }) {
                 ru={
                   <>
                     Если появилось синее окно «Система Windows защитила ваш компьютер», нажмите <b>«Подробнее»</b>,
-                    затем <b>«Выполнить в любом случае»</b>. Окно появляется потому, что у программы нет платной
-                    цифровой подписи.
+                    затем <b>«Выполнить в любом случае»</b>. Windows показывает это окно, потому что у программы нет
+                    цифровой подписи. Продолжайте, если скачали файл с этого сайта.
                   </>
                 }
                 en={
                   <>
                     If a blue “Windows protected your PC” window appears, click <b>“More info”</b>, then{" "}
-                    <b>“Run anyway”</b>. It appears because the program has no paid code-signing certificate.
+                    <b>“Run anyway”</b>. Windows shows it because the program has no digital signature. Go on if
+                    you downloaded the file from this site.
                   </>
                 }
               />
@@ -170,14 +171,14 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    На вопрос «Разрешить этому приложению вносить изменения?» ответьте <b>«Да»</b> и нажимайте{" "}
-                    <b>«Далее»</b> до конца установки.
+                    На вопрос «Разрешить этому приложению вносить изменения?» ответьте <b>«Да»</b>. В установщике
+                    нажимайте <b>«Далее»</b>, затем <b>«Установить»</b> и <b>«Завершить»</b>.
                   </>
                 }
                 en={
                   <>
-                    When asked “Do you want to allow this app to make changes?”, answer <b>“Yes”</b> and keep
-                    clicking <b>“Next”</b> until the setup finishes.
+                    When asked “Do you want to allow this app to make changes?”, answer <b>“Yes”</b>. In the
+                    installer click <b>“Next”</b>, then <b>“Install”</b> and <b>“Finish”</b>.
                   </>
                 }
               />
@@ -186,13 +187,15 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    Откройте <b>VPNRouter</b> из меню «Пуск». Дальше смотрите раздел{" "}
+                    Приложение откроется само, если на последнем шаге оставить галочку «Запустить VPNRouter». Позже
+                    открывайте его из меню «Пуск». Что делать дальше, показано в разделе{" "}
                     <a href="#guide">«Как пользоваться»</a>.
                   </>
                 }
                 en={
                   <>
-                    Open <b>VPNRouter</b> from the Start menu. Then see <a href="#guide">“How to use”</a>.
+                    The app opens by itself if you leave “Launch VPNRouter” ticked on the last step. Later, open
+                    it from the Start menu. What to do next is shown in <a href="#guide">“How to use”</a>.
                   </>
                 }
               />
@@ -207,8 +210,8 @@ export function Download({ release }: { release: Release }) {
             </summary>
             <p>
               <T
-                ru="Одной командой. Откройте PowerShell (Win+X) и вставьте её. Права администратора она запросит сама."
-                en="With one command. Open PowerShell (Win+X) and paste it. It asks for administrator rights by itself."
+                ru="Одной командой. Откройте меню «Пуск», наберите PowerShell и откройте его. Вставьте команду и нажмите Enter. Права администратора она запросит сама."
+                en="With one command. Open the Start menu, type PowerShell and open it. Paste the command and press Enter. It asks for administrator rights by itself."
               />
             </p>
             <Command text={WIN_COMMAND} event="copy-win" />
@@ -271,14 +274,16 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    Откройте «Терминал» (его значок есть в том же окне), вставьте команду (Cmd+V) и нажмите Enter. Введите пароль от Mac: он нужен
-                    один раз, чтобы приложение могло включать VPN без пароля.
+                    Откройте «Терминал» (его значок есть в том же окне), вставьте команду (Cmd+V) и нажмите Enter.
+                    Введите пароль от Mac и снова нажмите Enter. Пока вы печатаете пароль, на экране ничего не
+                    появляется: так и должно быть. Пароль нужен один раз, чтобы приложение могло включать VPN само.
                   </>
                 }
                 en={
                   <>
-                    Open Terminal (its icon is in the same window), paste the command (Cmd+V) and press Enter. Type your Mac password: it is asked
-                    once, so that the app can turn the VPN on without a password later.
+                    Open Terminal (its icon is in the same window), paste the command (Cmd+V) and press Enter.
+                    Type your Mac password and press Enter again. Nothing shows while you type the password:
+                    that is normal. It is asked once, so that the app can turn the VPN on by itself later.
                   </>
                 }
               />
@@ -341,20 +346,28 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    Откройте терминал: <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.
+                    Откройте «Терминал»: это окно для текстовых команд. В Ubuntu и Mint он открывается клавишами{" "}
+                    <span className="keys">
+                      <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>
+                    </span>
+                    .
                   </>
                 }
                 en={
                   <>
-                    Open a terminal: <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.
+                    Open Terminal: a window for text commands. On Ubuntu and Mint it opens with{" "}
+                    <span className="keys">
+                      <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>
+                    </span>
+                    .
                   </>
                 }
               />
             </Step>
             <Step n={2}>
               <T
-                ru="Нажмите «Копировать», вставьте команду в терминал и нажмите Enter. Введите свой пароль."
-                en="Press “Copy”, paste the command into the terminal and press Enter. Type your password."
+                ru="Нажмите «Копировать» рядом с командой. В терминале вставьте её клавишами Ctrl+Shift+V и нажмите Enter. Введите свой пароль и снова нажмите Enter. Пока вы печатаете пароль, на экране ничего не появляется: так и должно быть."
+                en="Press “Copy” next to the command. In the terminal paste it with Ctrl+Shift+V and press Enter. Type your password and press Enter again. Nothing shows while you type the password: that is normal."
               />
             </Step>
             <Step n={3}>
@@ -392,8 +405,8 @@ export function Download({ release }: { release: Release }) {
             </div>
             <p>
               <T
-                ru=".deb подходит для Debian и Ubuntu. AppImage запускается на большинстве систем без установки. Нужен 64-битный компьютер (x86_64)."
-                en=".deb is for Debian and Ubuntu. AppImage runs on most systems without installing. A 64-bit (x86_64) computer is required."
+                ru="Файл .deb для Debian и Ubuntu: откройте его и подтвердите установку. AppImage работает без установки: в свойствах файла разрешите запускать его как программу и откройте. Нужен обычный 64-битный компьютер с процессором Intel или AMD."
+                en="The .deb file is for Debian and Ubuntu: open it and confirm the installation. AppImage runs without installing: in the file properties allow running it as a program, then open it. A regular 64-bit computer with an Intel or AMD processor is required."
               />
             </p>
           </div>
@@ -429,14 +442,14 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    Телефон спросит про <b>установку из неизвестных источников</b>. Разрешите её для браузера: это
-                    нужно один раз, потому что приложения нет в Google Play.
+                    Телефон спросит разрешение на <b>установку из неизвестных источников</b>: приложения нет в Google
+                    Play. Разрешите её для браузера, которым скачали файл, и вернитесь назад.
                   </>
                 }
                 en={
                   <>
-                    The phone asks about <b>installing unknown apps</b>. Allow it for your browser: it is needed
-                    once, because the app is not on Google Play.
+                    The phone asks for permission to <b>install unknown apps</b>: the app is not on Google Play.
+                    Allow it for the browser you downloaded the file with, then go back.
                   </>
                 }
               />
@@ -459,14 +472,14 @@ export function Download({ release }: { release: Release }) {
               <T
                 ru={
                   <>
-                    Вставьте ссылку на сервер или нажмите <b>«Сканировать QR»</b>, если сервис дал вам QR-код. Затем{" "}
-                    <b>«Подключить»</b>.
+                    Вставьте ссылку для подключения или нажмите <b>«Сканировать QR»</b>, если сервис дал вам QR-код.
+                    Затем <b>«Подключить»</b>. Android спросит, можно ли создать VPN-подключение: разрешите.
                   </>
                 }
                 en={
                   <>
-                    Paste your server link or tap <b>“Scan QR”</b> if your service gave you a QR code. Then{" "}
-                    <b>“Connect”</b>.
+                    Paste your connection link or tap <b>“Scan QR”</b> if your service gave you a QR code. Then{" "}
+                    <b>“Connect”</b>. Android asks whether a VPN connection may be created: allow it.
                   </>
                 }
               />
@@ -489,8 +502,8 @@ export function Download({ release }: { release: Release }) {
               </h3>
               <p>
                 <T
-                  ru="Наведите камеру телефона на этот код: страница откроется на телефоне, и файл скачается сразу туда."
-                  en="Point your phone camera at this code: the page opens on the phone and the file downloads right there."
+                  ru="Наведите камеру телефона на этот код и откройте ссылку. Эта страница откроется на телефоне: нажмите там «Скачать для Android»."
+                  en="Point your phone camera at this code and open the link. This page opens on the phone: tap “Download for Android” there."
                 />
               </p>
             </div>

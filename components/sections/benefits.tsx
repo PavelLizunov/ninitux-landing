@@ -10,12 +10,12 @@ const ITEMS = [
     en: ["Or everything at once", "Need the VPN for the whole computer? One “All traffic” switch on the home screen."],
   },
   {
-    ru: ["Одна ссылка, и готово", "Вставьте ссылку от вашего VPN-сервиса. Приложение само поймёт, сервер это или подписка, и всё настроит."],
-    en: ["One link and you are set", "Paste the link from your VPN service. The app works out whether it is a server or a subscription and sets everything up."],
+    ru: ["Одна ссылка, и готово", "Вставьте ссылку для подключения от вашего VPN-сервиса. Приложение само поймёт, сервер это или подписка. Какие ссылки подходят, сказано в технических подробностях ниже."],
+    en: ["One link and you are set", "Paste the connection link from your VPN service. The app works out whether it is a server or a subscription. The supported link types are listed in the technical details below."],
   },
   {
-    ru: ["Сам найдёт рабочий сервер", "Если выбранный сервер перестал отвечать, приложение подключится к самому быстрому из рабочих."],
-    en: ["Finds a working server itself", "If the server you picked stops answering, the app connects to the fastest one that works."],
+    ru: ["Сам найдёт рабочий сервер", "Если серверов несколько и выбранный не отвечает, приложение подключится к самому быстрому из тех, что отвечают."],
+    en: ["Finds a working server itself", "If you have several servers and the one you picked does not answer, the app connects to the fastest of those that do."],
   },
   {
     ru: ["Не следит за вами", "Нет рекламы, нет аккаунта, нет сбора статистики. Отчёты о сбоях остаются на вашем компьютере."],

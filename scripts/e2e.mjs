@@ -69,11 +69,14 @@ async function open({ query = "", ua = UA.win, width = 1280, height = 900, langu
       Object.defineProperty(navigator, "language", { get: () => list[0] });
     }, languages);
   }
-  // The analytics script lives on another host and is not part of this check.
+  // The analytics script lives on another host and is not part of this check: it gets an empty answer.
   await page.setRequestInterception(true);
   page.on("request", (request) => {
-    if (request.url().includes("analytics.ninitux.com")) request.abort();
-    else request.continue();
+    if (request.url().includes("analytics.ninitux.com")) {
+      request.respond({ status: 200, contentType: "application/javascript", body: "" });
+    } else {
+      request.continue();
+    }
   });
   const response = await page.goto(`${BASE}/${query}`, { waitUntil: "networkidle0", timeout: 45000 });
   await page.evaluate(() => document.fonts.ready);
@@ -254,7 +257,7 @@ await check("questions open", async () => {
 });
 
 // ── Layout ────────────────────────────────────────────────────────────────
-for (const width of [360, 390, 768, 1024, 1280, 1680]) {
+for (const width of [360, 390, 768, 941, 1024, 1100, 1280, 1680]) {
   await check(`no sideways scroll at ${width}px`, async () => {
     const { page } = await open({ query: "?lang=ru", width, mobile: width < 700, ua: width < 700 ? UA.android : UA.win });
     const extra = await overflow(page);
