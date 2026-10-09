@@ -35,7 +35,10 @@ Bun 1.3 (the version of the `Dockerfile`).
 bun install
 bun run dev          # http://localhost:3000
 bun run check        # lint, types, production build
-bun run start & bun run e2e   # browser check, screenshots in e2e-out/
+
+# browser check against the production image, screenshots in e2e-out/
+docker compose up -d --build
+SITE_URL=http://127.0.0.1:18910 bun run e2e
 ```
 
 `?lang=ru|en` and `?os=win|mac|linux|android|ios` override the language and system detection, which is
