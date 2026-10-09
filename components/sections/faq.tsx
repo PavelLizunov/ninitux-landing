@@ -1,197 +1,175 @@
 import { T } from "@/components/i18n/t";
-import type { ReactNode } from "react";
+import { REPO_URL, RELEASES_URL } from "@/lib/github";
 
-interface Q {
+interface Item {
+  id: string;
   q: { ru: string; en: string };
-  a: { ru: ReactNode; en: ReactNode };
-  open?: boolean;
+  a: { ru: React.ReactNode; en: React.ReactNode };
 }
 
-const FAQS: Q[] = [
+const ITEMS: Item[] = [
   {
-    open: true,
-    q: {
-      ru: "Почему \"по процессам\", а не \"весь трафик\"?",
-      en: "Why \"per-process\" and not the usual \"all traffic\"?",
-    },
+    id: "free",
+    q: { ru: "Это бесплатно?", en: "Is it free?" },
     a: {
-      en: `Because most of your traffic is fine on the open net. Your bank, your Slack, your printer, the cloud storage on which your work lives — these should not take the long way around just because you wanted Telegram or a torrent client to use a tunnel. Routing by app means you get the tunnel exactly where you wanted it and pay no latency anywhere else.`,
-      ru: `Потому что большая часть трафика прекрасно живёт в открытой сети. Банк, Slack, принтер, облако с рабочими файлами — им не нужно крутиться через тоннель только из-за того что вы хотели Telegram или торрент пустить через прокси. Маршрутизация по приложениям даёт тоннель именно там где вы хотели — без задержек везде ещё.`,
+      ru: "Да. Приложение бесплатное, без рекламы и без регистрации. Его код открыт под лицензией GPL-3.0.",
+      en: "Yes. The app is free, with no ads and no sign-up. Its code is open under the GPL-3.0 license.",
     },
   },
   {
-    q: {
-      en: "Does it really have no telemetry?",
-      ru: "Реально нет телеметрии?",
-    },
+    id: "link",
+    q: { ru: "Где взять ссылку на сервер?", en: "Where do I get a server link?" },
     a: {
-      en: `Yes. Don't take my word for it — the code is GPL-3.0, you can grep it in 30 seconds (see the Telemetry section). The only outgoing requests are the four listed there, none of which carry usage data.`,
-      ru: `Да. Не верьте на слово — код под GPL-3.0, grep-нуть можно за 30 секунд (см. раздел Телеметрия). Исходящие запросы только те четыре, что перечислены выше, и ни один из них не несёт usage-данных.`,
-    },
-  },
-  {
-    q: {
-      en: "Where do the ≈25k free configs come from?",
-      ru: "Откуда берутся ≈25k бесплатных конфигов?",
-    },
-    a: {
-      en: (
-        <>
-          From a public scrape of openly-shared VLESS endpoints, refreshed every
-          six hours. They are <i>not curated</i> — quality varies, anything can
-          be down at any time, and you should treat them as found change. The
-          Free tab is for when you have nowhere else to point a tunnel; bring
-          your own server when you can.
-        </>
-      ),
       ru: (
         <>
-          Это публичный скрейп открыто-расшаренных VLESS endpoint, обновляется
-          раз в 6 часов. <i>Не курируется</i> — качество разное, любой сервер
-          может лежать, относиться к ним как к найденной мелочи. Free — это
-          когда некуда направить тоннель; свой сервер всегда лучше.
-        </>
-      ),
-    },
-  },
-  {
-    q: {
-      en: "Does it work on a corporate network?",
-      ru: "Будет ли работать в корпоративной сети?",
-    },
-    a: {
-      en: `Sometimes. VLESS+Reality fingerprints as a regular browser TLS handshake which is usually fine; DPI-heavy networks may still block based on flow analysis. Zapret (Windows-only, bundled) helps for the most common cases. If your corp has its own MITM root certificate, no tunnel will get you out — and you should not try.`,
-      ru: `Иногда. VLESS+Reality маскируется под обычный TLS, что обычно прокатывает; сети с тяжёлым DPI могут блокировать по flow-анализу. Zapret (Windows, в комплекте) помогает в типичных случаях. Если у корпорации свой MITM-сертификат — никакой тоннель не выпустит, и не стоит пытаться.`,
-    },
-  },
-  {
-    q: {
-      en: "Does it need root / admin all the time?",
-      ru: "Нужен ли постоянный root / админ?",
-    },
-    a: {
-      en: `No. Linux uses POSIX capabilities so only the TUN-bind needs them — no full-root daemon. macOS writes a one-time sudoers entry at install. Windows needs admin because the TUN driver does; the app itself does not run as SYSTEM.`,
-      ru: `Нет. Linux использует POSIX capabilities — только TUN-bind их требует, full-root демона нет. macOS пишет одну sudoers строку при установке. Windows требует админа из-за TUN-драйвера; само приложение не работает как SYSTEM.`,
-    },
-  },
-  {
-    q: {
-      en: "Mobile support?",
-      ru: "Поддержка мобилки?",
-    },
-    a: {
-      en: (
-        <>
-          <b>Android — yes, shipping.</b> Grab{" "}
-          <code>VPNRouter-v*-android.apk</code> from{" "}
-          <a
-            href="https://github.com/PavelLizunov/VPNRouter/releases/latest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Releases
+          VPNRouter — это программа, а не VPN-сервис: своих серверов у неё нет. Ссылку для подключения даёт ваш
+          VPN-сервис, обычно в личном кабинете. Её называют «подписка», «ключ» или «конфиг», и начинается она с
+          https://, vless://, hysteria2://, tuic:// или ss://. Нет своего сервиса? В приложении есть{" "}
+          <a href="#guide" data-guide-link="free">
+            бесплатные публичные серверы
           </a>
-          . Android 6.0+ (API 23), arm64/arm/x64/x86 universal. Uses
-          Android&apos;s <code>VpnService</code> (no root). Live-preview QR
-          scanner, paste-and-go subscription, self-update via in-app banner.
-          <br />
-          <br />
-          <b>iOS — not planned.</b> Apple&apos;s VPN entitlement + App Store
-          review aren&apos;t worth the effort for a personal project. Use a
-          sing-box compatible iOS client (e.g. ShadowRocket) with the same
-          subscription URL.
+          .
         </>
       ),
-      ru: (
-        <>
-          <b>Android — да, релизится.</b> Скачайте{" "}
-          <code>VPNRouter-v*-android.apk</code> с{" "}
-          <a
-            href="https://github.com/PavelLizunov/VPNRouter/releases/latest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Releases
-          </a>
-          . Android 6.0+ (API 23), arm64/arm/x64/x86 universal. Использует{" "}
-          <code>VpnService</code> Android (без root). Live-preview QR-сканер,
-          paste-and-go подписка, само-обновление через in-app баннер.
-          <br />
-          <br />
-          <b>iOS — не планируется.</b> VPN entitlement у Apple + App Store
-          review не стоят усилий для личного проекта. На iOS — sing-box
-          совместимый клиент (например, ShadowRocket) с той же subscription
-          URL.
-        </>
-      ),
-    },
-  },
-  {
-    q: {
-      en: "Can I trust the auto-updater?",
-      ru: "Можно ли доверять авто-апдейтеру?",
-    },
-    a: {
       en: (
         <>
-          It pulls release manifest from <code>api.github.com</code>, downloads
-          the binary, verifies SHA-256 against the value in the signed
-          manifest, swaps in place. If you don&apos;t want it, disable it in
-          Settings → Updates; you&apos;ll still get notified.
-        </>
-      ),
-      ru: (
-        <>
-          Тянет манифест с <code>api.github.com</code>, скачивает бинарник,
-          проверяет SHA-256 против значения из подписанного манифеста,
-          подменяет на месте. Не хотите — выключите в Настройках → Обновления;
-          уведомления всё равно будут.
+          VPNRouter is a program, not a VPN service: it has no servers of its own. The connection link comes from
+          your VPN service, usually from your account page. It is called a “subscription”, a “key” or a “config”
+          and starts with https://, vless://, hysteria2://, tuic:// or ss://. No service of your own? The app comes
+          with{" "}
+          <a href="#guide" data-guide-link="free">
+            free public servers
+          </a>
+          .
         </>
       ),
     },
   },
   {
+    id: "difference",
+    q: { ru: "Чем это отличается от обычного VPN?", en: "How is it different from a regular VPN?" },
+    a: {
+      ru: "Многие VPN-программы пускают через себя весь трафик компьютера. VPNRouter по умолчанию пускает через VPN только выбранные программы: браузеры, Discord, Telegram. Игры, банки и остальное идут напрямую. Если нужен весь трафик, на главном экране есть переключатель «Весь трафик».",
+      en: "Many VPN programs take all the traffic of your computer. By default VPNRouter sends only the chosen programs through the VPN: browsers, Discord, Telegram. Games, banking and the rest go direct. If you need everything, there is an “All traffic” switch on the home screen.",
+    },
+  },
+  {
+    id: "smartscreen",
     q: {
-      en: "Does this support [my favourite protocol]?",
-      ru: "Поддерживает ли [мой любимый протокол]?",
+      ru: "Windows пишет «Система Windows защитила ваш компьютер». Это вирус?",
+      en: "Windows says “Windows protected your PC”. Is it a virus?",
     },
     a: {
-      en: `If sing-box supports it, this does: VLESS, TUIC, Hysteria2, Shadowsocks, Trojan, plain SOCKS5, plain HTTP. WireGuard works as an output too. Drop a JSON, click Apply, done.`,
-      ru: `Если sing-box поддерживает — поддерживает и это: VLESS, TUIC, Hysteria2, Shadowsocks, Trojan, обычный SOCKS5, HTTP. WireGuard как outbound тоже работает. Кидаете JSON, жмёте Apply, готово.`,
+      ru: (
+        <>
+          Само это окно не значит, что в файле вирус. Windows показывает его для программ без цифровой подписи, а у
+          VPNRouter её нет. Если вы скачали файл с этого сайта, нажмите «Подробнее», затем «Выполнить в любом
+          случае». Рядом с каждым файлом на <a href={RELEASES_URL}>странице релизов</a> лежит его контрольная сумма
+          (.sha256): по ней можно проверить, что файл скачался без изменений.
+        </>
+      ),
+      en: (
+        <>
+          The window alone does not mean the file has a virus. Windows shows it for programs without a digital
+          signature, and VPNRouter has none. If you downloaded the file from this site, click “More info”, then
+          “Run anyway”. Next to every file on the <a href={RELEASES_URL}>releases page</a> there is its checksum
+          (.sha256): with it you can check that the file arrived unchanged.
+        </>
+      ),
+    },
+  },
+  {
+    id: "admin",
+    q: { ru: "Зачем программе права администратора?", en: "Why does the program need administrator rights?" },
+    a: {
+      ru: "Чтобы создать сетевой адаптер VPN и направлять через него выбранные программы. Без этих прав система не разрешает менять сетевые маршруты.",
+      en: "To create the VPN network adapter and route the chosen programs through it. Without these rights the system does not allow changing network routes.",
+    },
+  },
+  {
+    id: "fail",
+    q: { ru: "Не подключается. Что делать?", en: "It does not connect. What now?" },
+    a: {
+      ru: (
+        <>
+          Сначала проверьте, что ссылка вставлена целиком. Затем на главном экране откройте «Проверка настроек»:
+          мастер шаг за шагом проверит сеть и маршрутизацию. Если серверов несколько, попробуйте другой: кнопка
+          «Изменить» рядом с названием сервера. Не помогло? Напишите в{" "}
+          <a href={`${REPO_URL}/issues`}>раздел проблем на GitHub</a>.
+        </>
+      ),
+      en: (
+        <>
+          First check that the whole link was pasted. Then open “Check my setup” on the home screen: the wizard
+          checks the network and the routing step by step. If you have several servers, try another one: the
+          “Change” button next to the server name. Still stuck? Write to the{" "}
+          <a href={`${REPO_URL}/issues`}>issues section on GitHub</a>.
+        </>
+      ),
+    },
+  },
+  {
+    id: "iphone",
+    q: { ru: "Есть версия для iPhone?", en: "Is there an iPhone version?" },
+    a: {
+      ru: "Пока нет. VPNRouter работает на Windows 10 и 11, на Mac с Apple Silicon, на Linux и на Android 6.0 и новее.",
+      en: "Not yet. VPNRouter runs on Windows 10 and 11, Apple Silicon Macs, Linux and Android 6.0 and later.",
+    },
+  },
+  {
+    id: "update",
+    q: { ru: "Как обновлять?", en: "How do I update?" },
+    a: {
+      ru: "Когда выходит новая версия, приложение само сообщает об этом и предлагает обновиться. На Linux при установке одной командой обновления приходят вместе с обновлением системы.",
+      en: "When a new version is out, the app tells you and offers to update. On Linux installed with the one command, updates arrive with your system updates.",
+    },
+  },
+  {
+    id: "data",
+    q: { ru: "Собирает ли приложение мои данные?", en: "Does the app collect my data?" },
+    a: {
+      ru: "Нет: в нём нет рекламы, аккаунтов и сбора статистики, а отчёты о сбоях остаются на вашем устройстве. Важно другое: тот, кто держит VPN-сервер, видит, к каким сайтам вы подключаетесь, а незашифрованные данные может и прочитать. Выбирайте сервис, которому доверяете.",
+      en: "No: it has no ads, no accounts and no usage statistics, and crash reports stay on your device. Something else matters: whoever runs the VPN server can see which sites you connect to, and can read data that is not encrypted. Choose a service you trust.",
+    },
+  },
+  {
+    id: "remove",
+    q: { ru: "Как удалить?", en: "How do I remove it?" },
+    a: {
+      ru: "Windows: «Параметры», затем «Приложения», затем VPNRouter и «Удалить». Android: как любое приложение. macOS: перетащите VPNRouter из «Программ» в корзину. Linux: если ставили командой или файлом .deb, выполните sudo apt remove vpnrouter; если запускали AppImage, просто удалите этот файл.",
+      en: "Windows: Settings, then Apps, then VPNRouter and Uninstall. Android: like any other app. macOS: drag VPNRouter from Applications to the Trash. Linux: if you installed with the command or the .deb file, run sudo apt remove vpnrouter; if you ran the AppImage, just delete that file.",
     },
   },
 ];
 
-/**
- * FAQ — 8 native <details> rows. Server-rendered, no JS needed for expand.
- */
-export function FAQ() {
+export function Faq() {
   return (
     <section className="section" id="faq">
-      <div className="section-h">
-        <div className="num" style={{ color: "var(--blue)" }}>
-          06
-        </div>
+      <header className="section-head">
         <h2>
-          <T ru="Частые" en="Common" />{" "}
-          <em>
-            <T ru="вопросы" en="questions" />
-          </em>
-          .
+          <T
+            ru={
+              <>
+                Частые <mark>вопросы</mark>
+              </>
+            }
+            en={
+              <>
+                Common <mark>questions</mark>
+              </>
+            }
+          />
         </h2>
-        <div className="meta">{"// click to expand"}</div>
-      </div>
-
-      <div className="faq-grid">
-        {FAQS.map((item, i) => (
-          <details key={i} className="faq" open={item.open}>
+      </header>
+      <div className="faq">
+        {ITEMS.map((item) => (
+          <details key={item.id} id={`faq-${item.id}`}>
             <summary>
               <T ru={item.q.ru} en={item.q.en} />
             </summary>
-            <div className="body">
-              <p data-i18n="en">{item.a.en}</p>
-              <p data-i18n="ru">{item.a.ru}</p>
-            </div>
+            <p>
+              <T ru={item.a.ru} en={item.a.en} />
+            </p>
           </details>
         ))}
       </div>

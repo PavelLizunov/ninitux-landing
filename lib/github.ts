@@ -1,165 +1,111 @@
 /**
- * VPNRouter release resolution — bulletproof against GitHub API rate limits.
+ * Latest VPNRouter release, resolved without api.github.com.
  *
- * THE PROBLEM (recurring):
- *   Earlier versions hit `https://api.github.com/repos/.../releases/latest`.
- *   That endpoint rate-limits by IP at 60 req/h unauthenticated. Our entire
- *   homelab shares one egress IP (83.97.108.34 via the gost proxy), so the
- *   budget burns fast. When the API returned a 403 rate-limit body, the code
- *   fell through to a `releases/latest` *page* link — so the APK button (and
- *   version pill, and manual links) silently broke: clicking "Download .apk"
- *   opened the GitHub release page instead of downloading.
+ * The API is rate-limited to 60 requests an hour per IP and the whole homelab
+ * shares one address, so the page never depends on it for downloads. Two plain
+ * github.com redirects are enough:
  *
- * THE FIX:
- *   Don't touch api.github.com for the critical path at all. Two facts make
- *   this possible — both are plain github.com HTTP redirects with NO API and
- *   NO rate limit:
+ *   GET /releases/latest                 -> 302 .../releases/tag/<TAG>
+ *   GET /releases/download/<TAG>/<FILE>  -> 302 to the file
  *
- *     1. GET https://github.com/{repo}/releases/latest
- *          -> 302 Location: .../releases/tag/<TAG>     (reveals the version)
- *
- *     2. GET https://github.com/{repo}/releases/latest/download/<FILENAME>
- *          -> 302 to the actual asset CDN URL          (direct download)
- *
- *   So we resolve the tag from redirect #1, then build every download URL
- *   deterministically from the tag + the known asset-name pattern. Asset
- *   sizes come from HEAD requests on those (non-API) download URLs.
- *
- *   Result: version + all download links are always correct and direct,
- *   even when api.github.com is fully throttled. Zero API dependency.
- *
- *   Star count is the ONE thing with no non-API source — it stays an
- *   optional API call with an honest fallback, and never blocks anything.
+ * The tag comes from the first redirect and every download link is built from
+ * the tag and the known file names. Sizes come from HEAD requests on those
+ * links and are optional: a failed probe leaves the size at 0 and the page
+ * shows the link without it.
  */
 
 const REPO = "PavelLizunov/VPNRouter";
 const BASE = `https://github.com/${REPO}`;
 
+export const REPO_URL = BASE;
+export const RELEASES_URL = `${BASE}/releases`;
+
+/** Used only when github.com cannot be reached while the page is rendered. */
+const FALLBACK_TAG = "v2.50.2";
+
+/** File names published by the VPNRouter release workflows, by tag. */
+const FILES = {
+  winSetup: (tag: string) => `VPNRouter-Setup-${tag}.exe`,
+  winZip: (tag: string) => `VPNRouter-${tag}-win.zip`,
+  macDmg: (tag: string) => `VPNRouter-${tag}-mac.dmg`,
+  macZip: (tag: string) => `VPNRouter-${tag}-mac.zip`,
+  deb: (tag: string) => `VPNRouter-${tag}-linux-amd64.deb`,
+  appImage: (tag: string) => `VPNRouter-${tag}-linux-x86_64.AppImage`,
+  tarGz: (tag: string) => `VPNRouter-${tag}-linux.tar.gz`,
+  apk: (tag: string) => `VPNRouter-${tag}-android-arm64.apk`,
+} as const;
+
+export type AssetKey = keyof typeof FILES;
+
 export interface ReleaseAsset {
   name: string;
-  size: number; // 0 if the size HEAD failed — callers must treat 0 as "unknown"
-  browser_download_url: string;
+  url: string;
+  /** Bytes; 0 means the size is unknown. */
+  size: number;
 }
 
 export interface Release {
-  tag_name: string;
-  assets: ReleaseAsset[];
+  tag: string;
+  /** The tag without the leading "v". */
+  version: string;
+  assets: Record<AssetKey, ReleaseAsset>;
 }
 
-/**
- * Asset filename suffixes produced by the VPNRouter release CI. Each real
- * asset is named `VPNRouter-<tag>-<suffix>`. Kept in sync with the repo's
- * build workflows + README "Manual download" table.
- */
-const ASSET_SUFFIXES = [
-  "win.zip", // Windows full installer
-  "mac.dmg", // macOS drag-install
-  "mac.zip", // macOS raw .app
-  "linux-amd64.deb", // Debian/Ubuntu
-  "linux-x86_64.AppImage", // portable
-  "linux.tar.gz", // raw tarball
-  "android.apk", // Android sideload
-] as const;
-
-/**
- * Last-known-good tag. Used only if the redirect resolution itself fails
- * (network down at render time). Guarantees we never emit a bare
- * `releases/latest` page link for a download. Bump on each review.
- */
-const FALLBACK_TAG = "v2.42.0";
-
-function buildAssets(tag: string): ReleaseAsset[] {
-  return ASSET_SUFFIXES.map((suffix) => {
-    const name = `VPNRouter-${tag}-${suffix}`;
-    return {
-      name,
-      size: 0,
-      browser_download_url: `${BASE}/releases/download/${tag}/${name}`,
-    };
-  });
-}
-
-/**
- * Resolve the latest tag via the github.com 302 redirect — NOT api.github.com.
- * No rate limit. Returns null only on a hard network error.
- */
 async function resolveLatestTag(): Promise<string | null> {
   try {
-    const r = await fetch(`${BASE}/releases/latest`, {
+    const response = await fetch(`${BASE}/releases/latest`, {
       method: "HEAD",
       redirect: "manual",
       signal: AbortSignal.timeout(6000),
       headers: { "User-Agent": "ninitux-landing" },
       next: { revalidate: 600 },
     });
-    const loc = r.headers.get("location") ?? "";
-    const m = loc.match(/\/releases\/tag\/(.+)$/);
-    return m ? decodeURIComponent(m[1]) : null;
+    const location = response.headers.get("location") ?? "";
+    const match = location.match(/\/releases\/tag\/(.+)$/);
+    return match ? decodeURIComponent(match[1]) : null;
   } catch {
     return null;
   }
 }
 
-/**
- * Best-effort asset size via HEAD on the (non-API) download URL. The CDN
- * sets Content-Length on the final asset response. Returns 0 on any failure
- * — callers render the link without a size rather than break.
- */
 async function headSize(url: string): Promise<number> {
   try {
-    const r = await fetch(url, {
+    const response = await fetch(url, {
       method: "HEAD",
       redirect: "follow",
       signal: AbortSignal.timeout(6000),
       headers: { "User-Agent": "ninitux-landing" },
       next: { revalidate: 600 },
     });
-    const len = r.headers.get("content-length");
-    return len ? parseInt(len, 10) : 0;
+    const length = response.headers.get("content-length");
+    return response.ok && length ? parseInt(length, 10) : 0;
   } catch {
     return 0;
   }
 }
 
-/**
- * Latest release with direct download URLs for every platform. Never returns
- * a page-style link. Resolves entirely without api.github.com.
- */
-export async function getLatestRelease(): Promise<Release> {
-  const tag = (await resolveLatestTag()) ?? FALLBACK_TAG;
-  const assets = buildAssets(tag);
-  // Sizes are nice-to-have; fetch in parallel, never block the version/links.
-  await Promise.all(
-    assets.map(async (a) => {
-      a.size = await headSize(a.browser_download_url);
-    }),
-  );
-  return { tag_name: tag, assets };
+export function buildRelease(tag: string): Release {
+  const assets = {} as Record<AssetKey, ReleaseAsset>;
+  for (const key of Object.keys(FILES) as AssetKey[]) {
+    const name = FILES[key](tag);
+    assets[key] = { name, url: `${BASE}/releases/download/${tag}/${name}`, size: 0 };
+  }
+  return { tag, version: tag.replace(/^v/, ""), assets };
 }
 
-/**
- * Star count — the only metric with no non-API source. Optional API call
- * (authenticated if GITHUB_TOKEN is set in the container env -> 5000 req/h),
- * honest fallback to the last-known real value. Never throws, never blocks.
- */
-export async function getStarCount(): Promise<number | null> {
-  try {
-    const token = process.env.GITHUB_TOKEN;
-    const r = await fetch(`https://api.github.com/repos/${REPO}`, {
-      signal: AbortSignal.timeout(5000),
-      headers: {
-        "User-Agent": "ninitux-landing",
-        Accept: "application/vnd.github+json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      next: { revalidate: 1800 },
-    });
-    if (!r.ok) return null;
-    const data = (await r.json()) as { stargazers_count?: number };
-    return typeof data.stargazers_count === "number"
-      ? data.stargazers_count
-      : null;
-  } catch {
-    return null;
-  }
+export async function getLatestRelease(): Promise<Release> {
+  const release = buildRelease((await resolveLatestTag()) ?? FALLBACK_TAG);
+  await Promise.all(
+    Object.values(release.assets).map(async (asset) => {
+      asset.size = await headSize(asset.url);
+    }),
+  );
+  return release;
+}
+
+/** "52 MB"; empty when the size is unknown. */
+export function formatSize(bytes: number, lang: "ru" | "en"): string {
+  if (!bytes) return "";
+  const megabytes = Math.max(1, Math.round(bytes / (1024 * 1024)));
+  return lang === "ru" ? `${megabytes} МБ` : `${megabytes} MB`;
 }

@@ -1,116 +1,149 @@
 import { T } from "@/components/i18n/t";
-import type { Release } from "@/lib/github";
+import { DownloadButton } from "@/components/ui/download-button";
+import { OsLink } from "@/components/ui/os-tabs";
+import { Stories } from "@/components/ui/stories";
+import { formatSize, type Release } from "@/lib/github";
+import { GUIDES } from "@/lib/guides";
 
-function fmtSize(bytes: number) {
-  if (!bytes && bytes !== 0) return "";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+function Meta({ ru, en }: { ru: string[]; en: string[] }) {
+  return (
+    <p className="cta-meta">
+      <T ru={ru.filter(Boolean).join(" · ")} en={en.filter(Boolean).join(" · ")} />
+    </p>
+  );
 }
 
 /**
- * Hero — eyebrow + multi-line headline with pop/yel/strike/underline,
- * lede, CTA row, trust pills, penguin sticker with 3 attached stickers.
- *
- * `release` is fetched server-side in app/page.tsx (cached 10min) and passed
- * down — no more client fetch race where href stayed on fallback long enough
- * for the user to click. If fetch failed, we fall back to the latest known
- * version string so the visible info is still truthful.
+ * First screen: what the app does in one sentence, one download button for the
+ * visitor's own system (data-show-os, chosen by the boot script) and a looping
+ * demo of the first connection.
  */
 export function Hero({ release }: { release: Release }) {
-  const version = release.tag_name;
-  const winAsset = release.assets.find(
-    (a) =>
-      a.name.endsWith("-win.zip") &&
-      !a.name.includes("update") &&
-      !a.name.endsWith(".sha256"),
-  );
-  // size may be 0 if the HEAD size probe failed — show version only then.
-  const size = winAsset && winAsset.size ? fmtSize(winAsset.size) : "";
+  const { assets, version } = release;
+  const ver = { ru: `версия ${version}`, en: `version ${version}` };
 
   return (
     <section className="hero" id="top">
-      <div className="hero-grid">
-        <div>
-          <p className="eyebrow">
-            <span className="blink"></span>{" "}
-            <T
-              ru="Virtual Penguin Network · работает"
-              en="Virtual Penguin Network · live"
+      <div className="hero-text">
+        <h1>
+          <T
+            ru={
+              <>
+                VPN только там, где он <mark>нужен</mark>
+              </>
+            }
+            en={
+              <>
+                A VPN only where you <mark>need</mark> it
+              </>
+            }
+          />
+        </h1>
+        <p className="lede">
+          <T
+            ru="VPNRouter пускает через VPN только выбранные программы: браузер, Discord, Telegram. Игры, банк и всё остальное работают как обычно, напрямую."
+            en="VPNRouter sends only the programs you choose through the VPN: your browser, Discord, Telegram. Games, banking and everything else keep working as usual, directly."
+          />
+        </p>
+
+        <div className="cta">
+          <div data-show-os="win">
+            <DownloadButton href={assets.winSetup.url} os="win" event="hero-dl-win">
+              <T ru="Скачать для Windows" en="Download for Windows" />
+            </DownloadButton>
+            <Meta
+              ru={["Windows 10 и 11", formatSize(assets.winSetup.size, "ru"), ver.ru]}
+              en={["Windows 10 and 11", formatSize(assets.winSetup.size, "en"), ver.en]}
             />
-          </p>
-
-          <h1 className="headline" data-i18n="en">
-            Not a <span className="strike">tunnel</span>.<br />
-            A <span className="pop">router</span> for<br />
-            <span className="underline">your apps.</span>
-          </h1>
-          <h1 className="headline" data-i18n="ru">
-            Не <span className="strike">тоннель</span>.<br />
-            <span className="pop">Роутер</span> для<br />
-            <span className="underline">ваших приложений.</span>
-          </h1>
-
-          <p className="lede" data-i18n="en">
-            <em>Pick which programs go through the proxy</em> — Slack, your
-            torrent client, that one website. Everything else stays direct, on
-            the open net. <b>Windows, macOS, Linux, Android.</b> Open source.
-          </p>
-          <p className="lede" data-i18n="ru">
-            <em>Выберите какие приложения идут через прокси</em> — Slack,
-            торрент-клиент, один сайт. Всё остальное идёт напрямую, по обычной
-            сети. <b>Windows, macOS, Linux, Android.</b> Open source.
-          </p>
-
-          <div className="cta-row">
-            <a className="cta" href="#install">
-              <T ru="Установить →" en="Install →" />
+          </div>
+          <div data-show-os="mac">
+            <DownloadButton href={assets.macDmg.url} os="mac" event="hero-dl-mac">
+              <T ru="Скачать для macOS" en="Download for macOS" />
+            </DownloadButton>
+            <Meta
+              ru={["Mac на Apple Silicon (M1 и новее)", formatSize(assets.macDmg.size, "ru"), ver.ru]}
+              en={["Apple Silicon Macs (M1 and later)", formatSize(assets.macDmg.size, "en"), ver.en]}
+            />
+          </div>
+          <div data-show-os="linux">
+            <a className="btn btn-primary btn-big" href="#download" data-umami-event="hero-dl-linux">
+              <span>
+                <T ru="Установить на Linux" en="Install on Linux" />
+              </span>
             </a>
-            <a
-              className="cta secondary"
-              href="https://github.com/PavelLizunov/VPNRouter"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ★ <T ru="Поставить звезду на GitHub" en="Star on GitHub" />
+            <Meta
+              ru={["Ubuntu, Debian, Mint: одна команда", "есть .deb и AppImage", ver.ru]}
+              en={["Ubuntu, Debian, Mint: one command", ".deb and AppImage too", ver.en]}
+            />
+          </div>
+          <div data-show-os="android">
+            <DownloadButton href={assets.apk.url} os="android" event="hero-dl-android">
+              <T ru="Скачать для Android" en="Download for Android" />
+            </DownloadButton>
+            <Meta
+              ru={["APK-файл", "Android 6.0 и новее", formatSize(assets.apk.size, "ru"), ver.ru]}
+              en={["APK file", "Android 6.0 and later", formatSize(assets.apk.size, "en"), ver.en]}
+            />
+          </div>
+          <div data-show-os="ios">
+            <p className="note note-warn">
+              <T
+                ru="Версии для iPhone и iPad пока нет. VPNRouter работает на Windows, macOS, Linux и Android."
+                en="There is no iPhone or iPad version yet. VPNRouter runs on Windows, macOS, Linux and Android."
+              />
+            </p>
+            <a className="btn btn-primary btn-big" href="#download">
+              <span>
+                <T ru="Скачать для другого устройства" en="Download for another device" />
+              </span>
             </a>
-            <span className="cta-meta">
-              <T ru="последняя" en="latest" /> <b id="hero-ver">{version}</b>
-              {size ? (
-                <>
-                  {" · "}
-                  <b id="hero-size">{size}</b>
-                </>
-              ) : null}{" "}
-              · sha256 ✓
-            </span>
           </div>
 
-          <div className="trust-row">
-            <span className="pill">
-              <span className="dot"></span> GPL-3.0
-            </span>
-            <span className="pill">
-              <span className="dot"></span> sing-box{" "}
-              <T ru="core" en="core" />
-            </span>
-            <span className="pill">
-              <span className="dot"></span> VLESS + Reality
-            </span>
-            <span className="pill">
-              <span className="dot"></span>{" "}
-              <T ru="без демона" en="no daemon" />
-            </span>
-          </div>
+          <p className="cta-other">
+            <T ru="Другая система:" en="Another system:" /> <OsLink os="win">Windows</OsLink>
+            <OsLink os="mac">macOS</OsLink>
+            <OsLink os="linux">Linux</OsLink>
+            <OsLink os="android">Android</OsLink>
+          </p>
         </div>
 
-        <div className="hero-pen-wrap">
-          <div className="hero-pen" role="img" aria-label="Penguin mascot"></div>
-          <span className="hero-sticker sticker-1">★ very cool</span>
-          <span className="hero-sticker sticker-2">
-            <T ru="это роутер!!" en="it's a router!!" />
-          </span>
-          <span className="hero-sticker sticker-3">{version} · GPL-3</span>
-        </div>
+        <p className="note">
+          <b>
+            <T ru="Что понадобится:" en="What you will need:" />
+          </b>{" "}
+          <T
+            ru={
+              <>
+                ссылка для подключения от вашего VPN-сервиса (её называют подпиской или ключом). Нет такой? В
+                приложении есть{" "}
+                <a href="#guide" data-guide-link="free">
+                  бесплатные публичные серверы
+                </a>
+                .
+              </>
+            }
+            en={
+              <>
+                a connection link from your VPN service (often called a subscription or a key). Do not have one?
+                The app comes with{" "}
+                <a href="#guide" data-guide-link="free">
+                  free public servers
+                </a>
+                .
+              </>
+            }
+          />
+        </p>
+      </div>
+
+      <div className="hero-demo">
+        <Stories guide={GUIDES[0]} variant="hero" />
+        <span className="hero-pen" role="img" aria-label="VPNRouter mascot">
+          <span className="hero-pen-art"></span>
+        </span>
+        <span className="hero-sticker" aria-hidden="true">
+          <T ru="это просто!!" en="it is easy!!" />
+        </span>
       </div>
     </section>
   );

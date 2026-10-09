@@ -1,36 +1,10 @@
-import { Hero } from "@/components/sections/hero";
-import { Install } from "@/components/sections/install";
-import { Features } from "@/components/sections/features";
-import { How } from "@/components/sections/how";
-import { Screenshots } from "@/components/sections/screenshots";
-import { Telemetry } from "@/components/sections/telemetry";
-import { FAQ } from "@/components/sections/faq";
-import { Support } from "@/components/sections/support";
-import { getLatestRelease, getStarCount } from "@/lib/github";
+import { Home } from "@/components/home";
+import { getLatestRelease } from "@/lib/github";
 
-// Force this page to be rendered at request time so the GitHub release data
-// (with revalidate 10min) is fetched on the server. SSR'd HTML will carry the
-// real direct-download URLs in href attributes — no race between user click
-// and the now-removed client-side fetch.
+// Re-rendered on the server at most every 10 minutes, so the version and the
+// download links follow new releases without a redeploy.
 export const revalidate = 600;
 
-export default async function Home() {
-  const [release, stars] = await Promise.all([
-    getLatestRelease(),
-    getStarCount(),
-  ]);
-
-  return (
-    <>
-      <Hero release={release} />
-      <Install release={release} />
-      {/* release is always non-null now (deterministic from redirect/fallback) */}
-      <Features />
-      <How />
-      <Screenshots />
-      <Telemetry />
-      <FAQ />
-      <Support stars={stars} />
-    </>
-  );
+export default async function Page() {
+  return <Home release={await getLatestRelease()} />;
 }

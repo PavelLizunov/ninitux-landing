@@ -1,36 +1,30 @@
 import { T } from "@/components/i18n/t";
 
 const ITEMS = [
-  { ru: "маршрутизация по процессам", en: "per-process routing" },
-  { ru: "25 000 публичных конфигов", en: "25 000 free public configs" },
-  { ru: "НОЛЬ телеметрии", en: "ZERO telemetry" },
-  { ru: "VLESS + Reality + sing-box", en: "VLESS + Reality + sing-box" },
-  { ru: "GPL-3.0 · open source", en: "GPL-3.0 · open source" },
-  { ru: "windows · macos · linux · android", en: "windows · macos · linux · android" },
-];
+  { ru: "бесплатно", en: "free" },
+  { ru: "без регистрации", en: "no sign-up" },
+  { ru: "без рекламы", en: "no ads" },
+  { ru: "открытый код", en: "open source" },
+  { ru: "Windows · macOS · Linux · Android", en: "Windows · macOS · Linux · Android" },
+  { ru: "VPN только там, где он нужен", en: "a VPN only where you need it" },
+] as const;
 
 /**
- * Full-width black bar at the top with lime monospaced text scrolling left.
- * Rendered OUTSIDE .wrap so the background stretches edge-to-edge.
- *
- * Items TRIPLED so the wrap is seamless on any viewport wider than one set.
- * (A doubled marquee leaves a gap on viewports wider than half the track —
- * at 1400px viewport with ~2700px track, half = 1350px < 1400px = ~50px gap.
- * Tripling keeps the visible window inside the loop region at any moment.)
- *
- * Animation: translateX(0) → translateX(-33.333%) over the cycle. At that
- * point, item[N] sits exactly where item[0] was → visually identical → loop.
+ * The running line above the top bar. Decoration only, so it is hidden from
+ * screen readers; the same facts are in the page text. The items are repeated
+ * three times and the track moves by one third, which makes the loop seamless.
  */
 export function Marquee() {
-  const tripled = [...ITEMS, ...ITEMS, ...ITEMS];
   return (
     <div className="marquee" aria-hidden="true">
-      <div className="track">
-        {tripled.map((item, idx) => (
-          <span key={idx}>
-            <span className="dot">●</span> <T ru={item.ru} en={item.en} />
-          </span>
-        ))}
+      <div className="marquee-track">
+        {[0, 1, 2].map((copy) =>
+          ITEMS.map((item) => (
+            <span key={`${copy}-${item.en}`}>
+              <i>●</i> <T ru={item.ru} en={item.en} />
+            </span>
+          )),
+        )}
       </div>
     </div>
   );
