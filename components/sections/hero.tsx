@@ -25,9 +25,6 @@ export function Hero({ release }: { release: Release }) {
   return (
     <section className="hero" id="top">
       <div className="hero-text">
-        <p className="eyebrow">
-          <T ru="Бесплатно · без регистрации · открытый код" en="Free · no sign-up · open source" />
-        </p>
         <h1>
           <T
             ru={
@@ -141,7 +138,12 @@ export function Hero({ release }: { release: Release }) {
 
       <div className="hero-demo">
         <Stories guide={GUIDES[0]} variant="hero" />
-        <span className="hero-pen" role="img" aria-label="VPNRouter mascot"></span>
+        <span className="hero-pen" role="img" aria-label="VPNRouter mascot">
+          <span className="hero-pen-art"></span>
+        </span>
+        <span className="hero-sticker" aria-hidden="true">
+          <T ru="это просто!!" en="it is easy!!" />
+        </span>
       </div>
     </section>
   );

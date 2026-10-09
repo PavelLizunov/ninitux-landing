@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Unbounded, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { BootScript } from "@/components/boot-script";
+import { Marquee } from "@/components/layout/marquee";
 import { Topbar } from "@/components/layout/topbar";
 import { Footer } from "@/components/layout/footer";
 
@@ -97,6 +98,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skip-link" href="#main">
           К содержанию / Skip to content
         </a>
+        <Marquee />
         <Topbar />
         <div className="wrap">
           <main id="main">{children}</main>

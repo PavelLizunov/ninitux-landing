@@ -1,7 +1,8 @@
 /* ninitux.com: plain CSS, no framework.
-   The look: cream paper, ink outlines, hard offset shadows, one hot colour.
-   Pink is kept for the main action (download); yellow marks the key word of a
-   heading and the active step; green means "done". */
+   The look: cream paper, ink outlines, hard offset shadows and acid colours.
+   The colours are loud in decoration (running line, stickers, tiles, shadows)
+   and quiet in the flow: the only filled pink control is the download button,
+   and yellow marks what is selected. */
 
 :root{
   --cream:#FFFBEC;
@@ -10,6 +11,10 @@
   --yellow:#FFE600;
   --pink:#FF3E8E;
   --lime:#C8FF3D;
+  --blue:#2D5BFF;
+  --sky:#9DE7FF;
+  --purple:#B68CFF;
+  --mint:#B7F0CC;
   --ink:#0A0907;
   --ink-2:#2B261C;
   --ink-mute:#5E584A;
@@ -30,7 +35,12 @@
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:92px;-webkit-text-size-adjust:100%}
 body{
-  margin:0;background:var(--cream);color:var(--ink);
+  margin:0;color:var(--ink);
+  background:
+    radial-gradient(circle at 6% 3%,rgba(255,62,142,.11),transparent 30rem),
+    radial-gradient(circle at 96% 2%,rgba(45,91,255,.10),transparent 32rem),
+    radial-gradient(circle at 50% 100%,rgba(200,255,61,.20),transparent 36rem),
+    var(--cream);
   font-family:var(--sans);font-size:17px;line-height:1.55;
   -webkit-font-smoothing:antialiased;overflow-x:clip;
 }
@@ -48,8 +58,8 @@ a:hover{background:var(--yellow);text-decoration-color:var(--ink)}
 ::selection{background:var(--pink);color:var(--cream)}
 
 mark{
-  background:var(--yellow);color:inherit;padding:0 .18em;border-radius:.14em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  display:inline-block;background:var(--yellow);color:inherit;padding:0 .2em .04em;border-radius:.16em;
+  transform:rotate(-1.5deg);box-shadow:4px 4px 0 var(--ink);
 }
 kbd{
   font-family:var(--mono);font-size:.82em;font-weight:700;
@@ -97,8 +107,16 @@ html[data-os="ios"] [data-show-os="ios"]{display:block}
 .btn-light{background:var(--cream)}
 .btn-icon{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 
+/* ── Running line ──────────────────────────────────── */
+.marquee{background:var(--ink);color:var(--lime);overflow:hidden;white-space:nowrap;padding:9px 0;
+  font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+.marquee-track{display:inline-flex;gap:30px;padding-right:30px;animation:marquee 44s linear infinite;will-change:transform}
+.marquee-track span{display:inline-flex;align-items:center;gap:9px}
+.marquee-track i{font-style:normal;color:var(--pink)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-33.3333%)}}
+
 /* ── Top bar ───────────────────────────────────────── */
-.topbar{position:sticky;top:0;z-index:20;background:var(--cream);border-bottom:2px solid var(--ink)}
+.topbar{position:sticky;top:0;z-index:20;background:var(--cream);border-bottom:2px solid var(--ink);box-shadow:0 4px 0 var(--lime)}
 .topbar-inner{max-width:var(--wrap);margin:0 auto;padding:12px var(--gutter);display:flex;align-items:center;gap:14px}
 .brand{
   display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
@@ -118,11 +136,8 @@ html[data-os="ios"] [data-show-os="ios"]{display:block}
 
 /* ── Hero ──────────────────────────────────────────── */
 .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:56px;align-items:center;padding:56px 0 72px}
-.eyebrow{
-  display:inline-block;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.03em;
-  background:var(--lime);border:2px solid var(--ink);border-radius:999px;padding:5px 13px;margin-bottom:22px;
-}
 h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.1vw,60px);line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
+.hero h1 mark{background:var(--pink);color:var(--cream);transform:rotate(-2.5deg);box-shadow:6px 6px 0 var(--ink);margin-top:.08em}
 .lede{font-size:clamp(18px,1.7vw,21px);line-height:1.5;color:var(--ink-2);margin-top:22px;max-width:34em}
 .cta{margin-top:30px}
 .cta-meta{font-family:var(--mono);font-size:13.5px;color:var(--ink-mute);margin-top:14px}
@@ -135,16 +150,27 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.1vw,60px);l
 .note-warn{background:var(--yellow);margin:0 0 16px}
 
 .hero-demo{position:relative;justify-self:center;width:100%;max-width:392px}
+.hero-demo .st-screen{box-shadow:10px 10px 0 var(--lime),10px 10px 0 3px var(--ink)}
 .hero-pen{
   position:absolute;right:-46px;top:-52px;width:112px;height:112px;z-index:3;
-  background:var(--yellow) url('/penguin-sketch.png') center/88% no-repeat;
-  border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow-s);transform:rotate(8deg);
+  background:var(--yellow);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow-s);transform:rotate(8deg);
+}
+/* The mascot drawing itself is never changed; the pink edge is a shadow around it. */
+.hero-pen-art{position:absolute;inset:5px;background:url('/penguin-sketch.png') center/contain no-repeat;filter:drop-shadow(3px 4px 0 var(--pink))}
+.hero-sticker{
+  position:absolute;left:-140px;bottom:168px;z-index:3;white-space:nowrap;
+  font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;
+  background:var(--lime);border:3px solid var(--ink);border-radius:999px;padding:7px 14px;
+  box-shadow:var(--shadow-s);transform:rotate(-7deg);
 }
 
 /* ── Sections ──────────────────────────────────────── */
 .section{padding:64px 0;border-top:2px solid var(--ink)}
 .section-head{margin-bottom:30px}
 h2{font-family:var(--display);font-weight:800;font-size:clamp(27px,3.6vw,42px);line-height:1.12;letter-spacing:-.02em;text-wrap:balance}
+#guide h2 mark{background:var(--lime)}
+#why h2 mark{background:var(--sky)}
+#faq h2 mark{background:var(--pink);color:var(--cream)}
 .section-head p{font-size:18.5px;color:var(--ink-2);margin-top:12px;max-width:42em}
 h3{font-size:19px;font-weight:800;line-height:1.3}
 .section-foot{margin-top:26px;font-size:15.5px;color:var(--ink-mute);max-width:52em}
@@ -171,6 +197,10 @@ html[data-ostab="win"] [data-os-panel="win"],
 html[data-ostab="mac"] [data-os-panel="mac"],
 html[data-ostab="linux"] [data-os-panel="linux"],
 html[data-ostab="android"] [data-os-panel="android"]{display:grid}
+[data-os-panel="win"]{box-shadow:8px 8px 0 var(--blue)}
+[data-os-panel="mac"]{box-shadow:8px 8px 0 var(--pink)}
+[data-os-panel="linux"]{box-shadow:8px 8px 0 var(--lime),8px 8px 0 3px var(--ink)}
+[data-os-panel="android"]{box-shadow:8px 8px 0 var(--mint),8px 8px 0 3px var(--ink)}
 .os-main h3{font-size:22px;margin-bottom:14px}
 
 .downloading{display:none;margin-bottom:18px;font-weight:700;background:var(--lime);border:3px solid var(--ink);border-radius:var(--radius-s);padding:12px 16px}
@@ -262,6 +292,7 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
 .st-controls{grid-area:controls}
 .st[data-variant="hero"]{display:block}
 .st[data-variant="hero"] .st-bars{padding-right:74px}
+.st[data-variant="full"] .st-screen{box-shadow:10px 10px 0 var(--sky),10px 10px 0 3px var(--ink)}
 .st-screen{width:100%;border:3px solid var(--ink);border-radius:var(--radius);overflow:hidden;background:var(--white);box-shadow:8px 8px 0 var(--ink)}
 .st-bars{display:flex;gap:5px;padding:10px 10px 9px;background:var(--ink)}
 .st-bar{flex:1;height:14px;display:flex;align-items:center}
@@ -316,9 +347,17 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
 
 /* ── Benefits ──────────────────────────────────────── */
 .benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.benefits li{background:var(--white);border:2px solid var(--ink);border-radius:var(--radius-s);padding:22px}
-.benefits h3{font-size:19px}
-.benefits p{font-size:16px;color:var(--ink-2);margin-top:8px}
+.benefits li{background:var(--white);border:3px solid var(--ink);border-radius:var(--radius);padding:22px;box-shadow:5px 5px 0 var(--ink)}
+.benefits li:nth-child(1){background:var(--yellow)}
+.benefits li:nth-child(2){background:var(--sky)}
+.benefits li:nth-child(3){background:var(--lime)}
+.benefits li:nth-child(4){background:var(--pink)}
+.benefits li:nth-child(5){background:var(--purple)}
+.benefits li:nth-child(6){background:var(--ink);color:var(--cream)}
+.benefits li:nth-child(6) h3{color:var(--lime)}
+.benefits li:nth-child(6) p{color:var(--cream)}
+.benefits h3{font-family:var(--display);font-size:17px;line-height:1.25}
+.benefits p{font-size:16px;color:var(--ink);margin-top:10px}
 
 /* ── FAQ ───────────────────────────────────────────── */
 .faq{display:grid;gap:10px;max-width:860px}
@@ -327,7 +366,9 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";font-family:var(--display);font-size:22px;line-height:1;flex:none}
 .faq details[open] summary::after{content:"–"}
-.faq details[open]{background:var(--paper)}
+.faq summary:hover{color:var(--ink)}
+.faq details:hover{box-shadow:4px 4px 0 var(--pink)}
+.faq details[open]{background:var(--paper);box-shadow:4px 4px 0 var(--ink)}
 .faq p{font-size:16.5px;color:var(--ink-2);padding:0 0 18px;max-width:46em}
 
 /* ── Closing block and footer ──────────────────────── */
@@ -353,10 +394,15 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
 @media (max-width:1180px){
   .hero-pen{right:-14px}
 }
+/* Between these widths there is no free room beside the demo for the sticker. */
+@media (min-width:941px) and (max-width:1100px){
+  .hero-sticker{display:none}
+}
 @media (max-width:940px){
   .hero{grid-template-columns:minmax(0,1fr);gap:44px;padding:36px 0 56px}
   .hero-demo{max-width:360px}
   .hero-pen{right:-12px;top:-44px;width:86px;height:86px}
+  .hero-sticker{left:-10px;bottom:150px}
   .os-panel{grid-template-columns:minmax(0,1fr);padding:24px}
   .st{grid-template-columns:minmax(0,1fr);grid-template-areas:"screen" "caption" "controls" "steps";grid-template-rows:none}
   .st-screen{max-width:392px;justify-self:center}
@@ -387,7 +433,7 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
   .hero-pen{right:-6px}
 }
 @media (max-width:420px){
-  .eyebrow{font-size:11.5px;letter-spacing:0;padding:5px 10px}
+  .marquee{font-size:12px;padding:8px 0}
 }
 @media (max-width:380px){
   .brand{font-size:13.5px;padding:6px 11px}
@@ -398,4 +444,5 @@ html[data-os="android"] .qr-card,html[data-os="ios"] .qr-card{display:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{transition-duration:.01ms !important}
   .st-spot{animation:none}
+  .marquee-track{animation:none}
 }
