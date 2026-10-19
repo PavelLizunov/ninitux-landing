@@ -36,7 +36,8 @@ def L(ru, en):
 
 # A spot is a list of (control type, label) pairs; the highlight is the box around all of them.
 CONNECT = [("Button", L("Подключить", "Connect"))]
-ADVANCED = [("Button", L("Расширенные настройки", "Advanced settings"))]
+MENU = [("Button", L("icon:more-horizontal", "icon:more-horizontal"))]
+ADVANCED = [("Button", L("Расширенный", "Advanced"))]
 
 GUIDES = {
     "first-run": [
@@ -51,7 +52,9 @@ GUIDES = {
     "apps": [
         dict(id="mode", surface="window-simple", scenario="connected", height=800, crop="top",
              spot=[("RadioButton", L("Приложения", "Selected apps")), ("RadioButton", L("Весь трафик", "All traffic"))]),
-        dict(id="advanced", surface="window-simple", scenario="connected", height=800, crop="bottom", spot=ADVANCED),
+        dict(id="menu", surface="window-simple", scenario="connected", height=800, crop="top", spot=MENU),
+        dict(id="advanced", surface="window-simple", scenario="connected", height=800, crop="top",
+             steps=L(["icon:more-horizontal"], ["icon:more-horizontal"]), spot=ADVANCED),
         dict(id="tab", surface="window-advanced", scenario="connected", height=800, crop="top",
              steps=L(["Приложения"], ["Applications"]),
              spot=[("ListBoxItem", L("Приложения", "Applications"))]),
@@ -63,13 +66,15 @@ GUIDES = {
              spot=[("Button", L("Обзор...", "Browse...")), ("Button", L("Запущенные", "Running"))]),
     ],
     "free": [
-        dict(id="advanced", surface="window-simple", scenario="default", height=980, crop="bottom", spot=ADVANCED),
+        dict(id="menu", surface="window-simple", scenario="default", height=980, crop="top", spot=MENU),
+        dict(id="advanced", surface="window-simple", scenario="default", height=980, crop="top",
+             steps=L(["icon:more-horizontal"], ["icon:more-horizontal"]), spot=ADVANCED),
         dict(id="tab", surface="window-advanced", scenario="default", height=800, crop="top",
              steps=L(["Публичные"], ["Public"]), spot=[("ListBoxItem", L("Публичные", "Public"))]),
         dict(id="find", surface="window-advanced", scenario="default", height=800, crop="top",
              steps=L(["Публичные"], ["Public"]),
              spot=[("Button", L("Найти рабочие конфиги", "Find working configs"))]),
-        dict(id="connect", surface="window-advanced", scenario="default", height=800, crop="bottom",
+        dict(id="connect", surface="window-advanced", scenario="free-results", height=800, crop="bottom",
              steps=L(["Публичные"], ["Public"]), spot=CONNECT),
     ],
 }
