@@ -104,11 +104,20 @@ export const GUIDES: Guide[] = [
       ),
       step(
         "apps",
-        "advanced",
-        { ru: "Откройте «Расширенные настройки»", en: "Open “Advanced settings”" },
+        "menu",
+        { ru: "Откройте меню с тремя точками", en: "Open the three-dot menu" },
         {
-          ru: "Это строка внизу главного экрана.",
-          en: "It is the row at the bottom of the home screen.",
+          ru: "Кнопка находится справа вверху окна.",
+          en: "The button is at the top right of the window.",
+        },
+      ),
+      step(
+        "apps",
+        "advanced",
+        { ru: "Нажмите «Расширенный»", en: "Press “Advanced”" },
+        {
+          ru: "Кнопка внизу открытого меню покажет все настройки.",
+          en: "The button at the bottom of the open menu shows all settings.",
         },
       ),
       step(
@@ -147,11 +156,20 @@ export const GUIDES: Guide[] = [
     steps: [
       step(
         "free",
-        "advanced",
-        { ru: "Откройте «Расширенные настройки»", en: "Open “Advanced settings”" },
+        "menu",
+        { ru: "Откройте меню с тремя точками", en: "Open the three-dot menu" },
         {
-          ru: "Это строка внизу главного экрана.",
-          en: "It is the row at the bottom of the home screen.",
+          ru: "Кнопка находится справа вверху окна.",
+          en: "The button is at the top right of the window.",
+        },
+      ),
+      step(
+        "free",
+        "advanced",
+        { ru: "Нажмите «Расширенный»", en: "Press “Advanced”" },
+        {
+          ru: "Кнопка внизу открытого меню покажет все настройки.",
+          en: "The button at the bottom of the open menu shows all settings.",
         },
       ),
       step(
@@ -177,8 +195,8 @@ export const GUIDES: Guide[] = [
         "connect",
         { ru: "Выберите сервер и нажмите «Подключить»", en: "Pick a server and press “Connect”" },
         {
-          ru: "Эти серверы держат посторонние люди. Для важных дел лучше VPN-сервис, которому вы доверяете.",
-          en: "These servers are run by third parties. For anything important, use a VPN service you trust.",
+          ru: "На примере показаны тестовые адреса. У вас появятся найденные серверы. Их держат посторонние люди: для важных дел лучше VPN-сервис, которому вы доверяете.",
+          en: "The picture uses example addresses. Your results will show the servers found. They are run by third parties: for anything important, use a VPN service you trust.",
         },
       ),
     ],

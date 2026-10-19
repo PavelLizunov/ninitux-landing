@@ -210,8 +210,8 @@ await check("guides: tabs, steps, back and forth, pause", async () => {
   await page.$eval("#guide", (node) => node.scrollIntoView());
   await page.click(".guide-tabs button:nth-child(2)");
   await page.waitForSelector('#guide .st[data-guide="apps"]');
-  await page.click("#guide .st-steps li:nth-child(4) button");
-  expect((await activeFrame(page, "#guide")).endsWith("apps-pick.webp"), "step 4 did not open");
+  await page.click("#guide .st-steps li:nth-child(5) button");
+  expect((await activeFrame(page, "#guide")).endsWith("apps-pick.webp"), "step 5 did not open");
   expect((await page.$eval("#guide .st", (n) => n.dataset.running)) === "false", "a click on a step must pause");
   await page.click("#guide .st-tap-next");
   expect((await activeFrame(page, "#guide")).endsWith("apps-add.webp"), "next did not work");
@@ -221,6 +221,15 @@ await check("guides: tabs, steps, back and forth, pause", async () => {
   expect(spot === "1", "the highlight is hidden on a step that has one");
   await sleep(800);
   await shot(page, "guide-apps-step4", "#guide");
+  for (const [position, suffix] of [[2, "apps-menu.webp"], [3, "apps-advanced.webp"]]) {
+    await page.click(`#guide .st-steps li:nth-child(${position}) button`);
+    expect((await activeFrame(page, "#guide")).endsWith(suffix), `missing current menu frame ${suffix}`);
+  }
+  await page.click(".guide-tabs button:nth-child(3)");
+  await page.waitForSelector('#guide .st[data-guide="free"]');
+  await page.click("#guide .st-steps li:last-child button");
+  expect((await activeFrame(page, "#guide")).endsWith("free-connect.webp"), "free result frame did not open");
+  await shot(page, "guide-free-results", "#guide");
   await page.click("#guide .st-play");
   expect((await page.$eval("#guide .st-play", (b) => b.getAttribute("aria-pressed"))) === "true", "play did not resume");
   await page.close();
