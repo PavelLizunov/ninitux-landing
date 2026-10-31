@@ -2,12 +2,13 @@
 
 import { useHtmlAttr } from "@/components/ui/use-html-attr";
 
-export type Os = "win" | "mac" | "linux" | "android";
+export type Os = "win" | "mac" | "linux" | "omarchy" | "android";
 
 const TABS: { os: Os; label: string }[] = [
   { os: "win", label: "Windows" },
   { os: "mac", label: "macOS" },
   { os: "linux", label: "Linux" },
+  { os: "omarchy", label: "Omarchy" },
   { os: "android", label: "Android" },
 ];
 
@@ -41,9 +42,9 @@ export function OsTabs() {
 }
 
 /** A link that switches the download section to one system and scrolls to it. */
-export function OsLink({ os, children }: { os: Os; children: React.ReactNode }) {
+export function OsLink({ os, children, href = "#download" }: { os: Os; children: React.ReactNode; href?: "#download" | "#omarchy" }) {
   return (
-    <a href="#download" onClick={() => document.documentElement.setAttribute("data-ostab", os)}>
+    <a href={href} onClick={() => document.documentElement.setAttribute("data-ostab", os)}>
       {children}
     </a>
   );

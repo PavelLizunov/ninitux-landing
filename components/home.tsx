@@ -3,7 +3,6 @@ import { Download } from "@/components/sections/download";
 import { Faq } from "@/components/sections/faq";
 import { GuideSection } from "@/components/sections/guide";
 import { Hero } from "@/components/sections/hero";
-import { Omarchy } from "@/components/sections/omarchy";
 import { Trust } from "@/components/sections/trust";
 import type { Release } from "@/lib/github";
 
@@ -13,7 +12,6 @@ export function Home({ release }: { release: Release }) {
     <>
       <Hero release={release} />
       <Download release={release} />
-      <Omarchy />
       <GuideSection />
       <Benefits />
       <Faq />

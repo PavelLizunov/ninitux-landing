@@ -1,7 +1,8 @@
 import { T } from "@/components/i18n/t";
 import { Command } from "@/components/ui/copy-button";
 import { DownloadButton } from "@/components/ui/download-button";
-import { OsTabs } from "@/components/ui/os-tabs";
+import { OsLink, OsTabs } from "@/components/ui/os-tabs";
+import { Omarchy } from "@/components/sections/omarchy";
 import { formatSize, RELEASES_URL, type Release, type ReleaseAsset } from "@/lib/github";
 
 const WIN_COMMAND = "iwr -useb https://vpn.ninitux.com/install.ps1 | iex";
@@ -340,7 +341,7 @@ export function Download({ release }: { release: Release }) {
           <h3>
             <T ru="Ubuntu, Debian, Mint: одна команда" en="Ubuntu, Debian, Mint: one command" />
           </h3>
-          <p><a href="#omarchy"><T ru="У вас Omarchy Quattro? Установите нативный плагин." en="Using Omarchy Quattro? Install the native plugin." /></a></p>
+          <p><OsLink os="omarchy" href="#omarchy"><T ru="У вас Omarchy Quattro? Установите нативный плагин." en="Using Omarchy Quattro? Install the native plugin." /></OsLink></p>
           <Command text={LINUX_COMMAND} event="copy-linux" />
           <ol className="steps">
             <Step n={1}>
@@ -413,6 +414,8 @@ export function Download({ release }: { release: Release }) {
           </div>
         </div>
       </div>
+
+      <Omarchy />
 
       {/* ── Android ── */}
       <div
