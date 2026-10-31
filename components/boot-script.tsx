@@ -6,7 +6,8 @@
  * globals.css; without JavaScript the page stays Russian with the Windows
  * download.
  *
- * ?lang=ru|en and ?os=win|mac|linux|android|ios override the detection.
+ * ?lang=ru|en and ?os=win|mac|linux|omarchy|android|ios override the detection.
+ * The existing #omarchy link opens the native plugin installation tab.
  */
 const BOOT = `(function(){try{
 var d=document.documentElement,n=navigator,q=new URLSearchParams(location.search);
@@ -21,7 +22,8 @@ else if(/Windows/i.test(u))o='win';
 else if(/Macintosh|Mac OS X/i.test(u))o='mac';
 else if(/Linux|X11|CrOS/i.test(u))o='linux';
 var qo=q.get('os');if(/^(win|mac|linux|android|ios)$/.test(qo||''))o=qo;
-d.setAttribute('data-os',o);d.setAttribute('data-ostab',o==='ios'?'win':o);
+if(qo==='omarchy')o='linux';
+d.setAttribute('data-os',o);d.setAttribute('data-ostab',qo==='omarchy'||location.hash==='#omarchy'?'omarchy':o==='ios'?'win':o);
 }catch(e){}})();`;
 
 export function BootScript() {

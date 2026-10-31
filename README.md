@@ -4,7 +4,7 @@ The public site of [VPNRouter](https://github.com/PavelLizunov/VPNRouter): what 
 button for the visitor's system, install steps in plain words and step-by-step guides played from frames of
 the real app. Russian and English.
 
-The live site is built from the `feat/nextjs-v4` line of this repository; `main` still holds the old
+The live site is built from the `fix/current-help-guides` line of this repository; `main` still holds the old
 single-file page.
 
 ## Layout
@@ -41,8 +41,9 @@ docker compose up -d --build
 SITE_URL=http://127.0.0.1:18910 bun run e2e
 ```
 
-`?lang=ru|en` and `?os=win|mac|linux|android|ios` override the language and system detection, which is
+`?lang=ru|en` and `?os=win|mac|linux|omarchy|android|ios` override the language and system detection, which is
 handy for looking at one variant.
+Omarchy is an installation tab inside “Download and install”; existing `#omarchy` links open that tab.
 
 CI (`.github/workflows/ci.yml`) lints, type-checks, builds the production Docker image, starts it and runs
 `scripts/e2e.mjs` against it. Its screenshots are the artifact `screenshots` of the run.

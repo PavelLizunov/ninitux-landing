@@ -75,11 +75,11 @@ export function GuideSection() {
       <p className="section-foot">
         <span data-i18n="ru">
           Кадры сняты с версии для Windows на тестовых данных: настоящих серверов и аккаунтов на них нет. На macOS и
-          Linux приложение выглядит так же.
+          Linux отдельное приложение выглядит так же. Плагин Omarchy — во вкладке Omarchy раздела «Скачать и установить».
         </span>
         <span data-i18n="en">
           The frames come from the Windows version with sample data: no real servers or accounts are shown. On macOS
-          and Linux the app looks the same.
+          and Linux the standalone app looks the same. For the Omarchy plugin, choose Omarchy under “Download and install”.
         </span>
       </p>
     </section>

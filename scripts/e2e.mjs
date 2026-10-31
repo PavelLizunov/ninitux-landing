@@ -193,6 +193,39 @@ await check("every download link points to a published file", async () => {
   await page.close();
 });
 
+// ── Native Omarchy plugin ─────────────────────────────────────────────────
+for (const lang of ["ru", "en"]) {
+  await check(`Omarchy install copy and video playback (${lang})`, async () => {
+    const { page, errors } = await open({ query: `?lang=${lang}&os=linux` });
+    await browser.defaultBrowserContext().overridePermissions(BASE, ["clipboard-read", "clipboard-write"]);
+    await page.click('#os-panel-linux a[href="#omarchy"]');
+    expect(await visible(page, "#omarchy"), "native section is hidden");
+    const command = "omarchy plugin add https://github.com/PavelLizunov/omarchy-vpnrouter --enable";
+    expect((await page.$eval("#omarchy code", (node) => node.textContent)) === command, "wrong install command");
+    await page.click("#omarchy .cmd-copy");
+    expect((await page.evaluate(() => navigator.clipboard.readText())) === command, "clipboard differs from install command");
+    const selector = `#omarchy [data-i18n="${lang}"] video`;
+    expect(await visible(page, selector), "localized video is hidden");
+    const other = lang === "ru" ? "en" : "ru";
+    expect(!(await visible(page, `#omarchy [data-i18n="${other}"] video`)), "both language videos are visible");
+    await page.$eval(selector, async (video) => {
+      video.muted = true;
+      await video.play();
+    });
+    await page.waitForFunction((sel) => {
+      const video = document.querySelector(sel);
+      return video && !video.paused && video.currentTime > 0.2 && video.videoWidth === 440 && video.videoHeight === 764;
+    }, { timeout: 15000 }, selector);
+    const duration = await page.$eval(selector, (video) => video.duration);
+    expect(duration >= 23.9 && duration <= 24.2, `unexpected duration ${duration}`);
+    await page.$eval(selector, (video) => { video.currentTime = 22; });
+    await page.waitForFunction((sel) => document.querySelector(sel)?.currentTime >= 22, {}, selector);
+    await shot(page, `omarchy-${lang}`, "#omarchy");
+    expect(errors.length === 0, `console errors: ${errors.join(" | ")}`);
+    await page.close();
+  });
+}
+
 // ── Guides ────────────────────────────────────────────────────────────────
 await check("the demo on the first screen plays by itself", async () => {
   const { page } = await open({ query: "?lang=ru" });
@@ -210,8 +243,8 @@ await check("guides: tabs, steps, back and forth, pause", async () => {
   await page.$eval("#guide", (node) => node.scrollIntoView());
   await page.click(".guide-tabs button:nth-child(2)");
   await page.waitForSelector('#guide .st[data-guide="apps"]');
-  await page.click("#guide .st-steps li:nth-child(4) button");
-  expect((await activeFrame(page, "#guide")).endsWith("apps-pick.webp"), "step 4 did not open");
+  await page.click("#guide .st-steps li:nth-child(5) button");
+  expect((await activeFrame(page, "#guide")).endsWith("apps-pick.webp"), "step 5 did not open");
   expect((await page.$eval("#guide .st", (n) => n.dataset.running)) === "false", "a click on a step must pause");
   await page.click("#guide .st-tap-next");
   expect((await activeFrame(page, "#guide")).endsWith("apps-add.webp"), "next did not work");
@@ -221,6 +254,15 @@ await check("guides: tabs, steps, back and forth, pause", async () => {
   expect(spot === "1", "the highlight is hidden on a step that has one");
   await sleep(800);
   await shot(page, "guide-apps-step4", "#guide");
+  for (const [position, suffix] of [[2, "apps-menu.webp"], [3, "apps-advanced.webp"]]) {
+    await page.click(`#guide .st-steps li:nth-child(${position}) button`);
+    expect((await activeFrame(page, "#guide")).endsWith(suffix), `missing current menu frame ${suffix}`);
+  }
+  await page.click(".guide-tabs button:nth-child(3)");
+  await page.waitForSelector('#guide .st[data-guide="free"]');
+  await page.click("#guide .st-steps li:last-child button");
+  expect((await activeFrame(page, "#guide")).endsWith("free-connect.webp"), "free result frame did not open");
+  await shot(page, "guide-free-results", "#guide");
   await page.click("#guide .st-play");
   expect((await page.$eval("#guide .st-play", (b) => b.getAttribute("aria-pressed"))) === "true", "play did not resume");
   await page.close();
