@@ -193,6 +193,39 @@ await check("every download link points to a published file", async () => {
   await page.close();
 });
 
+// ── Native Omarchy plugin ─────────────────────────────────────────────────
+for (const lang of ["ru", "en"]) {
+  await check(`Omarchy install copy and video playback (${lang})`, async () => {
+    const { page, errors } = await open({ query: `?lang=${lang}&os=linux` });
+    await browser.defaultBrowserContext().overridePermissions(BASE, ["clipboard-read", "clipboard-write"]);
+    await page.click('#os-panel-linux a[href="#omarchy"]');
+    expect(await visible(page, "#omarchy"), "native section is hidden");
+    const command = "omarchy plugin add https://github.com/PavelLizunov/omarchy-vpnrouter --enable";
+    expect((await page.$eval("#omarchy code", (node) => node.textContent)) === command, "wrong install command");
+    await page.click("#omarchy .cmd-copy");
+    expect((await page.evaluate(() => navigator.clipboard.readText())) === command, "clipboard differs from install command");
+    const selector = `#omarchy [data-i18n="${lang}"] video`;
+    expect(await visible(page, selector), "localized video is hidden");
+    const other = lang === "ru" ? "en" : "ru";
+    expect(!(await visible(page, `#omarchy [data-i18n="${other}"] video`)), "both language videos are visible");
+    await page.$eval(selector, async (video) => {
+      video.muted = true;
+      await video.play();
+    });
+    await page.waitForFunction((sel) => {
+      const video = document.querySelector(sel);
+      return video && !video.paused && video.currentTime > 0.2 && video.videoWidth === 440 && video.videoHeight === 764;
+    }, { timeout: 15000 }, selector);
+    const duration = await page.$eval(selector, (video) => video.duration);
+    expect(duration >= 23.9 && duration <= 24.2, `unexpected duration ${duration}`);
+    await page.$eval(selector, (video) => { video.currentTime = 22; });
+    await page.waitForFunction((sel) => document.querySelector(sel)?.currentTime >= 22, {}, selector);
+    await shot(page, `omarchy-${lang}`, "#omarchy");
+    expect(errors.length === 0, `console errors: ${errors.join(" | ")}`);
+    await page.close();
+  });
+}
+
 // ── Guides ────────────────────────────────────────────────────────────────
 await check("the demo on the first screen plays by itself", async () => {
   const { page } = await open({ query: "?lang=ru" });
