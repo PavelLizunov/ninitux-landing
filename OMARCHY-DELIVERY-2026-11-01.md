@@ -30,9 +30,43 @@ Omarchy section at playback time 22 seconds was inspected inline. Final live-
 source branch SHA: `583041d02aeb59660d17177dcf0ada1c5e4f1b8b`.
 This is successful isolated browser evidence, not a production deployment.
 
-Deployment access: direct LAN SSH to site-and-git times out from the workstation.
+Initial deployment attempt: direct LAN SSH to site-and-git timed out from the workstation.
 The existing `dsh@harness-test` Tailnet hop is available, but the `user` account
 on site-and-git rejects that hop's key. No production file/container was changed.
 The endpoint's first-seen ED25519 public host key was recorded using OpenSSH
 accept-new; changed host keys remain refused. Do not report this source checkpoint
 as a deployed site. Existing deployment instructions remain in README.md.
+
+## Production publication completed — 2026-11-01
+
+Resumed from pi session `01a193b2-b54e-7265-b61c-ec718c914ccd`.
+Deployed `583041d02aeb59660d17177dcf0ada1c5e4f1b8b` to the existing
+`ninitux-landing` container on site-and-git (VM 118). Its tree is identical to
+the successful CI candidate `e93729366d41c0eff992db81aaab6fd6d986cf3c`.
+
+Used the existing authenticated harness-test → pve-ninitux3 → QEMU Guest Agent
+management path. No SSH keys, SSH configuration or access policies were changed.
+The previous production files matched `b3ad55402456ee83c167d6d7e13c9a9b1827248d`
+exactly, apart from `DEPLOYED_SHA`; no server-local source edits were overwritten.
+Downloaded the exact commit archive, built it in a staging directory, then
+replaced the existing Compose service. Build and activation units exited 0;
+the new container reported `healthy`.
+
+Production image: `sha256:4cee228e345c251c61e77d4f7ab4bd7a029ba7f914883ac30eed9007edd0f56c`.
+Source marker: `/home/user/ninitux-landing-next/DEPLOYED_SHA`.
+Previous source: `/home/user/ninitux-landing-next.bak-omarchy-20261101`.
+Previous image retained as `ninitux-landing:rollback-omarchy-20261101`.
+
+Public browser smoke at `https://ninitux.com/` confirmed the Omarchy section,
+the exact install command and the Linux installation link. Both EN/RU videos
+decoded at 440×764, played and sought to 22 seconds of their 24-second duration.
+The live copy handler reached its success state; reading the system clipboard
+was unavailable through the preview browser, so clipboard equality is supported
+by the earlier CI result, not a new production clipboard read. Desktop layout
+was inspected. After navigation applied the requested 390px viewport, the public
+RU page and Omarchy section loaded without horizontal document overflow
+(`scrollWidth` and `clientWidth` both 375px, excluding the scrollbar).
+
+The Marketplace submission remains open with `validated` and
+`security-review-required` labels; publication there still needs maintainer
+review: https://github.com/omacom/omarchy-plugin-marketplace/issues/13500.
