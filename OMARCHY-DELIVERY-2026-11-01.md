@@ -22,10 +22,13 @@ is byte-identical to successful upstream exact-source CI artifact 40348520604,
 not an independently reproduced build. A native fresh clone/validate/enable
 check passed with explicitly stubbed shell IPC. This is not live VPN acceptance.
 
-Site source/diff read directly. CI on the checkpoint/PR will provide lint,
-typecheck, production Docker build and existing browser suite evidence; unrun
-checks are not passes. No new browser coverage or visual site acceptance is
-claimed before CI artifacts are inspected.
+Site source/diff read directly. PR #6 merged the section/media; PR #7 added
+actual bilingual video playback, decoded size/duration/seek, exact command
+clipboard and Linux anchor checks. CI run 41245485534 passed lint, types,
+production Docker build and 29 browser checks, zero failures. The captured
+Omarchy section at playback time 22 seconds was inspected inline. Final live-
+source branch SHA: `583041d02aeb59660d17177dcf0ada1c5e4f1b8b`.
+This is successful isolated browser evidence, not a production deployment.
 
 Deployment access: direct LAN SSH to site-and-git times out from the workstation.
 The existing `dsh@harness-test` Tailnet hop is available, but the `user` account
