@@ -340,6 +340,7 @@ export function Download({ release }: { release: Release }) {
           <h3>
             <T ru="Ubuntu, Debian, Mint: одна команда" en="Ubuntu, Debian, Mint: one command" />
           </h3>
+          <p><a href="#omarchy"><T ru="У вас Omarchy Quattro? Установите нативный плагин." en="Using Omarchy Quattro? Install the native plugin." /></a></p>
           <Command text={LINUX_COMMAND} event="copy-linux" />
           <ol className="steps">
             <Step n={1}>
