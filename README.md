@@ -4,7 +4,7 @@ The public site of [VPNRouter](https://github.com/PavelLizunov/VPNRouter): what 
 button for the visitor's system, install steps in plain words and step-by-step guides played from frames of
 the real app. Russian and English.
 
-The live site is built from the `feat/nextjs-v4` line of this repository; `main` still holds the old
+The live site is built from the `fix/current-help-guides` line of this repository; `main` still holds the old
 single-file page.
 
 ## Layout
